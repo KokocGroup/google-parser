@@ -107,10 +107,100 @@ def get_full_domain_without_scheme(url):
     return urlunsplit(('', parsed.netloc, '', '', '')).replace('//', '')
 
 
+class GoogleSerpCleaner(object):
+    flags = re.U | re.I | re.M | re.S
+
+    _patterns = (
+        ur'<script.*?<\/script>',
+        ur'<style.*?<\/style>',
+        ur'onmousedown=".*?"',
+        ur'onclick=".*?"',
+        ur'class=".*?"',
+        ur'target="_blank"',
+        ur'title=".*?"',
+        ur'ondblclick=".*?"',
+        ur'style=".*?"',
+        ur'<i\s+><\/i>',
+        ur'\s+tabindex="\d+"',
+        ur'<noscript>.*?<\/noscript>',
+        ur'<link.*?/>',
+        ur'><!--.*?-->',
+        ur'<i\s+><\/i>',
+    )
+    patterns = []
+    for p in _patterns:
+        patterns.append(re.compile(p, flags=re.U | re.I | re.M | re.S))
+    patterns = tuple(patterns)
+
+    no_space = re.compile(ur'\s+', flags=flags)
+
+    @classmethod
+    def clean(cls, content):
+        content = content
+        for p in cls.patterns:
+            content = p.sub('', content)
+
+        content = cls.no_space.sub(' ', content)
+        return content
+
 class Google(object):
+    # Адрес картинки (src)
+    captcha_regexp = re.compile(
+        '<img src=\"([^\"]+)\"',
+        re.DOTALL | re.IGNORECASE | re.UNICODE | re.MULTILINE
+    )
+    # Ключ картинки
+    captcha_id_regexp = re.compile(
+        '<input.*?name=\"id\".*?value=\"([^\"]+)\".*?>',
+        re.DOTALL | re.IGNORECASE | re.UNICODE | re.MULTILINE
+    )
+    # Путь куда редиректить
+    captcha_continue_regexp = re.compile(
+        '<input.*?name=\"continue\".*?value=\"([^\"]+)\".*?>',
+        re.DOTALL | re.IGNORECASE | re.UNICODE | re.MULTILINE
+    )
+
+    sorry_page_regexp = re.compile(
+        '<title>Sorry...</title>',
+        re.DOTALL | re.IGNORECASE | re.UNICODE | re.MULTILINE
+    )
+
     def __init__(self, content, xhtml_snippet=False):
         self.content = content
         self.xhtml_snippet = xhtml_snippet
+
+    def get_serp(self):
+        return self.parse()
+
+    def get_clean_html(self):
+        return GoogleSerpCleaner.clean(self.content)
+
+    def get_captcha_data(self):
+        u"""Проверить наличие капчи на странице
+        """
+
+        is_captcha = bool(re.findall(
+            '^.*?(<img src="/sorry/image).*', self.content,
+            re.DOTALL | re.UNICODE | re.IGNORECASE
+        ))
+        if not is_captcha:
+            return
+
+        match_captcha = self.captcha_regexp.findall(self.content)
+        if not match_captcha:
+            return
+
+        match_captcha_id = self.captcha_id_regexp.findall(self.content)
+        match_captcha_coninue = self.captcha_continue_regexp.findall(self.content)
+
+        return {
+            'url': 'https://www.google.com' + match_captcha[0].replace('&amp;', '&'),
+            'captcha_id': match_captcha_id[0],
+            'captcha_coninue': match_captcha_coninue[0].replace('&amp;', '&')
+        }
+
+    def is_blocked(self):
+        return bool(self.sorry_page_regexp.search(self.content))
 
     def parse(self):
         body = body_regexp.findall(self.content)
