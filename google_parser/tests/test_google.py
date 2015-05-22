@@ -53,6 +53,15 @@ class GoogleParserTestCase(GoogleParserTests):
         captcha = g.get_captcha_data()
         self.assertEqual(captcha, None)
 
+    def test3(self):
+        u""""
+            Не заблокировано
+        """
+        html = self.get_data('google.html')
+        g = Google(html)
+        blocked = g.is_blocked()
+        self.assertEqual(blocked, False)
+
     def check(self, snippets, founded):
         for i, founded_snippet in enumerate(founded):
             position, url, title, snippet = snippets[i]
