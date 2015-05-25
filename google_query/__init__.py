@@ -49,6 +49,11 @@ class GoogleQuery():
         if zone_params:
             self.zone_params = zone_params
 
+    def _get_crutch_zone(self):
+        if self.zone == 'com.uag':
+            return 'com.ua'
+        return self.zone
+
     def get_url(self):
         u"""Возвращает урл"""
 
@@ -79,5 +84,5 @@ class GoogleQuery():
             params += '&{0}'.format(self.custom_params)
 
         return self.base_url_tpl.format(
-            zone=self.zone, query=urllib.quote(self.query), params=params
+            zone=self._get_crutch_zone(), query=urllib.quote(self.query), params=params
         )

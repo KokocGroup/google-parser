@@ -46,3 +46,7 @@ class GoogleParserTests(GoogleQueryTests):
     def test10(self):
         q = GoogleQuery('info', 'стол', region='Washington', page=2, num=50, custom_params='oq=table&psi=1231231231')
         self.assertEqual(q.get_url(), 'https://www.google.info/search?q=%D1%81%D1%82%D0%BE%D0%BB&num=50&start=50&as_dt=e&near=Washington&oq=table&psi=1231231231')
+
+    def test11(self):
+        q = GoogleQuery('com.uag', 'стол', region='Washington', page=2, num=50, custom_params='oq=table&psi=1231231231')
+        self.assertEqual(q.get_url(), 'https://www.google.com.ua/search?q=%D1%81%D1%82%D0%BE%D0%BB&num=50&start=50&hl=ru&tbs=ctr:countryUA&cr=countryUA&as_dt=e&near=Washington&oq=table&psi=1231231231')
