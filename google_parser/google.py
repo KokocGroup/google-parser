@@ -199,7 +199,7 @@ class Google(object):
     def is_blocked(self):
         return bool(self.sorry_page_regexp.search(self.content))
 
-    def get_serp(self):
+    def get_snippets(self):
         body = body_regexp.findall(self.content)
         if not body:
             raise Exception('no body in response')
