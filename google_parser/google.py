@@ -314,7 +314,7 @@ class GoogleParser(object):
 
     def is_not_found(self):
         response = self._encode_respoonse(self.content)
-        return bool(re.findall(u'ничего не найдено', response.decode('utf-8')))
+        return bool(re.findall(ur'ничего не найдено', response))
 
     @staticmethod
     def _encode_respoonse(response):

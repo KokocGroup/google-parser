@@ -62,6 +62,22 @@ class GoogleParserTestCase(GoogleParserTests):
         blocked = g.is_blocked()
         self.assertEqual(blocked, False)
 
+    def test4(self):
+        u""""
+            Ничего не найдено есть
+        """
+        html = self.get_data('not-found.html').decode('utf8')
+        g = GoogleParser(html)
+        self.assertEqual(g.is_not_found(), True)
+
+    def test5(self):
+        u""""
+            Ничего не найдено нет
+        """
+        html = self.get_data('google.html').decode('utf8')
+        g = GoogleParser(html)
+        self.assertEqual(g.is_not_found(), False)
+
     def check(self, snippets, founded):
         for i, founded_snippet in enumerate(founded):
             position, url, title, snippet = snippets[i]
