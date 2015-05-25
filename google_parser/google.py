@@ -1,11 +1,15 @@
 #! coding: utf-8
+from HTMLParser import HTMLParser
+import logging
 import re
-import urllib
 import unicodedata
 from urllib import quote, unquote
+import urllib
 from urlparse import urlparse, urlunsplit, urlsplit
 
 from pyquery import PyQuery
+
+from google_parser.exceptions import EmptySerp
 import lxml.etree as ET
 
 
@@ -169,9 +173,6 @@ class Google(object):
         self.content = content
         self.xhtml_snippet = xhtml_snippet
 
-    def get_serp(self):
-        return self.parse()
-
     def get_clean_html(self):
         return GoogleSerpCleaner.clean(self.content)
 
@@ -202,7 +203,43 @@ class Google(object):
     def is_blocked(self):
         return bool(self.sorry_page_regexp.search(self.content))
 
-    def parse(self):
+    def get_serp(self):
+        if self.is_not_found():
+            return {'pc': 0, 'sn': []}
+        
+        pagecount = self.get_pagecount()
+        snippets = self.get_snippets()
+        
+        if not snippets:
+            raise EmptySerp()
+        
+        return {'pc': pagecount, 'sn': snippets}
+
+    def get_pagecount(self):
+        u"""Получить количество сниппетов результатов выдачи
+        """
+        pagecount = 0
+        patterns = (r'<div[^>]+resultStats(?:[^>]+)?>Результатов: примерно (.*?)</div>',
+                    r'<div[^>]+resultStats(?:[^>]+)?>(.*?)<nobr>',
+                    r'<div[^>]+resultStats(?:[^>]+)?>Результатов:(.*?)</div>',
+                    r'<div>Результатов:\s*(.*?)</div>',
+                    r'Результатов:\s*(.*?),.*?</div>',
+                    r'из примерно <b>(.*?)</b>',
+                    r'<div>Результаты:.*?из\s*<b>\s*(\d+)\s*</b>')
+
+        response = self._encode_respoonse(self.content)
+        for pattern in patterns:
+            res = re.findall(pattern, response, re.DOTALL | re.IGNORECASE | re.UNICODE | re.MULTILINE)
+            if res:
+                # html-символы могут встречаться в виде своих числовых кодов (например, &nbsp; = &#160;)
+                # избавимся от закодированных последовательностей в результирующей строке
+                res_str = HTMLParser().unescape(res[0])
+                results_ints = re.findall(r'\d+', res_str.split(',')[0])
+                if results_ints:
+                    return int(''.join(results_ints))
+        return pagecount
+
+    def get_snippets(self):
         body = body_regexp.findall(self.content)
         if not body:
             raise Exception('no body in response')
@@ -213,7 +250,7 @@ class Google(object):
         snippets = []
         position = 0
         for snippet in serp:
-            parsed_snippet = self.parse_snippet(snippet)
+            parsed_snippet = self._parse_snippet(snippet)
             if not parsed_snippet:
                 continue
             position += 1
@@ -222,7 +259,26 @@ class Google(object):
 
         return snippets
 
-    def parse_title_snippet(self, snippet):
+    def _parse_snippet(self, snippet):
+        position, title, url = self._parse_title_snippet(snippet)
+        if not url:
+            return {}
+        try:
+            domain = get_full_domain_without_scheme(url)
+        except UnicodeError as e:
+            raise e
+
+        description = self._parse_description_snippet(snippet)
+        return {
+            'd': domain,  # domain
+            'p': position,  # position
+            'u': url,  # url
+            't': unicode(title),  # title snippet
+            's': unicode(description),  # body snippet
+            'm': self._is_map_snippet(snippet)  # map
+        }
+
+    def _parse_title_snippet(self, snippet):
         elements_h3 = [el for el in snippet.iter() if el.tag == 'h3']
         empty_result = None, None, None
         if not elements_h3:
@@ -242,25 +298,6 @@ class Google(object):
             title = ''.join(a.itertext()).strip()
         return None, title, url
 
-    def parse_snippet(self, snippet):
-        position, title, url = self.parse_title_snippet(snippet)
-        if not url:
-            return {}
-        try:
-            domain = get_full_domain_without_scheme(url)
-        except UnicodeError as e:
-            raise e
-
-        description = self._parse_description_snippet(snippet)
-        return {
-            'd': domain,  # domain
-            'p': position,  # position
-            'u': url,  # url
-            't': unicode(title),  # title snippet
-            's': unicode(description),  # body snippet
-            'm': self.is_map_snippet(snippet)  # map
-        }
-
     def _parse_description_snippet(self, snippet):
         description = u''
         div_description = snippet.find('div')
@@ -275,10 +312,11 @@ class Google(object):
     def _etree_to_string(self, el):
         return ET.tostring(el, encoding='UTF-8')
 
-    def _is_not_found(self, response):
-        response = self._encode_respoonse(response)
+    def is_not_found(self):
+        response = self._encode_respoonse(self.content)
         return bool(re.findall(u'ничего не найдено', response.decode('utf-8')))
 
+    @staticmethod
     def _encode_respoonse(response):
         try:
             encodings = re.findall('content=.*?charset=(.*?)"', response,
@@ -312,9 +350,10 @@ class Google(object):
         else:
             return link
 
-    def is_map_snippet(self, snippet):
+    def _is_map_snippet(self, snippet):
         pattern = u'maps.google'
         for s in snippet.iter():
             if s.tag == 'a' and s.get('href').find(pattern) != -1:
                 return True
         return False
+
