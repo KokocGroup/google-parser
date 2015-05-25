@@ -147,7 +147,7 @@ class GoogleSerpCleaner(object):
         content = cls.no_space.sub(' ', content)
         return content
 
-class Google(object):
+class GoogleParser(object):
     # Адрес картинки (src)
     captcha_regexp = re.compile(
         '<img src=\"([^\"]+)\"',

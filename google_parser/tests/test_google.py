@@ -3,7 +3,7 @@
 
 import unittest
 from google_parser.tests import GoogleParserTests
-from google_parser.google import Google
+from google_parser.google import GoogleParser
 
 
 class GoogleParserTestCase(GoogleParserTests):
@@ -21,7 +21,7 @@ class GoogleParserTestCase(GoogleParserTests):
             (10, "https://www.express-bank.ru/moscow/faq/credit-price", u"Обслуживание кредита, кредитной карты | Восточный экспресс ...", u"Наиболее частые вопросы по обслуживанию кредита, кредитной  карты .  ...  ли    я  оплатить  задолженность по кредиту/кредитной  карте  в филиале  Банка  в  ..."),
         ]
         html = self.get_data('google.html').decode('utf8')
-        founded = Google(html).parse()
+        founded = GoogleParser(html).get_snippets()
         self.check(snippets, founded)
 
     def test_ftp(self):
@@ -30,7 +30,7 @@ class GoogleParserTestCase(GoogleParserTests):
         ]
 
         html = self.get_data('google-ftp.html').decode('utf8')
-        founded = Google(html).parse()
+        founded = GoogleParser(html).get_snippets()
         self.check(snippets, founded)
 
     def test1(self):
@@ -38,7 +38,7 @@ class GoogleParserTestCase(GoogleParserTests):
             Проверяем на наличие капчи
         """
         html = self.get_data('google-captcha.html')
-        g = Google(html)
+        g = GoogleParser(html)
         captcha = g.get_captcha_data()
         self.assertEqual(captcha['url'], 'https://www.google.com/sorry/image?id=10009568273031142024&hl=en')
         self.assertEqual(captcha['captcha_coninue'], 'https://www.google.ru/search?num=10&hl=ru&start=0&q=yandex&as_dt=e')
@@ -49,7 +49,7 @@ class GoogleParserTestCase(GoogleParserTests):
             Капчи быть не должно
         """
         html = self.get_data('google.html')
-        g = Google(html)
+        g = GoogleParser(html)
         captcha = g.get_captcha_data()
         self.assertEqual(captcha, None)
 
@@ -58,7 +58,7 @@ class GoogleParserTestCase(GoogleParserTests):
             Не заблокировано
         """
         html = self.get_data('google.html')
-        g = Google(html)
+        g = GoogleParser(html)
         blocked = g.is_blocked()
         self.assertEqual(blocked, False)
 

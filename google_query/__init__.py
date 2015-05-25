@@ -5,7 +5,6 @@ import urllib
 class GoogleQuery():
 
     base_url_tpl = 'https://www.google.{zone}/search?q={query}{params}'
-    # base_url_tpl = 'https://www.google.{zone}/search?{num}&{hl}&{start}&{query}{add_get_params}',
 
     zone_params = {
         'com.ua': {
