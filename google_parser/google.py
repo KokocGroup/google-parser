@@ -169,9 +169,6 @@ class Google(object):
         self.content = content
         self.xhtml_snippet = xhtml_snippet
 
-    def get_serp(self):
-        return self.parse()
-
     def get_clean_html(self):
         return GoogleSerpCleaner.clean(self.content)
 
@@ -202,7 +199,7 @@ class Google(object):
     def is_blocked(self):
         return bool(self.sorry_page_regexp.search(self.content))
 
-    def parse(self):
+    def get_serp(self):
         body = body_regexp.findall(self.content)
         if not body:
             raise Exception('no body in response')
