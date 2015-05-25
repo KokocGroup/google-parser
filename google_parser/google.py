@@ -1,11 +1,15 @@
 #! coding: utf-8
+from HTMLParser import HTMLParser
+import logging
 import re
-import urllib
 import unicodedata
 from urllib import quote, unquote
+import urllib
 from urlparse import urlparse, urlunsplit, urlsplit
-from HTMLParser import HTMLParser
+
 from pyquery import PyQuery
+
+from google_parser.exceptions import EmptySerp
 import lxml.etree as ET
 
 
@@ -200,8 +204,15 @@ class Google(object):
         return bool(self.sorry_page_regexp.search(self.content))
 
     def get_serp(self):
+        if self.is_not_found():
+            return {'pc': 0, 'sn': []}
+        
         pagecount = self.get_pagecount()
         snippets = self.get_snippets()
+        
+        if not snippets:
+            raise EmptySerp()
+        
         return {'pc': pagecount, 'sn': snippets}
 
     def get_pagecount(self):
@@ -247,7 +258,6 @@ class Google(object):
             snippets.append(parsed_snippet)
 
         return snippets
-
 
     def _parse_snippet(self, snippet):
         position, title, url = self._parse_title_snippet(snippet)
@@ -302,8 +312,8 @@ class Google(object):
     def _etree_to_string(self, el):
         return ET.tostring(el, encoding='UTF-8')
 
-    def _is_not_found(self, response):
-        response = self._encode_respoonse(response)
+    def is_not_found(self):
+        response = self._encode_respoonse(self.content)
         return bool(re.findall(u'ничего не найдено', response.decode('utf-8')))
 
     @staticmethod
