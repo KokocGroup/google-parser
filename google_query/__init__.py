@@ -36,11 +36,11 @@ class GoogleQuery():
 
     num = 10
 
-    def __init__(self, zone, query, region=None, page=None, num=None, zone_params=None, always_params='as_dt=e', custom_params=None):
+    def __init__(self, zone, query, region=None, start=0, num=10, zone_params=None, always_params='as_dt=e', custom_params=None):
         self.zone = zone
         self.query = query
         self.region = region
-        self.page = int(page) if page else None
+        self.start = int(start) * num
         self.always_params = always_params
         self.num = int(num) if num else self.num
         self.custom_params = custom_params
@@ -61,8 +61,8 @@ class GoogleQuery():
         if self.num:
             params += '&num={0}'.format(self.num)
 
-        if self.page and self.page != 1:
-            params += '&start={0}'.format((self.page - 1) * self.num)
+        if self.start:
+            params += '&start={0}'.format(self.start)
 
         zone_params = self.zone_params.get(self.zone, {})
         hl = zone_params.get('hl')
