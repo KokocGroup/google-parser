@@ -1,6 +1,5 @@
 #! coding: utf-8
 from HTMLParser import HTMLParser
-from StringIO import StringIO
 import re
 import unicodedata
 from urllib import quote, unquote
@@ -8,7 +7,6 @@ import urllib
 from urlparse import urlparse, urlunsplit, urlsplit
 
 from pyquery import PyQuery
-from requests.packages.chardet.universaldetector import UniversalDetector
 
 from google_parser.exceptions import EmptySerp
 import lxml.etree as ET
@@ -21,20 +19,52 @@ RE_URL_PROTOCOL = re.compile(ur'^(?:http|https|ftp)://', re.X | re.I | re.U)
 body_regexp = re.compile('(<body.*?</body>)', re.DOTALL)
 
 
-def to_unicode(content):
-    encoding = get_encoding(content)
-    return content.decode(encoding, "ignore")
+def to_unicode(content, from_charset=None):
+    u"""Безопасное приведение к юникоду
 
-def get_encoding(content):
-    detector = UniversalDetector()
-    sio = StringIO(content)
-    for line in sio:
-        detector.feed(line)
-        if detector.done:
-            break
-    detector.close()
-    expect_encoding = detector.result['encoding']
-    return expect_encoding    
+    :type  content: str
+    :param content: текст
+    :type  from_charset: str
+    :param from_charset: Кодировка исходного текста
+
+    :rtype: unicode
+    :returns: текст, преобразованный в юникод
+    """
+    if type(content) == unicode:
+        return content
+
+    charsets = {
+        'utf-8' : 'utf8',
+        'utf8' : 'utf8',
+        'cp1251' : 'cp1251',
+        'cp-1251' : 'cp1251',
+        'windows-1251' : 'cp1251',
+        'win-1251' : 'cp1251',
+        '1251' : 'cp1251',
+        'русdows-1251': 'cp1251',
+        'koi8-r' : 'koi8-r'
+    }
+    if type(from_charset) in (str, unicode):
+        from_charset = str(from_charset.lower())
+
+    try:
+        from_charset = charsets[from_charset]
+        return unicode(content, encoding=from_charset)
+
+    except KeyError:
+        for from_charset in ('utf8', 'cp1251', 'koi8-r', None):
+            try:
+                if from_charset is not None:
+                    return unicode(content, encoding=from_charset)
+                else:
+                    return unicode(content)
+            except UnicodeError:
+                continue
+
+        raise UnicodeError('Can not be converted to Unicode')
+
+    except UnicodeError:
+        return unicode(content, encoding=from_charset, errors='ignore')
 
 def normalize(url, charset='utf-8'):
     def _clean(string):
@@ -330,7 +360,7 @@ class GoogleParser(object):
 
     def is_not_found(self):
         return u'ничего не найдено' in self.content
-#         return bool(re.findall(ur'ничего не найдено', self.content.decode('cp1251')))
+#        return bool(re.findall(ur'ничего не найдено', self.content))
 
 
     def _format_link(self, link):
