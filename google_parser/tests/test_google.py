@@ -82,15 +82,7 @@ class GoogleParserTestCase(GoogleParserTests):
         u""""
             Ничего не найдено есть
         """
-        html = self.get_data('not_found_2.html')
-        g = GoogleParser(html)
-        self.assertEqual(g.is_not_found(), True)
-
-    def test8(self):
-        u""""
-            Ничего не найдено есть
-        """
-        html = self.get_data('not_found_3.html')
+        html = self.get_data('not_found4.html')
         g = GoogleParser(html)
         self.assertEqual(g.is_not_found(), True)
 

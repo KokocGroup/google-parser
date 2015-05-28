@@ -329,7 +329,7 @@ class GoogleParser(object):
         return ET.tostring(el, encoding='UTF-8')
 
     def is_not_found(self):
-        return u'ничего не найдено' in to_unicode(self.content)
+        return u'ничего не найдено' in self.content
 #         return bool(re.findall(ur'ничего не найдено', self.content.decode('cp1251')))
 
 
