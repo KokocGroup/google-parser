@@ -1,6 +1,6 @@
 #! coding: utf-8
 from HTMLParser import HTMLParser
-import logging
+from StringIO import StringIO
 import re
 import unicodedata
 from urllib import quote, unquote
@@ -8,6 +8,7 @@ import urllib
 from urlparse import urlparse, urlunsplit, urlsplit
 
 from pyquery import PyQuery
+from requests.packages.chardet.universaldetector import UniversalDetector
 
 from google_parser.exceptions import EmptySerp
 import lxml.etree as ET
@@ -19,6 +20,21 @@ __all__ = ['Google']
 RE_URL_PROTOCOL = re.compile(ur'^(?:http|https|ftp)://', re.X | re.I | re.U)
 body_regexp = re.compile('(<body.*?</body>)', re.DOTALL)
 
+
+def to_unicode(content):
+    encoding = get_encoding(content)
+    return content.decode(encoding, "ignore")
+
+def get_encoding(content):
+    detector = UniversalDetector()
+    sio = StringIO(content)
+    for line in sio:
+        detector.feed(line)
+        if detector.done:
+            break
+    detector.close()
+    expect_encoding = detector.result['encoding']
+    return expect_encoding    
 
 def normalize(url, charset='utf-8'):
     def _clean(string):
@@ -170,7 +186,7 @@ class GoogleParser(object):
     )
 
     def __init__(self, content, xhtml_snippet=False):
-        self.content = content
+        self.content = to_unicode(content)
         self.xhtml_snippet = xhtml_snippet
 
     def get_clean_html(self):
@@ -227,7 +243,7 @@ class GoogleParser(object):
                     r'из примерно <b>(.*?)</b>',
                     r'<div>Результаты:.*?из\s*<b>\s*(\d+)\s*</b>')
 
-        response = self._encode_respoonse(self.content)
+        response = self.content
         for pattern in patterns:
             res = re.findall(pattern, response, re.DOTALL | re.IGNORECASE | re.UNICODE | re.MULTILINE)
             if res:
@@ -313,20 +329,9 @@ class GoogleParser(object):
         return ET.tostring(el, encoding='UTF-8')
 
     def is_not_found(self):
-        response = self._encode_respoonse(self.content)
-        return bool(re.findall(ur'ничего не найдено', response))
+        return u'ничего не найдено' in to_unicode(self.content)
+#         return bool(re.findall(ur'ничего не найдено', self.content.decode('cp1251')))
 
-    @staticmethod
-    def _encode_respoonse(response):
-        try:
-            encodings = re.findall('content=.*?charset=(.*?)"', response,
-                                   re.DOTALL | re.IGNORECASE | re.UNICODE | re.MULTILINE)
-            if encodings:
-                encoding = encodings[0]
-                return response.decode(encoding).encode('utf8')
-        except Exception:
-            pass
-        return response
 
     def _format_link(self, link):
         _marker_1 = '/interstitial?url='

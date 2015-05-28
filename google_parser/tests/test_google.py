@@ -20,7 +20,7 @@ class GoogleParserTestCase(GoogleParserTests):
             (9, "https://www.express-bank.ru/moscow/private/online/internet/posibilities", u"Возможности интернет-банка | Восточный экспресс банк", u"Совершайте  банковские  операции по своим счетам дистанционно.  ...     денежных средств,  оплачивать  покупки и услуги в режиме реального    времени.  ...  кредиту;; по кредитной  карте , которая включает сумму    минимального платежа,  ..."),
             (10, "https://www.express-bank.ru/moscow/faq/credit-price", u"Обслуживание кредита, кредитной карты | Восточный экспресс ...", u"Наиболее частые вопросы по обслуживанию кредита, кредитной  карты .  ...  ли    я  оплатить  задолженность по кредиту/кредитной  карте  в филиале  Банка  в  ..."),
         ]
-        html = self.get_data('google.html').decode('utf8')
+        html = self.get_data('google.html')
         founded = GoogleParser(html).get_snippets()
         self.check(snippets, founded)
 
@@ -29,7 +29,7 @@ class GoogleParserTestCase(GoogleParserTests):
             (1, "ftp://os2.fannet.ru/Boating/books/kija-new/2009-06%20(222).pdf", u"техника", u"в «базе»  нет  удобного раскладывающегося сто- лика – он  .....   РИБа  «   Кальмар» с мотором от. «Волги», не  .....  если выполнить ее  складной  и    снабдить  ....  гое время на одной и той же лодке «SkyBoat  440 » (сегодня  ......     остойчивости на  дно  укладывают бал- ласт.  ......  (ее составили «Олимп» и « Люкс » из."),
         ]
 
-        html = self.get_data('google-ftp.html').decode('utf8')
+        html = self.get_data('google-ftp.html')
         founded = GoogleParser(html).get_snippets()
         self.check(snippets, founded)
 
@@ -66,7 +66,31 @@ class GoogleParserTestCase(GoogleParserTests):
         u""""
             Ничего не найдено есть
         """
-        html = self.get_data('not-found.html').decode('utf8')
+        html = self.get_data('not-found.html')
+        g = GoogleParser(html)
+        self.assertEqual(g.is_not_found(), True)
+
+    def test6(self):
+        u""""
+            Ничего не найдено есть
+        """
+        html = self.get_data('google_not_found.html')
+        g = GoogleParser(html)
+        self.assertEqual(g.is_not_found(), True)
+
+    def test7(self):
+        u""""
+            Ничего не найдено есть
+        """
+        html = self.get_data('not_found_2.html')
+        g = GoogleParser(html)
+        self.assertEqual(g.is_not_found(), True)
+
+    def test8(self):
+        u""""
+            Ничего не найдено есть
+        """
+        html = self.get_data('not_found_3.html')
         g = GoogleParser(html)
         self.assertEqual(g.is_not_found(), True)
 
@@ -74,7 +98,7 @@ class GoogleParserTestCase(GoogleParserTests):
         u""""
             Ничего не найдено нет
         """
-        html = self.get_data('google.html').decode('utf8')
+        html = self.get_data('google.html')
         g = GoogleParser(html)
         self.assertEqual(g.is_not_found(), False)
 
