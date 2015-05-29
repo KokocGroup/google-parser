@@ -214,10 +214,11 @@ class GoogleParser(object):
         '<title>Sorry...</title>',
         re.DOTALL | re.IGNORECASE | re.UNICODE | re.MULTILINE
     )
-
-    def __init__(self, content, xhtml_snippet=False):
+    
+    def __init__(self, content, xhtml_snippet=False, snippet_fileds=('d', 'p', 'u', 't', 's', 'm')):
         self.content = to_unicode(content)
         self.xhtml_snippet = xhtml_snippet
+        self.snippet_fileds = snippet_fileds
 
     def get_clean_html(self):
         return GoogleSerpCleaner.clean(self.content)
@@ -309,20 +310,26 @@ class GoogleParser(object):
         position, title, url = self._parse_title_snippet(snippet)
         if not url:
             return {}
+        
         try:
             domain = get_full_domain_without_scheme(url)
         except UnicodeError as e:
             raise e
 
-        description = self._parse_description_snippet(snippet)
-        return {
+        snippet = {
             'd': domain,  # domain
             'p': position,  # position
             'u': url,  # url
-            't': unicode(title),  # title snippet
-            's': unicode(description),  # body snippet
-            'm': self._is_map_snippet(snippet)  # map
+            'm': self._is_map_snippet(snippet),  # map
+            't': None,  # title snippet
+            's': None,  # body snippet
         }
+        if 't' in self.snippet_fileds:
+            snippet['t'] = title
+        if 's' in self.snippet_fileds:
+            snippet['s'] = self._parse_description_snippet(snippet)
+            
+        return snippet
 
     def _parse_title_snippet(self, snippet):
         elements_h3 = [el for el in snippet.iter() if el.tag == 'h3']
