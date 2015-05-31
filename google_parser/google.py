@@ -306,8 +306,8 @@ class GoogleParser(object):
 
         return snippets
 
-    def _parse_snippet(self, snippet):
-        position, title, url = self._parse_title_snippet(snippet)
+    def _parse_snippet(self, raw_snippet):
+        position, title, url = self._parse_title_snippet(raw_snippet)
         if not url:
             return {}
         
@@ -320,14 +320,14 @@ class GoogleParser(object):
             'd': domain,  # domain
             'p': position,  # position
             'u': url,  # url
-            'm': self._is_map_snippet(snippet),  # map
+            'm': self._is_map_snippet(raw_snippet),  # map
             't': None,  # title snippet
             's': None,  # body snippet
         }
         if 't' in self.snippet_fileds:
             snippet['t'] = title
         if 's' in self.snippet_fileds:
-            snippet['s'] = self._parse_description_snippet(snippet)
+            snippet['s'] = self._parse_description_snippet(raw_snippet)
             
         return snippet
 
