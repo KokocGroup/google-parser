@@ -12,7 +12,7 @@ from google_parser.exceptions import EmptySerp
 import lxml.etree as ET
 
 
-__all__ = ['Google']
+__all__ = ['GoogleParser']
 
 
 RE_URL_PROTOCOL = re.compile(ur'^(?:http|https|ftp)://', re.X | re.I | re.U)
