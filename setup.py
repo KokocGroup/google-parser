@@ -12,6 +12,6 @@ setup(
     packages=['google_parser', 'google_query'],
     install_requires=[
         'pyquery==1.2.9',
-        'lxml>=2.3.4',
+#         'lxml==2.3.4',
     ],
 )
