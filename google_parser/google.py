@@ -284,15 +284,14 @@ class GoogleParser(object):
         return pagecount
 
     def get_snippets(self):
-        res = re.compile('(<body.*?</body>)', re.DOTALL).search(self.content)
+        res = re.compile('<body.*?</body>', re.DOTALL).search(self.content)
         if not res:
             raise Exception('no body in response')
 
-        body = res.group(1)
-        if '<div class="srg">' in body:
-            return SnippetsParserDefault(self.snippet_fields).get_snippets(body)
-        elif '<div id="search"><div id="ires">' in body:
-            return SnippetsParserUnil_2015_07_23(self.snippet_fields).get_snippets(body)
+        if '<div class="srg">' in self.content:
+            return SnippetsParserDefault(self.snippet_fields).get_snippets(self.content)
+        elif '<div id="search"><div id="ires">' in self.content:
+            return SnippetsParserUnil_2015_07_23(self.snippet_fields).get_snippets(self.content)
         raise Exception(u'Bad parser')
 
     def is_not_found(self):
@@ -310,21 +309,17 @@ class SnippetsParserDefault(object):
         result = []
         position = 0
         for snippet in snippets:
+            title, url = self._parse_title_snippet(snippet)
             position += 1
-            parsed_snippet = self._parse_snippet(position, snippet)
-            result.append(parsed_snippet)
+            result.append({
+                'p': position,
+                'u': url,
+                'd': self._get_domain(url),
+                'm': self._is_map_snippet(url),
+                't': self._get_title(title),
+                's': self._get_descr(snippet, url),
+            })
         return result
-
-    def _parse_snippet(self, position, snippet):
-        title, url = self._parse_title_snippet(snippet)
-        return {
-            'p': position,
-            'u': url,
-            'd': self._get_domain(url),
-            'm': self._is_map_snippet(url),
-            't': self._get_title(title),
-            's': self._get_descr(snippet, url),
-        }
 
     def _get_descr(self, snippet, url):
         if 's' in self.snippet_fields:
@@ -384,6 +379,10 @@ class SnippetsParserDefault(object):
     def _strip_tags(self, html):
         return re.sub(ur' {2,}', ' ', re.sub(ur'<[^>]*?>', '', html.replace('&nbsp;', ' '))).strip()
 
+    def _get_host(self, html):
+        res = re.compile(ur'"host":"([^"]+?)"').search(html)
+        if res:
+            return res.group(1)
 
 class SnippetsParserUnil_2015_07_23(SnippetsParserDefault):
     snippets_regexp = re.compile(ur'<li class="g">(.*?(?:</div>|</table>))\s*</li>', re.I | re.M | re.S)
