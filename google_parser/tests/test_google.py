@@ -120,6 +120,20 @@ class GoogleParserTestCase(GoogleParserTests):
         self.assertEqual(len(res['sn']), len(etalon['sn']))
         self.check2(etalon['sn'], res['sn'])
 
+    def test10(self):
+        u""""
+            Парсинг новой выдачи
+        """
+
+        html = self.get_data('google-2015-07-24.html')
+        g = GoogleParser(html)
+        res = g.get_serp()
+
+        etalon = json.loads(self.get_data('google-2015-07-24.json'))
+        self.assertEqual(res['pc'], etalon['pc'])
+        self.assertEqual(len(res['sn']), len(etalon['sn']))
+        self.check2(etalon['sn'], res['sn'])
+
     def check2(self, snippets, founded):
         for i, founded_snippet in enumerate(founded):
             snippet = snippets[i]

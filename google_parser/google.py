@@ -28,15 +28,15 @@ def to_unicode(content, from_charset=None):
         return content
 
     charsets = {
-        'utf-8' : 'utf8',
-        'utf8' : 'utf8',
-        'cp1251' : 'cp1251',
-        'cp-1251' : 'cp1251',
-        'windows-1251' : 'cp1251',
-        'win-1251' : 'cp1251',
-        '1251' : 'cp1251',
+        'utf-8': 'utf8',
+        'utf8': 'utf8',
+        'cp1251': 'cp1251',
+        'cp-1251': 'cp1251',
+        'windows-1251': 'cp1251',
+        'win-1251': 'cp1251',
+        '1251': 'cp1251',
         'русdows-1251': 'cp1251',
-        'koi8-r' : 'koi8-r'
+        'koi8-r': 'koi8-r'
     }
     if type(from_charset) in (str, unicode):
         from_charset = str(from_charset.lower())
@@ -59,6 +59,7 @@ def to_unicode(content, from_charset=None):
 
     except UnicodeError:
         return unicode(content, encoding=from_charset, errors='ignore')
+
 
 def normalize(url, charset='utf-8'):
     def _clean(string):
@@ -103,7 +104,8 @@ def normalize(url, charset='utf-8'):
     path = quote(_clean(path), "~:/?#[]@!$&'()*+,;=")
     fragment = quote(_clean(fragment), "~")
 
-    query = "&".join(["=".join([quote(_clean(t), "~:/?#[]@!$'()*+,;=") for t in q.split("=", 1)]) for q in query.split("&")])
+    query = "&".join(
+        ["=".join([quote(_clean(t), "~:/?#[]@!$'()*+,;=") for t in q.split("=", 1)]) for q in query.split("&")])
 
     if scheme in ["", "http", "https", "ftp", "file"]:
         output = []
@@ -187,6 +189,7 @@ class GoogleSerpCleaner(object):
         content = cls.no_space.sub(' ', content)
         return content
 
+
 class GoogleParser(object):
     # Адрес картинки (src)
     captcha_regexp = re.compile(
@@ -208,7 +211,7 @@ class GoogleParser(object):
         '<title>Sorry...</title>',
         re.DOTALL | re.IGNORECASE | re.UNICODE | re.MULTILINE
     )
-    
+
     def __init__(self, content, xhtml_snippet=False, snippet_fields=('d', 'p', 'u', 't', 's', 'm')):
         self.content = to_unicode(content)
         self.xhtml_snippet = xhtml_snippet
@@ -247,13 +250,13 @@ class GoogleParser(object):
     def get_serp(self):
         if self.is_not_found():
             return {'pc': 0, 'sn': []}
-        
+
         pagecount = self.get_pagecount()
         snippets = self.get_snippets()
-        
+
         if not snippets:
             raise EmptySerp()
-        
+
         return {'pc': pagecount, 'sn': snippets}
 
     def get_pagecount(self):
@@ -261,12 +264,12 @@ class GoogleParser(object):
         """
         pagecount = 0
         patterns = (ur'<div[^>]+resultStats(?:[^>]+)?>Результатов: примерно (.*?)<',
-                    ur'<div[^>]+resultStats(?:[^>]+)?>(.*?)<nobr>',
-                    ur'<div[^>]+resultStats(?:[^>]+)?>Результатов:(.*?)</div>',
-                    ur'<div>Результатов:\s*(.*?)</div>',
-                    ur'Результатов:\s*(.*?),.*?</div>',
-                    ur'из примерно <b>(.*?)</b>',
-                    ur'<div>Результаты:.*?из\s*<b>\s*(\d+)\s*</b>')
+        ur'<div[^>]+resultStats(?:[^>]+)?>(.*?)<nobr>',
+        ur'<div[^>]+resultStats(?:[^>]+)?>Результатов:(.*?)</div>',
+        ur'<div>Результатов:\s*(.*?)</div>',
+        ur'Результатов:\s*(.*?),.*?</div>',
+        ur'из примерно <b>(.*?)</b>',
+        ur'<div>Результаты:.*?из\s*<b>\s*(\d+)\s*</b>')
 
         response = self.content
         for pattern in patterns:
@@ -338,16 +341,16 @@ class SnippetsParserDefault(object):
             raise e
 
     def _parse_title_snippet(self, snippet):
-        res = re.compile(ur'<h3 class="r"><a[^>]+?href="([^"]+?)"[^>]+?>(.*?)</a>').search(snippet)
+        res = re.compile(ur'<h3 class="r">.*?<a[^>]+?href="([^"]+?)"[^>]+?>(.*?)</a>').search(snippet)
         if res:
             return self._strip_tags(res.group(2)), self._format_link(res.group(1)),
         raise Exception(u'Parsing error')
 
     def _is_map_snippet(self, url):
-        return u'maps.google' in url
+        return 'maps.google' in url
 
     def _format_link(self, link):
-        link = urllib.unquote(link.replace('&amp;', '&'))
+        link = link.replace('&amp;', '&')
 
         patterns = [
             ur'/interstitial\?url=(.*?)&sa=',
@@ -355,7 +358,7 @@ class SnippetsParserDefault(object):
         ]
 
         for pattern in patterns:
-            res = re.compile(pattern).search(link)
+            res = re.compile(pattern).search(urllib.unquote(link))
             if res:
                 return res.group(1)
         return link
@@ -368,6 +371,7 @@ class SnippetsParserDefault(object):
 
     def _strip_tags(self, html):
         return re.sub(ur' {2,}', ' ', re.sub(ur'<[^>]*?>', '', html.replace('&nbsp;', ' '))).strip()
+
 
 class SnippetsParserUnil_2015_07_23(SnippetsParserDefault):
     snippets_regexp = re.compile(ur'<li class="g">(.*?)</li>')
