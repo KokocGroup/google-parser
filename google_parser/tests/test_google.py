@@ -147,6 +147,19 @@ class GoogleParserTestCase(GoogleParserTests):
         self.assertEqual(res['pc'], 0)
         self.assertEqual(len(res['sn']), 100)
 
+    def test12(self):
+        u""""
+            Парсинг новой выдачи
+        """
+
+        html = self.get_data('google2-2015-07-24.html')
+        g = GoogleParser(html)
+        res = g.get_serp()
+
+        #на самом деле тут 150000, но из-за того что кэш битый 0
+        self.assertEqual(res['pc'], 0)
+        self.assertEqual(len(res['sn']), 100)
+
     def print_sn(self, res):
         for i in res['sn']:
             print
