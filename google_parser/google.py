@@ -1,22 +1,16 @@
 #! coding: utf-8
-from HTMLParser import HTMLParser
+
 import re
 import unicodedata
-from urllib import quote, unquote
 import urllib
+from urllib import quote, unquote
 from urlparse import urlparse, urlunsplit, urlsplit
-
-from pyquery import PyQuery
+from HTMLParser import HTMLParser
 
 from google_parser.exceptions import EmptySerp
-import lxml.etree as ET
 
 
 __all__ = ['GoogleParser']
-
-
-RE_URL_PROTOCOL = re.compile(ur'^(?:http|https|ftp)://', re.X | re.I | re.U)
-body_regexp = re.compile('(<body.*?</body>)', re.DOTALL)
 
 
 def to_unicode(content, from_charset=None):
@@ -215,10 +209,10 @@ class GoogleParser(object):
         re.DOTALL | re.IGNORECASE | re.UNICODE | re.MULTILINE
     )
     
-    def __init__(self, content, xhtml_snippet=False, snippet_fileds=('d', 'p', 'u', 't', 's', 'm')):
+    def __init__(self, content, xhtml_snippet=False, snippet_fields=('d', 'p', 'u', 't', 's', 'm')):
         self.content = to_unicode(content)
         self.xhtml_snippet = xhtml_snippet
-        self.snippet_fileds = snippet_fileds
+        self.snippet_fields = snippet_fields
 
     def get_clean_html(self):
         return GoogleSerpCleaner.clean(self.content)
@@ -266,13 +260,13 @@ class GoogleParser(object):
         u"""Получить количество сниппетов результатов выдачи
         """
         pagecount = 0
-        patterns = (r'<div[^>]+resultStats(?:[^>]+)?>Результатов: примерно (.*?)</div>',
-                    r'<div[^>]+resultStats(?:[^>]+)?>(.*?)<nobr>',
-                    r'<div[^>]+resultStats(?:[^>]+)?>Результатов:(.*?)</div>',
-                    r'<div>Результатов:\s*(.*?)</div>',
-                    r'Результатов:\s*(.*?),.*?</div>',
-                    r'из примерно <b>(.*?)</b>',
-                    r'<div>Результаты:.*?из\s*<b>\s*(\d+)\s*</b>')
+        patterns = (ur'<div[^>]+resultStats(?:[^>]+)?>Результатов: примерно (.*?)<',
+                    ur'<div[^>]+resultStats(?:[^>]+)?>(.*?)<nobr>',
+                    ur'<div[^>]+resultStats(?:[^>]+)?>Результатов:(.*?)</div>',
+                    ur'<div>Результатов:\s*(.*?)</div>',
+                    ur'Результатов:\s*(.*?),.*?</div>',
+                    ur'из примерно <b>(.*?)</b>',
+                    ur'<div>Результаты:.*?из\s*<b>\s*(\d+)\s*</b>')
 
         response = self.content
         for pattern in patterns:
@@ -287,115 +281,93 @@ class GoogleParser(object):
         return pagecount
 
     def get_snippets(self):
-        body = body_regexp.findall(self.content)
-        if not body:
+        res = re.compile('(<body.*?</body>)', re.DOTALL).search(self.content)
+        if not res:
             raise Exception('no body in response')
 
-        dom = PyQuery(body[0])
-        serp = dom('#ires').find('li')
-
-        snippets = []
-        position = 0
-        for snippet in serp:
-            parsed_snippet = self._parse_snippet(snippet)
-            if not parsed_snippet:
-                continue
-            position += 1
-            parsed_snippet['p'] = position
-            snippets.append(parsed_snippet)
-
-        return snippets
-
-    def _parse_snippet(self, raw_snippet):
-        position, title, url = self._parse_title_snippet(raw_snippet)
-        if not url:
-            return {}
-        
-        try:
-            domain = get_full_domain_without_scheme(url)
-        except UnicodeError as e:
-            raise e
-
-        snippet = {
-            'd': domain,  # domain
-            'p': position,  # position
-            'u': url,  # url
-            'm': self._is_map_snippet(raw_snippet),  # map
-            't': None,  # title snippet
-            's': None,  # body snippet
-        }
-        if 't' in self.snippet_fileds:
-            snippet['t'] = title
-        if 's' in self.snippet_fileds:
-            snippet['s'] = self._parse_description_snippet(raw_snippet)
-            
-        return snippet
-
-    def _parse_title_snippet(self, snippet):
-        elements_h3 = [el for el in snippet.iter() if el.tag == 'h3']
-        empty_result = None, None, None
-        if not elements_h3:
-            return empty_result
-        h3 = elements_h3[-1]
-        if h3 is None:
-            return empty_result
-        a = h3.find('a')
-        if a is None:
-            return empty_result
-        url = self._format_link(a.get('href'))
-        if not RE_URL_PROTOCOL.match(url):
-            return empty_result
-        if self.xhtml_snippet:
-            title = ' '.join([self._etree_to_string(el).strip() for el in a.iter() if el.tag != 'a'])
-        else:
-            title = ''.join(a.itertext()).strip()
-        return None, title, url
-
-    def _parse_description_snippet(self, snippet):
-        description = u''
-        div_description = snippet.find('div')
-        if div_description is not None:
-            span_description = div_description.find('span')
-            if self.xhtml_snippet and span_description is not None:
-                description = self._etree_to_string(span_description)
-            else:
-                description = u'' if span_description is None else ' '.join(span_description.itertext()).strip()
-        return description
-
-    def _etree_to_string(self, el):
-        return ET.tostring(el, encoding='UTF-8')
+        body = res.group(1)
+        if '<div class="srg">' in body:
+            return SnippetsParserDefault(self.snippet_fields).get_snippets(body)
+        elif '<div id="search"><div id="ires">' in body:
+            return SnippetsParserUnil_2015_07_23(self.snippet_fields).get_snippets(body)
+        raise Exception(u'Bad parser')
 
     def is_not_found(self):
         return u'ничего не найдено' in self.content
-#        return bool(re.findall(ur'ничего не найдено', self.content))
 
+
+class SnippetsParserDefault(object):
+    snippets_regexp = re.compile(ur'<div class="g">(.*?)</div><!--n--></div>')
+
+    def __init__(self, snippet_fields):
+        self.snippet_fields = snippet_fields
+
+    def get_snippets(self, body):
+        snippets = self.snippets_regexp.findall(body)
+        result = []
+        position = 0
+        for snippet in snippets:
+            position += 1
+            parsed_snippet = self._parse_snippet(position, snippet)
+            result.append(parsed_snippet)
+        return result
+
+    def _parse_snippet(self, position, snippet):
+        title, url = self._parse_title_snippet(snippet)
+        return {
+            'p': position,
+            'u': url,
+            'd': self._get_domain(url),
+            'm': self._is_map_snippet(url),
+            't': self._get_title(title),
+            's': self._get_descr(snippet),
+        }
+
+    def _get_descr(self, snippet):
+        if 's' in self.snippet_fields:
+            return self._parse_description_snippet(snippet)
+
+    def _get_title(self, title):
+        if 't' in self.snippet_fields:
+            return title
+
+    def _get_domain(self, url):
+        try:
+            return get_full_domain_without_scheme(url)
+        except UnicodeError as e:
+            raise e
+
+    def _parse_title_snippet(self, snippet):
+        res = re.compile(ur'<h3 class="r"><a[^>]+?href="([^"]+?)"[^>]+?>(.*?)</a>').search(snippet)
+        if res:
+            return self._strip_tags(res.group(2)), self._format_link(res.group(1)),
+        raise Exception(u'Parsing error')
+
+    def _is_map_snippet(self, url):
+        return u'maps.google' in url
 
     def _format_link(self, link):
-        _marker_1 = '/interstitial?url='
-        _marker_2 = '/url?q='
-        _marker_end = '&sa='
-        if link.find(_marker_1) >= 0:
-            pos_start = link.index(_marker_1)
-            pos_start += len(_marker_1)
-            try:
-                pos_end = link.index(_marker_end)
-                link = link[pos_start:pos_end]
-            except Exception:
-                link = link[pos_start:]
-            return urllib.unquote(link)
-        elif link.find(_marker_2) >= 0:
-            pos_start = link.index(_marker_2)
-            pos_start += len(_marker_2)
-            pos_end = link.index(_marker_end)
-            link = link[pos_start:pos_end]
-            return urllib.unquote(link)
-        else:
-            return link
+        link = urllib.unquote(link.replace('&amp;', '&'))
 
-    def _is_map_snippet(self, snippet):
-        pattern = u'maps.google'
-        for s in snippet.iter():
-            if s.tag == 'a' and s.get('href').find(pattern) != -1:
-                return True
-        return False
+        patterns = [
+            ur'/interstitial\?url=(.*?)&sa=',
+            ur'/url\?q=(.*?)&sa='
+        ]
 
+        for pattern in patterns:
+            res = re.compile(pattern).search(link)
+            if res:
+                return res.group(1)
+        return link
+
+    def _parse_description_snippet(self, snippet):
+        res = re.compile(ur'<span class="st">(.*?)</span>').search(snippet)
+        if res:
+            return self._strip_tags(res.group(1))
+        raise Exception('Parsing error')
+
+    def _strip_tags(self, html):
+        return re.sub(ur' {2,}', ' ', re.sub(ur'<[^>]*?>', '', html.replace('&nbsp;', ' '))).strip()
+
+class SnippetsParserUnil_2015_07_23(SnippetsParserDefault):
+    snippets_regexp = re.compile(ur'<li class="g">(.*?)</li>')
