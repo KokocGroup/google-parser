@@ -300,7 +300,7 @@ class GoogleParser(object):
 
 
 class SnippetsParserDefault(object):
-    snippets_regexp = re.compile(ur'<div class="g">(.*?)</div><!--n--></div>')
+    snippets_regexp = re.compile(ur'<div class="g">(.*?)</div><!--n--></div>', re.I | re.M | re.S)
 
     def __init__(self, snippet_fields):
         self.snippet_fields = snippet_fields
@@ -323,12 +323,15 @@ class SnippetsParserDefault(object):
             'd': self._get_domain(url),
             'm': self._is_map_snippet(url),
             't': self._get_title(title),
-            's': self._get_descr(snippet),
+            's': self._get_descr(snippet, url),
         }
 
-    def _get_descr(self, snippet):
+    def _get_descr(self, snippet, url):
         if 's' in self.snippet_fields:
-            return self._parse_description_snippet(snippet)
+            if self._is_image_snippet(url):
+                return self._parse_description_img_snippet(snippet)
+            else:
+                return self._parse_description_snippet(snippet)
 
     def _get_title(self, title):
         if 't' in self.snippet_fields:
@@ -341,10 +344,13 @@ class SnippetsParserDefault(object):
             raise e
 
     def _parse_title_snippet(self, snippet):
-        res = re.compile(ur'<h3 class="r">.*?<a[^>]+?href="([^"]+?)"[^>]+?>(.*?)</a>').search(snippet)
+        res = re.compile(ur'<h3 class="r">.*?<a[^>]+?href="([^"]+?)"[^>]*?>(.*?)</a>', re.I | re.M | re.S).search(snippet)
         if res:
             return self._strip_tags(res.group(2)), self._format_link(res.group(1)),
         raise Exception(u'Parsing error')
+
+    def _is_image_snippet(self, url):
+        return url.startswith('/images?q=')
 
     def _is_map_snippet(self, url):
         return 'maps.google' in url
@@ -363,8 +369,14 @@ class SnippetsParserDefault(object):
                 return res.group(1)
         return link
 
+    def _parse_description_img_snippet(self, snippet):
+        res = re.compile(ur'<div>(.*?)</div>', re.I | re.M | re.S).search(snippet)
+        if res:
+            return self._strip_tags(res.group(1))
+        raise Exception('Parsing error')
+
     def _parse_description_snippet(self, snippet):
-        res = re.compile(ur'<span class="st">(.*?)</span>').search(snippet)
+        res = re.compile(ur'<span class="st">(.*?)</span>', re.I | re.M | re.S).search(snippet)
         if res:
             return self._strip_tags(res.group(1))
         raise Exception('Parsing error')
@@ -374,4 +386,4 @@ class SnippetsParserDefault(object):
 
 
 class SnippetsParserUnil_2015_07_23(SnippetsParserDefault):
-    snippets_regexp = re.compile(ur'<li class="g">(.*?)</li>')
+    snippets_regexp = re.compile(ur'<li class="g">(.*?(?:</div>|</table>))\s*</li>', re.I | re.M | re.S)

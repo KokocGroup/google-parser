@@ -134,6 +134,28 @@ class GoogleParserTestCase(GoogleParserTests):
         self.assertEqual(len(res['sn']), len(etalon['sn']))
         self.check2(etalon['sn'], res['sn'])
 
+    def test11(self):
+        u""""
+            Парсинг новой выдачи
+        """
+
+        html = self.get_data('google1-2015-07-24.html')
+        g = GoogleParser(html)
+        res = g.get_serp()
+
+        #на самом деле тут 150000, но из-за того что кэш битый 0
+        self.assertEqual(res['pc'], 0)
+        self.assertEqual(len(res['sn']), 100)
+
+    def print_sn(self, res):
+        for i in res['sn']:
+            print
+            print i['p']
+            print i['u']
+            print i['t']
+            print i['s']
+
+
     def check2(self, snippets, founded):
         for i, founded_snippet in enumerate(founded):
             snippet = snippets[i]
