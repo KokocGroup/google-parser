@@ -316,12 +316,17 @@ class GoogleParser(object):
 
 class SnippetsParserDefault(object):
     snippets_regexp = re.compile(ur'<div class="g">(.*?)</div><!--n--></div>', re.I | re.M | re.S)
+    result_regexp = re.compile(ur'(<div class="srg">.*?<hr class="rgsep">)', re.I | re.M | re.S)
 
     def __init__(self, snippet_fields):
         self.snippet_fields = snippet_fields
 
     def get_snippets(self, body):
-        snippets = self.snippets_regexp.findall(body)
+        res = self.result_regexp.search(body)
+        if not res:
+            raise Exception(u'Parsing error')
+
+        snippets = self.snippets_regexp.findall(res.group(1))
         result = []
         position = 0
         for snippet in snippets:
@@ -402,3 +407,4 @@ class SnippetsParserDefault(object):
 
 class SnippetsParserUnil_2015_07_23(SnippetsParserDefault):
     snippets_regexp = re.compile(ur'<li class="g">((?:<span|<h3|<table).*?(?:</div>|</table>))\s*</li>', re.I | re.M | re.S)
+    result_regexp = re.compile(ur'(<div id="ires">.*?</ol>\s*</div>)', re.I | re.M | re.S)
