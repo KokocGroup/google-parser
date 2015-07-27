@@ -304,7 +304,10 @@ class GoogleParser(object):
         if not res:
             raise Exception('no body in response')
 
-        if '<div class="srg">' in self.content:
+        pc = self.get_pagecount()
+        if pc == 1 and '<div class="g"' in self.content:
+            return [SnippetsParserDefault(self.snippet_fields).get_snippet(1, self.content)]
+        elif '<div class="srg">' in self.content:
             return SnippetsParserDefault(self.snippet_fields).get_snippets(self.content)
         elif '<div id="search"><div id="ires">' in self.content:
             return SnippetsParserUnil_2015_07_23(self.snippet_fields).get_snippets(self.content)
@@ -330,17 +333,20 @@ class SnippetsParserDefault(object):
         result = []
         position = 0
         for snippet in snippets:
-            title, url = self._parse_title_snippet(snippet)
             position += 1
-            result.append({
-                'p': position,
-                'u': url,
-                'd': self._get_domain(url),
-                'm': self._is_map_snippet(url),
-                't': self._get_title(title),
-                's': self._get_descr(snippet, url),
-            })
+            result.append(self.get_snippet(position, snippet))
         return result
+
+    def get_snippet(self, position, snippet):
+        title, url = self._parse_title_snippet(snippet)
+        return {
+            'p': position,
+            'u': url,
+            'd': self._get_domain(url),
+            'm': self._is_map_snippet(url),
+            't': self._get_title(title),
+            's': self._get_descr(snippet, url),
+        }
 
     def _get_descr(self, snippet, url):
         if 's' in self.snippet_fields:
