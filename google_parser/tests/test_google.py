@@ -66,6 +66,9 @@ class GoogleParserTestCase(GoogleParserTests):
         blocked = g.is_blocked()
         self.assertEqual(blocked, False)
 
+        pe = GoogleParser.pagination_exists(html)
+        self.assertTrue(pe)
+
     def test4(self):
         u""""
             Ничего не найдено есть
@@ -73,6 +76,9 @@ class GoogleParserTestCase(GoogleParserTests):
         html = self.get_data('not-found.html')
         g = GoogleParser(html)
         self.assertEqual(g.is_not_found(), True)
+
+        pe = GoogleParser.pagination_exists(html)
+        self.assertFalse(pe)
 
     def test6(self):
         u""""
@@ -159,6 +165,9 @@ class GoogleParserTestCase(GoogleParserTests):
         #на самом деле тут 150000, но из-за того что кэш битый 0
         self.assertEqual(res['pc'], 0)
         self.assertEqual(len(res['sn']), 100)
+
+        pe = GoogleParser.pagination_exists(html)
+        self.assertTrue(pe)
 
     def print_sn(self, res):
         for i in res['sn']:

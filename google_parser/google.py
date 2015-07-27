@@ -259,6 +259,16 @@ class GoogleParser(object):
 
         return {'pc': pagecount, 'sn': snippets}
 
+    @classmethod
+    def pagination_exists(cls, content):
+        res = re.search(
+            ur'<td\s*class="b"\s*style="text-align:left">\s*<a\s*href="/search', content, re.I | re.M | re.S
+        )
+        if res:
+            return True
+
+        return False
+
     def get_pagecount(self):
         u"""Получить количество сниппетов результатов выдачи
         """
