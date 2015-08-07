@@ -381,8 +381,10 @@ class SnippetsParserDefault(object):
         link = link.replace('&amp;', '&')
 
         patterns = [
-            ur'/interstitial\?url=(.*?)&sa=',
-            ur'/url\?q=(.*?)&sa='
+            ur'/interstitial\?url=(.*?)&',
+            ur'/url\?q=(.*?)&',
+            ur'/url\?url=(.*?)&',
+            ur'/infected\?url=(.*?)&',
         ]
 
         for pattern in patterns:
