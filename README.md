@@ -14,3 +14,11 @@ Testing
 python -m unittest google_parser.tests.test_google
 
 ```
+
+
+Installation
+---------
+
+```
+pip install google-parser
+```
