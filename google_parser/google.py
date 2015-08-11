@@ -319,22 +319,29 @@ class GoogleParser(object):
 
 class SnippetsParserDefault(object):
     snippets_regexp = re.compile(ur'<div class="g">(.*?)</div><!--n--></div>', re.I | re.M | re.S)
-    result_regexp = re.compile(ur'(<div class="srg">.*?<hr class="rgsep">)', re.I | re.M | re.S)
+    result_regexp = re.compile(ur'(<div class="srg">.*?<hr class=")', re.I | re.M | re.S)
 
     def __init__(self, snippet_fields):
         self.snippet_fields = snippet_fields
 
     def get_snippets(self, body):
-        res = self.result_regexp.search(body)
+        res = self.result_regexp.findall(body)
         if not res:
             raise Exception(u'Parsing error')
 
-        snippets = self.snippets_regexp.findall(res.group(1))
         result = []
         position = 0
-        for snippet in snippets:
-            position += 1
-            result.append(self.get_snippet(position, snippet))
+        for body in res:
+            snippets = self.snippets_regexp.findall(body)
+            for snippet in snippets:
+                position += 1
+                item = self.get_snippet(position, snippet)
+                # игнорим сниппет с картинками
+                if self._is_map_snippet(item['u']):
+                    position -= 1
+                    continue
+
+                result.append(item)
         return result
 
     def get_snippet(self, position, snippet):
@@ -403,7 +410,6 @@ class SnippetsParserDefault(object):
         res = re.compile(ur'<span class="st">(.*?)</span>', re.I | re.M | re.S).search(snippet)
         if res:
             return self._strip_tags(res.group(1))
-        raise Exception('Parsing error')
 
     def _strip_tags(self, html):
         return re.sub(ur' {2,}', ' ', re.sub(ur'<[^>]*?>', '', html.replace('&nbsp;', ' '))).strip()
