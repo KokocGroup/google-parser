@@ -3,7 +3,7 @@ import json
 
 import unittest
 from google_parser.tests import GoogleParserTests
-from google_parser.google import GoogleParser
+from google_parser.google import GoogleParser, SnippetsParserDefault
 
 
 class GoogleParserTestCase(GoogleParserTests):
@@ -243,6 +243,18 @@ class GoogleParserTestCase(GoogleParserTests):
 
         pe = GoogleParser.pagination_exists(html)
         self.assertTrue(pe)
+
+    def test18(self):
+        u""""
+            Проверка корректности форматирования ссылки
+        """
+        g = SnippetsParserDefault([])
+        
+        result = g._format_link('/interstitial?url=http://podokon.ru/podokonniki-rehau/')
+        self.assertEqual(result, 'http://podokon.ru/podokonniki-rehau/')
+
+        result = g._format_link('/interstitial?url=http://podokon.ru/podokonniki-rehau/&a=')
+        self.assertEqual(result, 'http://podokon.ru/podokonniki-rehau/')
 
     def print_sn(self, res):
         for i in res['sn']:
