@@ -317,6 +317,10 @@ class GoogleParser(object):
         return u'ничего не найдено' in self.content
 
 
+class SnippetsParserException(Exception):
+    pass
+
+
 class SnippetsParserDefault(object):
     snippets_regexp = re.compile(ur'<div class="g">(.*?)</div><!--n--></div>', re.I | re.M | re.S)
     result_regexp = re.compile(ur'(<div class="srg">.*?<hr class=")', re.I | re.M | re.S)
@@ -334,8 +338,18 @@ class SnippetsParserDefault(object):
         for body in res:
             snippets = self.snippets_regexp.findall(body)
             for snippet in snippets:
+
                 position += 1
-                item = self.get_snippet(position, snippet)
+
+                try:
+                    item = self.get_snippet(position, snippet)
+                except SnippetsParserException:
+                    if self._is_empty_snippet(snippet):
+                        position -= 1
+                        continue
+                    else:
+                        raise
+
                 # игнорим сниппет с картинками
                 if self._is_map_snippet(item['u']) or item['u'].startswith('/search'):
                     position -= 1
@@ -345,7 +359,7 @@ class SnippetsParserDefault(object):
         return result
 
     def get_snippet(self, position, snippet):
-        title, url = self._parse_title_snippet(snippet)
+        title, url = self._parse_title_snippet(snippet, position)
         return {
             'p': position,
             'u': url,
@@ -372,11 +386,14 @@ class SnippetsParserDefault(object):
         except UnicodeError as e:
             raise e
 
-    def _parse_title_snippet(self, snippet):
+    def _is_empty_snippet(self, snippet):
+        return '<h3 class="r"></h3>' in snippet
+
+    def _parse_title_snippet(self, snippet, position):
         res = re.compile(ur'<h3 class="r">.*?<a[^>]+?href="([^"]+?)"[^>]*?>(.*?)</a>', re.I | re.M | re.S).search(snippet)
         if res:
             return self._strip_tags(res.group(2)), self._format_link(res.group(1)),
-        raise Exception(u'Parsing error')
+        raise SnippetsParserException(u'Parsing error. Broken snippet at {0}: {1}'.format(position, snippet))
 
     def _is_image_snippet(self, url):
         return url.startswith('/images?q=')
