@@ -4,6 +4,7 @@ import json
 import unittest
 from google_parser.tests import GoogleParserTests
 from google_parser.google import GoogleParser, SnippetsParserDefault
+from google_parser.google_query import GoogleQuery
 
 
 class GoogleParserTestCase(GoogleParserTests):
@@ -249,12 +250,41 @@ class GoogleParserTestCase(GoogleParserTests):
             Проверка корректности форматирования ссылки
         """
         g = SnippetsParserDefault([])
-        
+
         result = g._format_link('/interstitial?url=http://podokon.ru/podokonniki-rehau/')
         self.assertEqual(result, 'http://podokon.ru/podokonniki-rehau/')
 
         result = g._format_link('/interstitial?url=http://podokon.ru/podokonniki-rehau/&a=')
         self.assertEqual(result, 'http://podokon.ru/podokonniki-rehau/')
+
+    def test19(self):
+        u""""
+            Парсинг новой выдачи
+        """
+
+        html = self.get_data('2015-08-21.html')
+        g = GoogleParser(html)
+        res = g.get_serp()
+
+        self.assertEqual(res['pc'], 245000)
+        self.assertEqual(len(res['sn']), 10)
+
+        pe = GoogleParser.pagination_exists(html)
+        self.assertTrue(pe)
+
+    def test20(self):
+        u""""
+            Парсинг новой выдачи
+        """
+        html = self.get_data('2015-09-04.html')
+        g = GoogleParser(html)
+        res = g.get_serp()
+
+        self.assertEqual(res['pc'], 59300000)
+        self.assertEqual(len(res['sn']), 9)
+
+        pe = GoogleParser.pagination_exists(html)
+        self.assertTrue(pe)
 
     def print_sn(self, res):
         for i in res['sn']:

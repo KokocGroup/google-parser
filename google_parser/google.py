@@ -337,7 +337,7 @@ class SnippetsParserDefault(object):
                 position += 1
                 item = self.get_snippet(position, snippet)
                 # игнорим сниппет с картинками
-                if self._is_map_snippet(item['u']):
+                if self._is_map_snippet(item['u']) or item['u'].startswith('/search'):
                     position -= 1
                     continue
 
