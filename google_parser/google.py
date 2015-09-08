@@ -314,7 +314,8 @@ class GoogleParser(object):
         raise Exception(u'Bad parser')
 
     def is_not_found(self):
-        return u'ничего не найдено' in self.content
+        pattern = re.compile(ur'По\s*запросу\s*<em>.*?</em>\s*ничего\s*не\s*найдено\.', re.I | re.M | re.S)
+        return bool(pattern.search(self.content))
 
 
 class SnippetsParserException(Exception):
