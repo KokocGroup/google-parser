@@ -7,7 +7,8 @@ from urllib import quote, unquote
 from urlparse import urlparse, urlunsplit, urlsplit
 from HTMLParser import HTMLParser
 
-from google_parser.exceptions import EmptySerp
+from google_parser.exceptions import EmptySerp, NoBodyInResponseError, BadGoogleParserError, \
+    SnippetsParserException, BadUrlError
 
 
 __all__ = ['GoogleParser']
@@ -302,7 +303,7 @@ class GoogleParser(object):
     def get_snippets(self):
         res = re.compile('<body.*?</body>', re.DOTALL).search(self.content)
         if not res:
-            raise Exception('no body in response')
+            raise NoBodyInResponseError()
 
         pc = self.get_pagecount()
         if pc == 1 and '<div class="g"' in self.content:
@@ -311,15 +312,11 @@ class GoogleParser(object):
             return SnippetsParserDefault(self.snippet_fields).get_snippets(self.content)
         elif '<div id="search"><div id="ires">' in self.content:
             return SnippetsParserUnil_2015_07_23(self.snippet_fields).get_snippets(self.content)
-        raise Exception(u'Bad parser')
+        raise BadGoogleParserError()
 
     def is_not_found(self):
         pattern = re.compile(ur'По\s*запросу\s*<(?:em|b)>.*?</(?:em|b)>\s*ничего\s*не\s*найдено\.', re.I | re.M | re.S)
         return bool(pattern.search(self.content))
-
-
-class SnippetsParserException(Exception):
-    pass
 
 
 class SnippetsParserDefault(object):
@@ -332,7 +329,7 @@ class SnippetsParserDefault(object):
     def get_snippets(self, body):
         res = self.result_regexp.findall(body)
         if not res:
-            raise Exception(u'Parsing error')
+            raise BadGoogleParserError()
 
         result = []
         position = 0
@@ -385,7 +382,7 @@ class SnippetsParserDefault(object):
         try:
             return get_full_domain_without_scheme(url)
         except UnicodeError as e:
-            raise e
+            raise BadUrlError(u'некорректный урл: {0}'.format(url))
 
     def _is_empty_snippet(self, snippet):
         return '<h3 class="r"></h3>' in snippet
@@ -422,7 +419,7 @@ class SnippetsParserDefault(object):
         res = re.compile(ur'<div>(.*?)</div>', re.I | re.M | re.S).search(snippet)
         if res:
             return self._strip_tags(res.group(1))
-        raise Exception('Parsing error')
+        raise BadGoogleParserError(u'не удалось найти описание сниппета: {}'.format(snippet))
 
     def _parse_description_snippet(self, snippet):
         res = re.compile(ur'<span class="st">(.*?)</span>', re.I | re.M | re.S).search(snippet)
