@@ -315,8 +315,15 @@ class GoogleParser(object):
         raise BadGoogleParserError()
 
     def is_not_found(self):
-        pattern = re.compile(ur'По\s*запросу\s*<(?:em|b)>.*?</(?:em|b)>\s*ничего\s*не\s*найдено\.', re.I | re.M | re.S)
-        return bool(pattern.search(self.content))
+        patterns = [
+            re.compile(ur'По\s*запросу\s*<(?:em|b)>.*?</(?:em|b)>\s*ничего\s*не\s*найдено\.', re.I | re.M | re.S),
+            re.compile(ur'Извините,\s*у\s*нас\s*нет\s*информации\s*об\s*адресе\s*<(?:em|b)>.*?</(?:em|b)>', re.I | re.M | re.S),
+        ]
+        res = False
+        for pattern in patterns:
+            if pattern.search(self.content):
+                return True
+        return res
 
 
 class SnippetsParserDefault(object):

@@ -314,6 +314,34 @@ class GoogleParserTestCase(GoogleParserTests):
         pe = GoogleParser.pagination_exists(html)
         self.assertFalse(pe)
 
+    def test23(self):
+        u""""
+            Парсинг новой выдачи
+        """
+        html = self.get_data('2015-09-10-not-found.html')
+        g = GoogleParser(html)
+        res = g.get_serp()
+
+        self.assertEqual(res['pc'], 0)
+        self.assertEqual(len(res['sn']), 0)
+
+        pe = GoogleParser.pagination_exists(html)
+        self.assertFalse(pe)
+
+    def test24(self):
+        u""""
+            Парсинг новой выдачи
+        """
+        html = self.get_data('2015-09-10.html')
+        g = GoogleParser(html)
+        res = g.get_serp()
+
+        self.assertEqual(res['pc'], 1)
+        self.assertEqual(len(res['sn']), 1)
+
+        pe = GoogleParser.pagination_exists(html)
+        self.assertFalse(pe)
+
     def print_sn(self, res):
         for i in res['sn']:
             print
