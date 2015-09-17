@@ -342,6 +342,37 @@ class GoogleParserTestCase(GoogleParserTests):
         pe = GoogleParser.pagination_exists(html)
         self.assertFalse(pe)
 
+    def test25(self):
+        u""""
+            Проверка подозрительной выдачи
+        """
+        html = self.get_data('suspicious-traffic.html')
+        g = GoogleParser(html)
+        self.assertTrue(g.is_suspicious_traffic())
+
+    def test26(self):
+        u""""
+            Проверка подозрительной выдачи
+        """
+        html = self.get_data('2015-09-10.html')
+        g = GoogleParser(html)
+        self.assertFalse(g.is_suspicious_traffic())
+
+    def test27(self):
+        u""""
+            Проверка подозрительной выдачи
+        """
+        html = self.get_data('2015-09-17.html')
+        g = GoogleParser(html)
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+        self.assertEqual(res['pc'], 7820)
+        self.assertEqual(len(res['sn']), 100)
+
+        pe = GoogleParser.pagination_exists(html)
+        self.assertTrue(pe)
+
     def print_sn(self, res):
         for i in res['sn']:
             print

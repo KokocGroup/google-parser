@@ -248,6 +248,20 @@ class GoogleParser(object):
     def is_blocked(self):
         return bool(self.sorry_page_regexp.search(self.content))
 
+    def is_suspicious_traffic(self):
+        patterns = [
+            re.compile(
+                ur'Мы зарегистрировали подозрительный трафик, исходящий из вашей сети. Повторите', re.I | re.M | re.S
+            ),
+            re.compile(
+                ur'<a href="//support\.google\.com/websearch/answer/86640">Подробнее\.\.\.</a>', re.I | re.M | re.S
+            )
+        ]
+        result = True
+        for pattern in patterns:
+            result &= bool(pattern.search(self.content))
+        return result
+
     def get_serp(self):
         if self.is_not_found():
             return {'pc': 0, 'sn': []}
