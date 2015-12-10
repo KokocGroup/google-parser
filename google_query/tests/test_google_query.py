@@ -46,3 +46,19 @@ class GoogleParserTests(GoogleQueryTests):
     def test11(self):
         q = GoogleQuery('com.uag', 'стол', region='Washington', start=2, num=50, custom_params='oq=table&psi=1231231231')
         self.assertEqual(q.get_url(), 'https://www.google.com.ua/search?q=%D1%81%D1%82%D0%BE%D0%BB&num=50&start=100&hl=ru&tbs=ctr:countryUA&cr=countryUA&as_dt=e&near=Washington&oq=table&psi=1231231231')
+
+    def test12(self):
+        cookie = GoogleQuery.get_region_cookie(u'Москва')
+        self.assertTrue(cookie)
+
+    def test13(self):
+        cookie = GoogleQuery.get_region_cookie(u'москва')
+        self.assertTrue(cookie)
+
+    def test14(self):
+        cookie = GoogleQuery.get_region_cookie(u'Санкт-Петербург')
+        self.assertTrue(cookie)
+
+    def test15(self):
+        cookie = GoogleQuery.get_region_cookie(u'Марс')
+        self.assertEquals(cookie, {})
