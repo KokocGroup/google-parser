@@ -197,6 +197,7 @@ class GoogleParserTestCase(GoogleParserTests):
         self.assertEqual(res['pc'], 13300)
         self.assertEqual(len(res['sn']), 10)
 
+
         pe = GoogleParser.pagination_exists(html)
         self.assertTrue(pe)
 
@@ -369,6 +370,21 @@ class GoogleParserTestCase(GoogleParserTests):
         res = g.get_serp()
         self.assertEqual(res['pc'], 7820)
         self.assertEqual(len(res['sn']), 100)
+
+        pe = GoogleParser.pagination_exists(html)
+        self.assertTrue(pe)
+
+    def test28(self):
+        u""""
+            Проверка подозрительной выдачи
+        """
+        html = self.get_data('2015-12-17.html')
+        g = GoogleParser(html)
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+        self.assertEqual(res['pc'], 11)
+        self.assertEqual(len(res['sn']), 1)
 
         pe = GoogleParser.pagination_exists(html)
         self.assertTrue(pe)
