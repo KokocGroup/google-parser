@@ -456,5 +456,5 @@ class SnippetsParserDefault(object):
             return res.group(1)
 
 class SnippetsParserUnil_2015_07_23(SnippetsParserDefault):
-    snippets_regexp = re.compile(ur'<li class="g">((?:<span|<h3|<table).*?(?:</div>|</table>))\s*</li>', re.I | re.M | re.S)
+    snippets_regexp = re.compile(ur'<(?:li|div) class="g">((?:<span|<h3|<table).*?(?:(?:<br>|</a>)\s*</div>|</table>))\s*</(?:li|div)>', re.I | re.M | re.S)
     result_regexp = re.compile(ur'(<div id="ires">.*?</ol>\s*</div>)', re.I | re.M | re.S)
