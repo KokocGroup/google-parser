@@ -288,6 +288,12 @@ class GoogleParser(object):
         if res:
             return True
 
+        res = re.search(
+            ur'<a\s*class="pn"\s*href="/search[^"]+"\s*id="pnnext"', content, re.I | re.M | re.S
+        )
+        if res:
+            return True
+
         return False
 
     def get_pagecount(self):
