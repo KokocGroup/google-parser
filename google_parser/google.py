@@ -328,6 +328,8 @@ class GoogleParser(object):
         pc = self.get_pagecount()
         if pc % 10 == 1 and '<div class="g"' in self.content:
             return [SnippetsParserDefault(self.snippet_fields).get_snippet(1, self.content)]
+        elif '<div class="med" id="res" role="main">' in self.content:
+            return SnippetsParserAfter_2016_03_10(self.snippet_fields).get_snippets(self.content)
         elif '<div class="srg">' in self.content:
             return SnippetsParserDefault(self.snippet_fields).get_snippets(self.content)
         elif '<div id="search"><div id="ires">' in self.content:
@@ -464,3 +466,45 @@ class SnippetsParserDefault(object):
 class SnippetsParserUnil_2015_07_23(SnippetsParserDefault):
     snippets_regexp = re.compile(ur'<(?:li|div) class="g">((?:<span|<h3|<table).*?(?:(?:<br>|</a>)\s*</div>|</table>))\s*</(?:li|div)>', re.I | re.M | re.S)
     result_regexp = re.compile(ur'(<div id="ires">.*?</ol>\s*</div>)', re.I | re.M | re.S)
+
+class SnippetsParserAfter_2016_03_10(SnippetsParserDefault):
+    snippets_regexp = re.compile(ur'<div class="g"[^>]*>(.*?)</div><!--n--></div>', re.I | re.M | re.S)
+    result_regexp = re.compile(ur'(<div class="med" id="res" role="main">.*?<!--z-->)', re.I | re.M | re.S)
+
+    def get_snippets(self, body):
+        res = self.result_regexp.findall(body)
+        if not res:
+            raise BadGoogleParserError()
+
+        result = []
+        position = 0
+        for body in res:
+            snippets = self.snippets_regexp.findall(body)
+            for snippet in snippets:
+
+                # исключаем отзывы
+                if '<div class="rc"' not in snippet:
+                    continue
+
+                position += 1
+
+                try:
+                    item = self.get_snippet(position, snippet)
+                except SnippetsParserException:
+                    if self._is_empty_snippet(snippet):
+                        position -= 1
+                        continue
+                    else:
+                        raise
+
+                # игнорим сниппет с картинками
+                if self._is_map_snippet(item['u']) or item['u'].startswith('/search'):
+                    position -= 1
+                    continue
+
+                result.append(item)
+
+        if len(result) >= 2 and result[0]['u'] == result[1]['u']:
+            result = result[1:]
+
+        return result

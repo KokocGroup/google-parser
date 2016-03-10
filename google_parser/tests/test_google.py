@@ -197,7 +197,6 @@ class GoogleParserTestCase(GoogleParserTests):
         self.assertEqual(res['pc'], 13300)
         self.assertEqual(len(res['sn']), 10)
 
-
         pe = GoogleParser.pagination_exists(html)
         self.assertTrue(pe)
 
@@ -417,6 +416,41 @@ class GoogleParserTestCase(GoogleParserTests):
         self.assertEqual(res['pc'], 457000)
         self.assertEqual(len(res['sn']), 10)
         # self.print_sn(res)
+
+        pe = GoogleParser.pagination_exists(html)
+        self.assertTrue(pe)
+
+    def test31(self):
+        u""""
+            Проверка подозрительной выдачи
+        """
+        html = self.get_data('2016-03-10-1.html')
+        g = GoogleParser(html)
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+        self.assertEqual(res['pc'], 28)
+        self.assertEqual(len(res['sn']), 28)
+        self.assertEqual(res['sn'][0]['u'], 'http://www.korbis-to.ru/')
+        self.assertEqual(res['sn'][27]['u'], 'http://www.isolux.ru/tovary-dlya-dachi-i-sada/tovary-dlya-bani/pechi-dlya-bani/drovyanyye-pechi.html')
+        # self.print_sn(res)
+
+        pe = GoogleParser.pagination_exists(html)
+        self.assertFalse(pe)
+
+    def test32(self):
+        u""""
+            Проверка подозрительной выдачи
+        """
+        html = self.get_data('2016-03-10-2.html')
+        g = GoogleParser(html)
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+        self.assertEqual(res['pc'], 352000)
+        self.assertEqual(len(res['sn']), 49)
+        self.assertEqual(res['sn'][0]['u'], 'http://laennec.ru/')
+        self.assertEqual(res['sn'][48]['u'], 'http://www.hindustantimes.com/tech/google-doodle-celebrates-stethoscope-inventor-rene-laennec-s-235th-birthday/story-NG3wmj3WNHL9g9lX7zthuO.html')
 
         pe = GoogleParser.pagination_exists(html)
         self.assertTrue(pe)
