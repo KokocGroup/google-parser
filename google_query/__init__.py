@@ -73,7 +73,7 @@ class GoogleQuery():
             'latitude_e7:{1}\n' \
             'longitude_e7:{2}\n' \
             '}}\n' \
-            'radius:60000'
+            'radius:29140'
         n = n.format(int(time.time()) * 100000, coords[0], coords[1])
         cookie_value = 'a+{0}'.format(b64encode(n))
         return {'UULE': cookie_value}
