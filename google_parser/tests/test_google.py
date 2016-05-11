@@ -455,6 +455,23 @@ class GoogleParserTestCase(GoogleParserTests):
         pe = GoogleParser.pagination_exists(html)
         self.assertTrue(pe)
 
+    def test33(self):
+        u""""
+            Проверка подозрительной выдачи
+        """
+        html = self.get_data('2016-05-11.html')
+        g = GoogleParser(html)
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+        self.assertEqual(res['pc'], 91)
+        self.assertEqual(len(res['sn']), 91)
+        self.assertEqual(res['sn'][0]['u'], 'http://gibsonshop.ru/kawai/3597-kawai-ca97w.html')
+        self.assertEqual(res['sn'][90]['u'], 'https://www.abcelectronique.com/comparateur/instrument-de-musique/instrument-de-musique/clavier-musique-/piano/index-6-prix_asc.html')
+
+        pe = GoogleParser.pagination_exists(html)
+        self.assertFalse(pe)
+
     def print_sn(self, res):
         for i in res['sn']:
             print

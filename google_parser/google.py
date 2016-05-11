@@ -326,9 +326,7 @@ class GoogleParser(object):
             raise NoBodyInResponseError()
 
         pc = self.get_pagecount()
-        if pc % 10 == 1 and '<div class="g"' in self.content:
-            return [SnippetsParserDefault(self.snippet_fields).get_snippet(1, self.content)]
-        elif '<div class="med" id="res" role="main">' in self.content:
+        if '<div class="med" id="res" role="main">' in self.content:
             return SnippetsParserAfter_2016_03_10(self.snippet_fields).get_snippets(self.content)
         elif '<div class="srg">' in self.content:
             return SnippetsParserDefault(self.snippet_fields).get_snippets(self.content)
