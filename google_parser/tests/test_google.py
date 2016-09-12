@@ -512,6 +512,29 @@ class GoogleParserTestCase(GoogleParserTests):
         pe = GoogleParser.pagination_exists(html)
         self.assertTrue(pe)
 
+    def test36(self):
+        u""""
+            Проверка подозрительной выдачи
+        """
+        html = self.get_data('2016-09-12-1.html')
+        g = GoogleParser(html)
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+        self.assertEqual(res['pc'], 461000)
+        self.assertEqual(len(res['sn']), 100)
+
+        self.assertEqual(res['sn'][0]['t'], u'Расписание поездов: Новосибирск - Капчагай, стоимость билета ...')
+        self.assertEqual(res['sn'][0]['u'], u'http://www.tutu.ru/poezda/rasp_d.php?nnst1=2044000&nnst2=2700804')
+        self.assertEqual(res['sn'][0]['d'], 'tutu.ru')
+
+        self.assertEqual(res['sn'][99]['t'], u'Форум туристов Сибири • Просмотр темы - RUS -&gt; KZ -&gt; KGZ: туда и ...')
+        self.assertEqual(res['sn'][99]['u'], u'http://egiki.ru/forum/viewtopic.php?t=2971')
+        self.assertEqual(res['sn'][99]['d'], 'egiki.ru')
+
+        pe = GoogleParser.pagination_exists(html)
+        self.assertTrue(pe)
+
     def print_sn(self, res):
         for i in res['sn']:
             print
