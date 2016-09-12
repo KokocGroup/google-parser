@@ -325,7 +325,6 @@ class GoogleParser(object):
         if not res:
             raise NoBodyInResponseError()
 
-        pc = self.get_pagecount()
         if '<div class="med" id="res" role="main">' in self.content:
             return SnippetsParserAfter_2016_03_10(self.snippet_fields).get_snippets(self.content)
         elif '<div class="srg">' in self.content:
@@ -466,7 +465,7 @@ class SnippetsParserUnil_2015_07_23(SnippetsParserDefault):
     result_regexp = re.compile(ur'(<div id="ires">.*?</ol>\s*</div>)', re.I | re.M | re.S)
 
 class SnippetsParserAfter_2016_03_10(SnippetsParserDefault):
-    snippets_regexp = re.compile(ur'<div class="g"[^>]*>(.*?)</div><!--n--></div>', re.I | re.M | re.S)
+    snippets_regexp = re.compile(ur'<div class="g\s*(?:card-section)?"(?: data-hveid="\d+")?>(.*?)</div><!--n--></div>', re.I | re.M | re.S)
     result_regexp = re.compile(ur'(<div class="med" id="res" role="main">.*?<!--z-->)', re.I | re.M | re.S)
 
     def get_snippets(self, body):
@@ -479,13 +478,7 @@ class SnippetsParserAfter_2016_03_10(SnippetsParserDefault):
         for body in res:
             snippets = self.snippets_regexp.findall(body)
             for snippet in snippets:
-
-                # исключаем отзывы
-                if '<div class="rc"' not in snippet:
-                    continue
-
                 position += 1
-
                 try:
                     item = self.get_snippet(position, snippet)
                 except SnippetsParserException:

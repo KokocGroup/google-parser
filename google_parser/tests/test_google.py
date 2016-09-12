@@ -472,6 +472,46 @@ class GoogleParserTestCase(GoogleParserTests):
         pe = GoogleParser.pagination_exists(html)
         self.assertFalse(pe)
 
+    def test34(self):
+        u""""
+            Проверка подозрительной выдачи
+        """
+        html = self.get_data('2016-05-20.html')
+        g = GoogleParser(html)
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+        self.assertEqual(res['pc'], 4)
+        self.assertEqual(len(res['sn']), 4)
+        self.assertEqual(res['sn'][0]['u'], u'http://www.venturewizard.ru/ecompanyg5p13fpricey0.php')
+        self.assertEqual(res['sn'][3]['u'], u'http://www.venturewizard.ru/ecatg83p1fgidy0.php')
+
+        pe = GoogleParser.pagination_exists(html)
+        self.assertFalse(pe)
+
+    def test35(self):
+        u""""
+            Проверка подозрительной выдачи
+        """
+        html = self.get_data('2016-09-12.html')
+        g = GoogleParser(html)
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+        self.assertEqual(res['pc'], 0)
+        self.assertEqual(len(res['sn']), 99)
+
+        self.assertEqual(res['sn'][0]['t'], u'Велосипеды Stels на Каширке - купить велосипед в Москве')
+        self.assertEqual(res['sn'][0]['u'], u'http://stelsvelo.ru/')
+        self.assertEqual(res['sn'][0]['d'], 'stelsvelo.ru')
+
+        self.assertEqual(res['sn'][98]['t'], u'Велосипеды STELS (СТEЛС), CUBE, MERIDA в Рязани. Купить ...')
+        self.assertEqual(res['sn'][98]['u'], u'http://www.velomir-pro.ru/')
+        self.assertEqual(res['sn'][98]['d'], 'velomir-pro.ru')
+
+        pe = GoogleParser.pagination_exists(html)
+        self.assertTrue(pe)
+
     def print_sn(self, res):
         for i in res['sn']:
             print
