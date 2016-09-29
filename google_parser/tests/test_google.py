@@ -535,6 +535,17 @@ class GoogleParserTestCase(GoogleParserTests):
         pe = GoogleParser.pagination_exists(html)
         self.assertTrue(pe)
 
+    def test37(self):
+        u""""
+            Проверяем на наличие капчи. captcha_id стал необязательным
+        """
+
+        html = self.get_data('google-captcha-2016-09-29.html')
+        g = GoogleParser(html)
+        captcha = g.get_captcha_data()
+        self.assertTrue(bool(captcha))
+
+
     def print_sn(self, res):
         for i in res['sn']:
             print

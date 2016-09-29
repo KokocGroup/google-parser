@@ -241,7 +241,7 @@ class GoogleParser(object):
 
         return {
             'url': 'https://www.google.com' + match_captcha[0].replace('&amp;', '&'),
-            'captcha_id': match_captcha_id[0],
+            'captcha_id': match_captcha_id[0] if match_captcha_id else  '',
             'captcha_coninue': match_captcha_coninue[0].replace('&amp;', '&')
         }
 
