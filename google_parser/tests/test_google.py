@@ -545,6 +545,28 @@ class GoogleParserTestCase(GoogleParserTests):
         captcha = g.get_captcha_data()
         self.assertTrue(bool(captcha))
 
+    def test38(self):
+        u""""
+            Проверка подозрительной выдачи
+        """
+        html = self.get_data('2016-11-10.html')
+        g = GoogleParser(html)
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+        self.assertEqual(res['pc'], 560000)
+        self.assertEqual(len(res['sn']), 100)
+
+        self.assertEqual(res['sn'][0]['t'], u'ПАО «СОЛЬ РУСИ»')
+        self.assertEqual(res['sn'][0]['u'], u'http://www.solrusi.ru/')
+        self.assertEqual(res['sn'][0]['d'], 'solrusi.ru')
+
+        self.assertEqual(res['sn'][99]['t'], u'Сохранение и приумножение денежных средств в период кризиса ...')
+        self.assertEqual(res['sn'][99]['u'], u'http://investtalk.ru/forum/topic/19806-sokhranenie-i-priumnozhenie-denezhnykh-sredstv-v-p/')
+        self.assertEqual(res['sn'][99]['d'], 'investtalk.ru')
+
+        pe = GoogleParser.pagination_exists(html)
+        self.assertTrue(pe)
 
     def print_sn(self, res):
         for i in res['sn']:
