@@ -262,6 +262,32 @@ class GoogleParser(object):
             result &= bool(pattern.search(self.content))
         return result
 
+    def get_context_snippet_title(self, content):
+        res = re.search(ur'<h3>\s*<a[^>]+?></a>\s*<a[^>]*?href="([^"]+?)"[^>]*?>\s*(.*?)\s*</a>\s*</h3>', content, re.I | re.M | re.S)
+        if not res:
+            raise BadGoogleParserError(u'Не удалось распарсить тайтл в сниппете: {0}'.format(content))
+        return {'u': SnippetsParserDefault.format_context_link(res.group(1)), 't': res.group(2)}
+
+    def get_context_visible_url(self, content):
+        res = re.search(ur'<div\s*class="ads-visurl">.*?<cite\s*class="_WGk"[^>]*?>\s*(.*?)\s*</cite>', content, re.I | re.M | re.S)
+        if not res:
+            return
+        return SnippetsParserDefault.strip_tags(res.group(1))
+
+    def get_context_serp(self):
+        snippets = re.findall(
+            ur'(<li class="ads-ad"(?:\s*data-hveid="\d+")?>.*?(?:</ul>|</div>)\s*</li>)',
+            self.content,
+            re.I | re.M | re.S
+        )
+        sn = []
+        for snippet in snippets:
+            item = self.get_context_snippet_title(snippet)
+            item['vu'] = self.get_context_visible_url(snippet)
+            sn.append(item)
+
+        return {'pc': len(sn), 'sn': sn}
+
     def get_serp(self):
         if self.is_not_found():
             return {'pc': 0, 'sn': []}
@@ -416,7 +442,7 @@ class SnippetsParserDefault(object):
     def _parse_title_snippet(self, snippet, position):
         res = re.compile(ur'<h3 class="r">.*?<a[^>]+?href="([^"]+?)"[^>]*?>(.*?)</a>', re.I | re.M | re.S).search(snippet)
         if res:
-            return self._strip_tags(res.group(2)), self._format_link(res.group(1)),
+            return SnippetsParserDefault.strip_tags(res.group(2)), SnippetsParserDefault.format_link(res.group(1)),
         raise SnippetsParserException(u'Parsing error. Broken snippet at {0}: {1}'.format(position, snippet))
 
     def _is_image_snippet(self, url):
@@ -425,7 +451,8 @@ class SnippetsParserDefault(object):
     def _is_map_snippet(self, url):
         return 'maps.google' in url
 
-    def _format_link(self, link):
+    @classmethod
+    def format_link(cls, link):
         link = link.replace('&amp;', '&')
 
         patterns = [
@@ -441,18 +468,27 @@ class SnippetsParserDefault(object):
                 return res.group(1)
         return link
 
+    @classmethod
+    def format_context_link(cls, link):
+        link = SnippetsParserDefault.format_link(link)
+
+        if link.startswith('/aclk?'):
+            link = 'https://www.google.ru' + link
+        return link
+
     def _parse_description_img_snippet(self, snippet):
         res = re.compile(ur'<div>(.*?)</div>', re.I | re.M | re.S).search(snippet)
         if res:
-            return self._strip_tags(res.group(1))
+            return SnippetsParserDefault.strip_tags(res.group(1))
         raise BadGoogleParserError(u'не удалось найти описание сниппета: {}'.format(snippet))
 
     def _parse_description_snippet(self, snippet):
         res = re.compile(ur'<span class="st">(.*?)</span>', re.I | re.M | re.S).search(snippet)
         if res:
-            return self._strip_tags(res.group(1))
+            return SnippetsParserDefault.strip_tags(res.group(1))
 
-    def _strip_tags(self, html):
+    @classmethod
+    def strip_tags(self, html):
         return re.sub(ur' {2,}', ' ', re.sub(ur'<[^>]*?>', '', html.replace('&nbsp;', ' '))).strip()
 
     def _get_host(self, html):

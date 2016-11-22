@@ -251,10 +251,10 @@ class GoogleParserTestCase(GoogleParserTests):
         """
         g = SnippetsParserDefault([])
 
-        result = g._format_link('/interstitial?url=http://podokon.ru/podokonniki-rehau/')
+        result = SnippetsParserDefault.format_link('/interstitial?url=http://podokon.ru/podokonniki-rehau/')
         self.assertEqual(result, 'http://podokon.ru/podokonniki-rehau/')
 
-        result = g._format_link('/interstitial?url=http://podokon.ru/podokonniki-rehau/&a=')
+        result = SnippetsParserDefault.format_link('/interstitial?url=http://podokon.ru/podokonniki-rehau/&a=')
         self.assertEqual(result, 'http://podokon.ru/podokonniki-rehau/')
 
     def test19(self):
@@ -568,13 +568,74 @@ class GoogleParserTestCase(GoogleParserTests):
         pe = GoogleParser.pagination_exists(html)
         self.assertTrue(pe)
 
+    def test39(self):
+        u""""
+            Проверка подозрительной выдачи
+        """
+        html = self.get_data('context-2016-11-22.html')
+        g = GoogleParser(html)
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_context_serp()
+
+        self.assertEqual(res['pc'], 7)
+
+        self.assertEqual(res['sn'][0]['t'], u'Столешницы из настоящего камня - Элегантные и надежные‎')
+        self.assertEqual(res['sn'][0]['u'], u'http://www.kamentorg.ru/stones/natural_stone_products/countertops/')
+        self.assertEqual(res['sn'][0]['vu'], u'www.kamentorg.ru/')
+
+        self.assertEqual(res['sn'][1]['t'], u'Кухонные столешницы ИКЕА - IKEA.com‎')
+        self.assertEqual(res['sn'][1]['u'], u'http://www.ikea.com/ru/ru/catalog/categories/departments/kitchen/24264/?cid=ps%257Cru%257Ckitchen_furniture%257C201607211330081986_3249')
+        self.assertEqual(res['sn'][1]['vu'], u'www.ikea.com/ru/столешницы_икеа')
+
+        self.assertEqual(res['sn'][6]['t'], u'Гранитные подоконники‎')
+        self.assertEqual(res['sn'][6]['u'], u'https://www.fabrikaokon.ru/podokonniki.html?utm_campaign=Podokonniki_google&utm_medium=cpc&utm_source=google&utm_content=Granitnye_podokonniki&utm_term=Granitnye_podokonniki')
+        self.assertEqual(res['sn'][6]['vu'], u'www.fabrikaokon.ru/подоконники')
+
+    def test40(self):
+        u""""
+            Проверка подозрительной выдачи
+        """
+        html = self.get_data('context-no-2016-11-22.html')
+        g = GoogleParser(html)
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_context_serp()
+
+        self.assertEqual(res['pc'], 0)
+        self.assertEqual(res['sn'], [])
+
+    def test41(self):
+        u""""
+            Проверка подозрительной выдачи
+        """
+        html = self.get_data('context-only-bottom-2016-11-22.html')
+        g = GoogleParser(html)
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_context_serp()
+
+        self.assertEqual(res['pc'], 3)
+
+        self.assertEqual(res['sn'][0]['t'], u'Продать Машину дорого - Продать выгодно на CarPrice.ru‎')
+        self.assertEqual(res['sn'][0]['u'], u'https://www.carprice.ru/?utm_source=google&utm_medium=dm_cpc_sell&utm_campaign=%5B%D0%B0%D0%B2%D1%82%D0%BE%5D%7Bb%7D%3ARussia&utm_adgroup=%5B%D0%B0%D0%B2%D1%82%D0%BE%7C%D0%B0%D0%B2%D1%82%D0%BE%D0%BC%D0%BE%D0%B1%D0%B8%D0%BB%D1%8C%7C%D1%81%D0%B0%D0%BB%D0%BE%D0%BD%7C%D0%BF%D1%80%D0%BE%D0%B1%D0%B5%D0%B3%D0%BE%D0%BC%7C%D0%BA%D0%B0%D0%B7%D0%B0%D0%BD%D1%8C%5D%7Bb%7D%3ARussia&utm_content=12_cat.12_cat.23_shop.31_used.41_region&utm_term=%2B%D0%B0%D0%B2%D1%82%D0%BE%D0%BC%D0%BE%D0%B1%D0%B8%D0%BB%D0%B8%20%2B%D1%81%20%2B%D0%BF%D1%80%D0%BE%D0%B1%D0%B5%D0%B3%D0%BE%D0%BC%20%2B%D0%BA%D0%B0%D0%B7%D0%B0%D0%BD%D1%8C%20%2B%D0%B0%D0%B2%D1%82%D0%BE%D1%81%D0%B0%D0%BB%D0%BE%D0%BD')
+        self.assertEqual(res['sn'][0]['vu'], u'www.carprice.ru/Акция/Получить-10000р')
+
+        self.assertEqual(res['sn'][1]['t'], u'Ищете автомобиль с пробегом? - Взгляните на автомобили Nissan‎')
+        self.assertEqual(res['sn'][1]['u'], u'http://www.used.nissan.ru/ru.RU/homepage.htm?cid=psnsnusdcrsofnsvRU_runaomdlocruggppcsrch&utm_source=google_network&utm_medium=cpc&utm_campaign=used_cars&utm_content=offensive&utm_term=%D0%BA%D1%83%D0%BF%D0%B8%D1%82%D1%8C%20%D0%BC%D0%B0%D1%88%D0%B8%D0%BD%D1%83%20%D1%81%D0%BF%D0%B1%20%D0%BF%D0%BE%D0%B4%D0%B5%D1%80%D0%B6%D0%B0%D0%BD%D0%BD%D1%83%D1%8E&s_kwcid=AL!84!3!101927968856!b!!g!!%D0%BA%D1%83%D0%BF%D0%B8%D1%82%D1%8C%20%D0%BC%D0%B0%D1%88%D0%B8%D0%BD%D1%83%20%D1%81%D0%BF%D0%B1%20%D0%BF%D0%BE%D0%B4%D0%B5%D1%80%D0%B6%D0%B0%D0%BD%D0%BD%D1%83%D1%8E')
+        self.assertEqual(res['sn'][1]['vu'], u'used.nissan.ru/Ниссан_с_пробегом')
+
+        self.assertEqual(res['sn'][2]['t'], u'Продажа Новых и Б/У Авто. - Тысячи Авто по Низкой Цене.‎')
+        self.assertEqual(res['sn'][2]['u'], u'https://www.google.ru/aclk?sa=l&ai=DChcSEwjU-vahrrzQAhXiC3MKHYBpC7UYABAJ&sig=AOD64_3NG_BERrn-lMcUBxKvVXtAnrguUA&adurl=&q=')
+        self.assertEqual(res['sn'][2]['vu'], u'www.avtopoisk.ru/')
+
     def print_sn(self, res):
         for i in res['sn']:
             print
-            print i['p']
-            print i['u']
-            print i['t']
-            print i['s']
+            print i.get('p')
+            print i.get('u')
+            print i.get('t')
+            print i.get('s')
 
 
     def check2(self, snippets, founded):
