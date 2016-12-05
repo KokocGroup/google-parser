@@ -629,6 +629,29 @@ class GoogleParserTestCase(GoogleParserTests):
         self.assertEqual(res['sn'][2]['u'], u'https://www.google.ru/aclk?sa=l&ai=DChcSEwjU-vahrrzQAhXiC3MKHYBpC7UYABAJ&sig=AOD64_3NG_BERrn-lMcUBxKvVXtAnrguUA&adurl=&q=')
         self.assertEqual(res['sn'][2]['vu'], u'www.avtopoisk.ru/')
 
+    def test42(self):
+        u""""
+            Проверка подозрительной выдачи
+        """
+        html = self.get_data('2016-12-05.html')
+        g = GoogleParser(html)
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+        self.assertEqual(res['pc'], 355000)
+        self.assertEqual(len(res['sn']), 6)
+
+        self.assertEqual(res['sn'][0]['t'], u'Лизинг для юридических и физических лиц - Европлан лизинговая ...')
+        self.assertEqual(res['sn'][0]['u'], u'https://europlan.ru/')
+        self.assertEqual(res['sn'][0]['d'], 'europlan.ru')
+
+        self.assertEqual(res['sn'][5]['t'], u'Вакансии компании Европлан - работа в Москве, Нижнем ... - HH.ru')
+        self.assertEqual(res['sn'][5]['u'], u'https://hh.ru/employer/1329')
+        self.assertEqual(res['sn'][5]['d'], 'hh.ru')
+
+        pe = GoogleParser.pagination_exists(html)
+        self.assertTrue(pe)
+
     def print_sn(self, res):
         for i in res['sn']:
             print
