@@ -199,7 +199,7 @@ class GoogleParser(object):
     )
     # Ключ картинки
     captcha_id_regexp = re.compile(
-        '<input.*?name=\"id\".*?value=\"([^\"]+)\".*?>',
+        '<input.*?name=\"id\".*?value=\"([^\"]*)\".*?>',
         re.DOTALL | re.IGNORECASE | re.UNICODE | re.MULTILINE
     )
     # Путь куда редиректить
@@ -239,10 +239,16 @@ class GoogleParser(object):
         match_captcha_id = self.captcha_id_regexp.findall(self.content)
         match_captcha_coninue = self.captcha_continue_regexp.findall(self.content)
 
+        q = ''
+        q_match = re.search(ur"name=(?:'|\")q(?:'|\")\s*value=(?:'|\")([^'\"]*)(?:'|\")", self.content, re.I | re.M | re.S)
+        if q_match:
+            q = q_match.group(1)
+
         return {
             'url': 'https://www.google.com' + match_captcha[0].replace('&amp;', '&'),
             'captcha_id': match_captcha_id[0] if match_captcha_id else  '',
-            'captcha_coninue': match_captcha_coninue[0].replace('&amp;', '&')
+            'captcha_coninue': match_captcha_coninue[0].replace('&amp;', '&'),
+            'q': q
         }
 
     def is_blocked(self):

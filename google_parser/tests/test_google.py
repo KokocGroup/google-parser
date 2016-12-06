@@ -652,6 +652,18 @@ class GoogleParserTestCase(GoogleParserTests):
         pe = GoogleParser.pagination_exists(html)
         self.assertTrue(pe)
 
+    def test43(self):
+        u""""
+            Проверяем на наличие капчи
+        """
+        html = self.get_data('google-captcha-2016-12-06.html')
+        g = GoogleParser(html)
+        captcha = g.get_captcha_data()
+        self.assertEqual(captcha['url'], 'https://www.google.com/sorry/image?id=14827882021952570767&q=EgQfuMqHGKadm8IFIhkA8aeDSy6Evqypj5j85OIT5nrl-YB2Nl3HMgFj&hl=ru&continue=https://www.google.ru/search%3Fnewwindow%3D1%26espv%3D2%26q%3D%25D0%25B2%25D0%25B8%25D0%25BD%25D0%25B4%25D0%25B7%25D0%25BE%25D1%2580%2520%25D1%2581%25D0%25BF%25D0%25B1%26oq%3D%25D0%25BA%25D1%2583%25D0%25BF%25D0%25B8%25D1%2582%25D1%258C%2520%25D0%25BA%25D0%25B0%25D0%25BF%25D0%25BA%25D0%25B5%25D0%25B9%25D0%25BA%25D0%25B8%25208cQQRlUX%26gs_l%3Dserp.3.o..32.58329.0.98603.55.8.0.0.0.0.0.0..0.0....0...1c.1.64.serp..55.0.0.jDrNJUKQ')
+        self.assertEqual(captcha['captcha_coninue'], 'https://www.google.ru/search?newwindow=1&espv=2&q=%D0%B2%D0%B8%D0%BD%D0%B4%D0%B7%D0%BE%D1%80%20%D1%81%D0%BF%D0%B1&oq=%D0%BA%D1%83%D0%BF%D0%B8%D1%82%D1%8C%20%D0%BA%D0%B0%D0%BF%D0%BA%D0%B5%D0%B9%D0%BA%D0%B8%208cQQRlUX&gs_l=serp.3.o..32.58329.0.98603.55.8.0.0.0.0.0.0..0.0....0...1c.1.64.serp..55.0.0.jDrNJUKQ')
+        self.assertEqual(captcha['captcha_id'], '')
+        self.assertEqual(captcha['q'], u'EgQfuMqHGKadm8IFIhkA8aeDSy6Evqypj5j85OIT5nrl-YB2Nl3HMgFj')
+
     def print_sn(self, res):
         for i in res['sn']:
             print
