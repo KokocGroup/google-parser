@@ -664,6 +664,29 @@ class GoogleParserTestCase(GoogleParserTests):
         self.assertEqual(captcha['captcha_id'], '')
         self.assertEqual(captcha['q'], u'EgQfuMqHGKadm8IFIhkA8aeDSy6Evqypj5j85OIT5nrl-YB2Nl3HMgFj')
 
+    def test44(self):
+        u""""
+            Проверка подозрительной выдачи
+        """
+        html = self.get_data('2016-12-15.html')
+        g = GoogleParser(html)
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+        self.assertEqual(res['pc'], 927000)
+        self.assertEqual(len(res['sn']), 100)
+
+        self.assertEqual(res['sn'][0]['t'], u'ПАО Соль Руси: отзывы сотрудников о работодателе, компания ...')
+        self.assertEqual(res['sn'][0]['u'], u'http://pravda-sotrudnikov.ru/company/pao-sol-rusi')
+        self.assertEqual(res['sn'][0]['d'], 'pravda-sotrudnikov.ru')
+
+        self.assertEqual(res['sn'][99]['t'], u'Заработать денег. альфа брокер отзывы - Заработок в сети')
+        self.assertEqual(res['sn'][99]['u'], u'http://xwebo.ru/search?q=%D0%B0%D0%BB%D1%8C%D1%84%D0%B0+%D0%B1%D1%80%D0%BE%D0%BA%D0%B5%D1%80+%D0%BE%D1%82%D0%B7%D1%8B%D0%B2%D1%8B')
+        self.assertEqual(res['sn'][99]['d'], 'xwebo.ru')
+
+        pe = GoogleParser.pagination_exists(html)
+        self.assertTrue(pe)
+
     def print_sn(self, res):
         for i in res['sn']:
             print

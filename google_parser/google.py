@@ -518,6 +518,9 @@ class SnippetsParserAfter_2016_03_10(SnippetsParserDefault):
         result = []
         position = 0
         for body in res:
+            # вырезаем отзывы
+            body = re.sub(ur'<div class="g mnr-c g-blk".*?<div class="kno-ftr">\s*', '', body, re.I | re.M | re.S)
+
             snippets = self.snippets_regexp.findall(body)
             for snippet in snippets:
                 position += 1
