@@ -268,6 +268,23 @@ class GoogleParser(object):
             result &= bool(pattern.search(self.content))
         return result
 
+    def is_recaptcha_suspicious_traffic(self):
+        patterns = [
+            re.compile(
+                ur'Мы зарегистрировали подозрительный трафик, исходящий из вашей сети. С помощью', re.I | re.M | re.S
+            ),
+            re.compile(
+                ur'<a href="//support\.google\.com/websearch/answer/86640">Подробнее\.\.\.</a>', re.I | re.M | re.S
+            ),
+            re.compile(
+                ur'class="g-recaptcha"', re.I | re.M | re.S
+            ),
+        ]
+        result = True
+        for pattern in patterns:
+            result &= bool(pattern.search(self.content))
+        return result
+
     def get_context_snippet_title(self, content):
         res = re.search(ur'<h3>\s*<a[^>]+?></a>\s*<a[^>]*?href="([^"]+?)"[^>]*?>\s*(.*?)\s*</a>\s*</h3>', content, re.I | re.M | re.S)
         if not res:

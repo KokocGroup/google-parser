@@ -687,6 +687,23 @@ class GoogleParserTestCase(GoogleParserTests):
         pe = GoogleParser.pagination_exists(html)
         self.assertTrue(pe)
 
+    def test45(self):
+        u""""
+            Проверка подозрительной выдачи
+        """
+        html = self.get_data('2017-03-17.html')
+        g = GoogleParser(html)
+        self.assertTrue(g.is_recaptcha_suspicious_traffic())
+
+
+        html = self.get_data('2016-12-15.html')
+        g = GoogleParser(html)
+        self.assertFalse(g.is_recaptcha_suspicious_traffic())
+
+        html = self.get_data('google-captcha-2016-12-06.html')
+        g = GoogleParser(html)
+        self.assertFalse(g.is_recaptcha_suspicious_traffic())
+
     def print_sn(self, res):
         for i in res['sn']:
             print
