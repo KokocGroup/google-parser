@@ -1,5 +1,5 @@
 #! coding: utf-8
-
+import json
 import re
 import unicodedata
 import urllib
@@ -332,7 +332,7 @@ class GoogleParser(object):
             return True
 
         res = re.search(
-            ur'<td>\s*<a\s*class="fl"\s*href="/search', content, re.I | re.M | re.S
+            ur'<td>\s*<a[^>]+class="fl"\s*href="/search', content, re.I | re.M | re.S
         )
         if res:
             return True
@@ -561,3 +561,40 @@ class SnippetsParserAfter_2016_03_10(SnippetsParserDefault):
             result = result[1:]
 
         return result
+
+
+class GoogleJsonParser(GoogleParser):
+    def __init__(self, content, xhtml_snippet=False, snippet_fields=('d', 'p', 'u', 't', 's', 'm')):
+        content = self._prepare_content(content)
+        super(GoogleJsonParser, self).__init__(content, xhtml_snippet=False, snippet_fields=snippet_fields)
+
+    def _get_need_blocks(self, content):
+        ret = ''
+
+        blocks = content.split('/*""*/')
+        for block in blocks:
+
+            block = block.strip()
+            if not block:
+                continue
+
+            d = json.loads(block).get('d', '')
+            if '"i":"search"' in d or '"i":"appbar"' in d or '"i":"xjs"' in d or '"i":"topstuff"' in d:
+                ret += d
+        return ret
+
+    def _prepare_content(self, content):
+        need_blocks = self._get_need_blocks(content)
+        je_apis = re.findall(ur'<script>je.api\((.*?)\);</script>', need_blocks, re.I | re.M | re.S)
+        ret = '<body><div class="srg">'
+        for je_api in je_apis:
+            if '"i":"search"' not in je_api and '"i":"appbar"' not in je_api and '"i":"xjs"' not in je_api and '"i":"topstuff"' not in je_api:
+                continue
+
+            match = re.search(ur'"h":"(.*?)"', je_api, re.I | re.M | re.S)
+            if not match:
+                continue
+
+            ret += match.group(1).decode('string_escape').decode('raw_unicode_escape')
+        ret += '<hr class=""></body>'
+        return ret

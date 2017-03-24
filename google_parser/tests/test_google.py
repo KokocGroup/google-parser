@@ -3,7 +3,7 @@ import json
 
 import unittest
 from google_parser.tests import GoogleParserTests
-from google_parser.google import GoogleParser, SnippetsParserDefault
+from google_parser.google import GoogleParser, SnippetsParserDefault, GoogleJsonParser
 from google_parser.google_query import GoogleQuery
 
 
@@ -703,6 +703,175 @@ class GoogleParserTestCase(GoogleParserTests):
         html = self.get_data('google-captcha-2016-12-06.html')
         g = GoogleParser(html)
         self.assertFalse(g.is_recaptcha_suspicious_traffic())
+
+    def test46(self):
+        u""""
+            Проверка подозрительной выдачи
+        """
+        html = self.get_data('2017-03-24-5470000000.txt')
+        g = GoogleJsonParser(html)
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+        self.assertEqual(res['pc'], 5460000000)
+        self.assertEqual(len(res['sn']), 49)
+
+        self.assertEqual(res['sn'][0]['t'], u'Добро пожаловать | ВКонтакте')
+        self.assertEqual(res['sn'][0]['u'], u'https://vk.com/')
+        self.assertEqual(res['sn'][0]['d'], 'vk.com')
+
+        self.assertEqual(res['sn'][48]['t'], u'Пора выбирать — Алексей Навальный')
+        self.assertEqual(res['sn'][48]['u'], u'https://2018.navalny.com/')
+        self.assertEqual(res['sn'][48]['d'], '2018.navalny.com')
+
+        pe = GoogleParser.pagination_exists(g.content)
+        self.assertTrue(pe)
+
+    def test47(self):
+        u""""
+            Проверка подозрительной выдачи
+        """
+        html = self.get_data('2017-03-24-60100.txt')
+        g = GoogleJsonParser(html)
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+        self.assertEqual(res['pc'], 60000)
+        self.assertEqual(len(res['sn']), 49)
+
+        self.assertEqual(res['sn'][0]['t'], u'ываыва - YouTube')
+        self.assertEqual(res['sn'][0]['u'], u'https://www.youtube.com/watch?v=mnXrfQ559NY')
+        self.assertEqual(res['sn'][0]['d'], 'youtube.com')
+
+        self.assertEqual(res['sn'][48]['t'], u'ываываыва ываыва - EuroShop')
+        self.assertEqual(res['sn'][48]['u'], u'http://euroshop.kiev.ua/bytovaya-himiya')
+        self.assertEqual(res['sn'][48]['d'], 'euroshop.kiev.ua')
+
+        pe = GoogleParser.pagination_exists(g.content)
+        self.assertTrue(pe)
+
+    def test48(self):
+        u""""
+            Проверка подозрительной выдачи
+        """
+        html = self.get_data('2017-03-24-1600.txt')
+        g = GoogleJsonParser(html)
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+        self.assertEqual(res['pc'], 1600)
+        self.assertEqual(len(res['sn']), 50)
+
+        self.assertEqual(res['sn'][0]['t'], u'выаываыв - YouTube')
+        self.assertEqual(res['sn'][0]['u'], u'https://www.youtube.com/watch?v=sDthlTYB1lA')
+        self.assertEqual(res['sn'][0]['d'], 'youtube.com')
+
+        self.assertEqual(res['sn'][49]['t'], u'выаываыв, Родионово-Несветайская / rusbody.com')
+        self.assertEqual(res['sn'][49]['u'], u'http://rusbody.com/id12593')
+        self.assertEqual(res['sn'][49]['d'], 'rusbody.com')
+
+        pe = GoogleParser.pagination_exists(g.content)
+        self.assertTrue(pe)
+
+    def test49(self):
+        u""""
+            Проверка подозрительной выдачи
+        """
+        html = self.get_data('2017-03-24-820.txt')
+        g = GoogleJsonParser(html)
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+        self.assertEqual(res['pc'], 812)
+        self.assertEqual(len(res['sn']), 50)
+
+        self.assertEqual(res['sn'][0]['t'], u'Выаываыв Ываыва | ВКонтакте')
+        self.assertEqual(res['sn'][0]['u'], u'https://vk.com/id79486428')
+        self.assertEqual(res['sn'][0]['d'], 'vk.com')
+
+        self.assertEqual(res['sn'][49]['t'], u'Все писатели и поэты - Вам сюда! - 31 страница » Ниндзя ...')
+        self.assertEqual(res['sn'][49]['u'], u'https://jut.su/forum/dninjas/topic-31050-page-31.html')
+        self.assertEqual(res['sn'][49]['d'], 'jut.su')
+
+        pe = GoogleParser.pagination_exists(g.content)
+        self.assertTrue(pe)
+
+    def test50(self):
+        u""""
+            Проверка подозрительной выдачи
+        """
+        html = self.get_data('2017-03-24-50.txt')
+        g = GoogleJsonParser(html)
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+        self.assertEqual(res['pc'], 2870000)
+        self.assertEqual(len(res['sn']), 50)
+
+        self.assertEqual(res['sn'][0]['t'], u'Такси Владивосток | Заказать такси | Дешевое такси |Приложение ...')
+        self.assertEqual(res['sn'][0]['u'], u'http://vlad.vostok-taxi.ru/')
+        self.assertEqual(res['sn'][0]['d'], 'vlad.vostok-taxi.ru')
+
+        self.assertEqual(res['sn'][49]['t'], u'Такси 2412 — Заказ такси через мобильное приложение или ...')
+        self.assertEqual(res['sn'][49]['u'], u'http://taxi2412.ru/')
+        self.assertEqual(res['sn'][49]['d'], 'taxi2412.ru')
+
+        pe = GoogleParser.pagination_exists(g.content)
+        self.assertTrue(pe)
+
+    def test51(self):
+        u""""
+            Проверка подозрительной выдачи
+        """
+        html = self.get_data('2017-03-24-8.txt')
+        g = GoogleJsonParser(html)
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+        self.assertEqual(res['pc'], 8)
+        self.assertEqual(len(res['sn']), 8)
+
+        self.assertEqual(res['sn'][0]['t'], u'Главная - Инструмент Сервис')
+        self.assertEqual(res['sn'][0]['u'], u'http://service124.ru/')
+        self.assertEqual(res['sn'][0]['d'], 'service124.ru')
+
+        self.assertEqual(res['sn'][7]['t'], u'Sibnet • Чат знакомств, онлайн общение')
+        self.assertEqual(res['sn'][7]['u'], u'http://chat.sibnet.ru/?history&date=2007-10-30&all=1')
+        self.assertEqual(res['sn'][7]['d'], 'chat.sibnet.ru')
+
+        pe = GoogleParser.pagination_exists(g.content)
+        self.assertFalse(pe)
+
+    def test52(self):
+        u""""
+            Проверка подозрительной выдачи
+        """
+        html = self.get_data('2017-03-24-1.txt')
+        g = GoogleJsonParser(html)
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+        self.assertEqual(res['pc'], 1)
+        self.assertEqual(len(res['sn']), 1)
+
+        self.assertEqual(res['sn'][0]['t'], u'Продам все это! - BeOn')
+        self.assertEqual(res['sn'][0]['u'], u'http://beon.ru/buy-sell/7664-873-prodam-vse-jeto-read.shtml')
+        self.assertEqual(res['sn'][0]['d'], 'beon.ru')
+
+        pe = GoogleParser.pagination_exists(g.content)
+        self.assertFalse(pe)
+
+    def test53(self):
+        u""""
+            Проверка подозрительной выдачи
+        """
+        html = self.get_data('2017-03-24-0.txt')
+        g = GoogleJsonParser(html)
+        self.assertFalse(g.is_suspicious_traffic())
+        self.assertTrue(g.is_not_found())
+
+        pe = GoogleParser.pagination_exists(g.content)
+        self.assertFalse(pe)
 
     def print_sn(self, res):
         for i in res['sn']:
