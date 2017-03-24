@@ -873,6 +873,29 @@ class GoogleParserTestCase(GoogleParserTests):
         pe = GoogleParser.pagination_exists(g.content)
         self.assertFalse(pe)
 
+    def test54(self):
+        u""""
+            Проверка подозрительной выдачи
+        """
+        html = self.get_data('2017-03-24-unicodeerror.txt')
+        g = GoogleJsonParser(html)
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+        self.assertEqual(res['pc'], 16100)
+        self.assertEqual(len(res['sn']), 100)
+
+        self.assertEqual(res['sn'][0]['t'], u'UPVEL UR-315BN: Wi-Fi роутер стандарта 802.11n 150 Мбит/с с ...')
+        self.assertEqual(res['sn'][0]['u'], u'http://upvel.ru/items/ur-315bn.html')
+        self.assertEqual(res['sn'][0]['d'], 'upvel.ru')
+
+        self.assertEqual(res['sn'][99]['t'], u'WiFi РОУТЕРЫ РОСТЕЛЕКОМ + Лучший провайдер WiFi Интернет ...')
+        self.assertEqual(res['sn'][99]['u'], u'http://tv1.moscow/%D0%B8%D0%BD%D1%82%D0%B5%D1%80%D0%BD%D0%B5%D1%82-%D0%BC%D0%B0%D0%B3%D0%B0%D0%B7%D0%B8%D0%BD/')
+        self.assertEqual(res['sn'][99]['d'], 'tv1.moscow')
+
+        pe = GoogleParser.pagination_exists(g.content)
+        self.assertTrue(pe)
+
     def print_sn(self, res):
         for i in res['sn']:
             print

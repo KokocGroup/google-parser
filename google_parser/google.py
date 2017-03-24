@@ -595,6 +595,6 @@ class GoogleJsonParser(GoogleParser):
             if not match:
                 continue
 
-            ret += match.group(1).decode('string_escape').decode('raw_unicode_escape')
+            ret += match.group(1).decode('string_escape').decode('raw_unicode_escape', 'ignore')
         ret += '<hr class=""></body>'
         return ret
