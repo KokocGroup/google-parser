@@ -412,6 +412,10 @@ class SnippetsParserDefault(object):
             snippets = self.snippets_regexp.findall(body)
             for snippet in snippets:
 
+                # игнорим расписание
+                if 'rrecc' in snippet:
+                    continue
+
                 position += 1
 
                 try:

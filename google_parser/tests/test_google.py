@@ -896,6 +896,29 @@ class GoogleParserTestCase(GoogleParserTests):
         pe = GoogleParser.pagination_exists(g.content)
         self.assertTrue(pe)
 
+    def test55(self):
+        u""""
+            Проверка подозрительной выдачи
+        """
+        html = self.get_data('2017-03-27.txt')
+        g = GoogleJsonParser(html)
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+        self.assertEqual(res['pc'], 444000)
+        self.assertEqual(len(res['sn']), 10)
+
+        self.assertEqual(res['sn'][0]['t'], u'Автобусы Ульяновск - Нижний Новгород (от 1122 руб.)')
+        self.assertEqual(res['sn'][0]['u'], u'https://www.avtovokzaly.ru/avtobus/ulyanovsk-nizhnij')
+        self.assertEqual(res['sn'][0]['d'], 'avtovokzaly.ru')
+
+        self.assertEqual(res['sn'][9]['t'], u'Расписание автобусов Ульяновск - Нижний Новгород - TMzilla.com')
+        self.assertEqual(res['sn'][9]['u'], u'http://www.tmzilla.com/bus/destination-from-19-to-4.html')
+        self.assertEqual(res['sn'][9]['d'], 'tmzilla.com')
+
+        pe = GoogleParser.pagination_exists(g.content)
+        self.assertTrue(pe)
+
     def print_sn(self, res):
         for i in res['sn']:
             print
