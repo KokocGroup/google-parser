@@ -590,7 +590,7 @@ class GoogleJsonParser(GoogleParser):
     def _prepare_content(self, content):
         need_blocks = self._get_need_blocks(content)
         je_apis = re.findall(ur'<script>je.api\((.*?)\);</script>', need_blocks, re.I | re.M | re.S)
-        ret = '<body><div class="srg">'
+        ret = '<body><div class="med" id="res" role="main"><div class="srg">'
         for je_api in je_apis:
             if '"i":"search"' not in je_api and '"i":"appbar"' not in je_api and '"i":"xjs"' not in je_api and '"i":"topstuff"' not in je_api:
                 continue
@@ -600,5 +600,5 @@ class GoogleJsonParser(GoogleParser):
                 continue
 
             ret += match.group(1).decode('string_escape').decode('raw_unicode_escape', 'ignore')
-        ret += '<hr class=""></body>'
+        ret += '<hr class=""></div></body>'
         return ret

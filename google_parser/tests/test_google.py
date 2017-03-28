@@ -919,6 +919,29 @@ class GoogleParserTestCase(GoogleParserTests):
         pe = GoogleParser.pagination_exists(g.content)
         self.assertTrue(pe)
 
+    def test56(self):
+        u""""
+            Проверка подозрительной выдачи
+        """
+        html = self.get_data('2017-03-28.txt')
+        g = GoogleJsonParser(html)
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+        self.assertEqual(res['pc'], 595000)
+        self.assertEqual(len(res['sn']), 100)
+
+        self.assertEqual(res['sn'][0]['t'], u'ПАО «СОЛЬ РУСИ»')
+        self.assertEqual(res['sn'][0]['u'], u'http://solrusi.ru/')
+        self.assertEqual(res['sn'][0]['d'], 'solrusi.ru')
+
+        self.assertEqual(res['sn'][99]['t'], u'История соли - Соль: история и факты')
+        self.assertEqual(res['sn'][99]['u'], u'http://www.o-soli.ru/istoriya-soli/')
+        self.assertEqual(res['sn'][99]['d'], 'o-soli.ru')
+
+        pe = GoogleParser.pagination_exists(g.content)
+        self.assertTrue(pe)
+
     def print_sn(self, res):
         for i in res['sn']:
             print
