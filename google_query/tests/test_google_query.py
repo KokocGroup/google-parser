@@ -2,7 +2,7 @@
 
 
 import unittest
-from google_query import GoogleQuery
+from google_query import GoogleQuery, GoogleQueryError
 from google_query.tests import GoogleQueryTests
 
 
@@ -62,3 +62,17 @@ class GoogleParserTests(GoogleQueryTests):
     def test15(self):
         cookie = GoogleQuery.get_region_cookie(u'Марс')
         self.assertEquals(cookie, {})
+
+    def test16(self):
+        with self.assertRaises(GoogleQueryError) as e:
+            GoogleQuery.get_zone_and_region(u'Марс')
+
+    def test17(self):
+        res = GoogleQuery.get_zone_and_region(u'Москва')
+        self.assertEquals(res['uule'], 'a+cm9sZToxCnByb2R1Y2VyOjEyCnByb3ZlbmFuY2U6Ngp0aW1lc3RhbXA6IDE0OTI2MDk1MTAwMDAwMApsYXRsbmd7CmxhdGl0dWRlX2U3OjU1NzU1ODI2MApsb25naXR1ZGVfZTc6Mzc2MTczMDAwCn0KcmFkaXVzOjI5MTQw')
+        self.assertEquals(res['zone'], 'ru')
+
+    def test18(self):
+        res = GoogleQuery.get_zone_and_region(u'Казахстан')
+        self.assertEquals(res['uule'], 'a+cm9sZToxCnByb2R1Y2VyOjEyCnByb3ZlbmFuY2U6Ngp0aW1lc3RhbXA6IDE0OTI2MDk1MTAwMDAwMApsYXRsbmd7CmxhdGl0dWRlX2U3OjQ4MDE5NTczMApsb25naXR1ZGVfZTc6NjY5MjM2ODQwCn0KcmFkaXVzOjI5MTQw')
+        self.assertEquals(res['zone'], 'kz')
