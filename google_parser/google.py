@@ -376,7 +376,7 @@ class GoogleParser(object):
 
         if '<div class="med" id="res" role="main">' in self.content:
             return SnippetsParserAfter_2016_03_10(self.snippet_fields).get_snippets(self.content)
-        elif '<div class="srg">' in self.content:
+        elif '<div class="srg"' in self.content:
             return SnippetsParserDefault(self.snippet_fields).get_snippets(self.content)
         elif '<div id="search"><div id="ires">' in self.content:
             return SnippetsParserUnil_2015_07_23(self.snippet_fields).get_snippets(self.content)
@@ -602,3 +602,37 @@ class GoogleJsonParser(GoogleParser):
             ret += match.group(1).decode('string_escape').decode('raw_unicode_escape', 'ignore')
         ret += '<hr class=""></div></body>'
         return ret
+
+
+class GoogleMobileParser(GoogleParser):
+    def get_snippets(self):
+        res = re.compile('<body.*?</body>', re.DOTALL).search(self.content)
+        if not res:
+            raise NoBodyInResponseError()
+
+        if '<div class="srg"' in self.content:
+            return SnippetsMobileParserDefault(self.snippet_fields).get_snippets(self.content)
+        raise BadGoogleParserError()
+
+
+    @classmethod
+    def pagination_exists(cls, content):
+        res = re.search(
+            ur'<a[^>]+?id="pnnext"', content, re.I | re.M | re.S
+        )
+        if res:
+            return True
+
+        return False
+
+    def get_pagecount(self):
+        return None
+
+class SnippetsMobileParserDefault(SnippetsParserDefault):
+    snippets_regexp = re.compile(ur'<div class="g card-section">(.*?)</div>\s*<!--n-->\s*</div>', re.I | re.M | re.S)
+    result_regexp = re.compile(ur'(<div class="srg".*?(?:</div>\s*</div>\s*</div>\s*</div>\s*<div class))', re.I | re.M | re.S)
+
+    def _parse_description_snippet(self, snippet):
+        res = re.compile(ur'<span class="st">(.*?)</span>\s*</div>', re.I | re.M | re.S).search(snippet)
+        if res:
+            return SnippetsParserDefault.strip_tags(res.group(1))

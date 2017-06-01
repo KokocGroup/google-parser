@@ -3,7 +3,7 @@ import json
 
 import unittest
 from google_parser.tests import GoogleParserTests
-from google_parser.google import GoogleParser, SnippetsParserDefault, GoogleJsonParser
+from google_parser.google import GoogleParser, SnippetsParserDefault, GoogleJsonParser, GoogleMobileParser
 from google_parser.google_query import GoogleQuery
 
 
@@ -941,6 +941,144 @@ class GoogleParserTestCase(GoogleParserTests):
 
         pe = GoogleParser.pagination_exists(g.content)
         self.assertTrue(pe)
+
+    def test57(self):
+        u""""
+            Проверка подозрительной выдачи
+        """
+        html = self.get_data('2017-03-28.txt')
+        g = GoogleJsonParser(html)
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+        self.assertEqual(res['pc'], 595000)
+        self.assertEqual(len(res['sn']), 100)
+
+        self.assertEqual(res['sn'][0]['t'], u'ПАО «СОЛЬ РУСИ»')
+        self.assertEqual(res['sn'][0]['u'], u'http://solrusi.ru/')
+        self.assertEqual(res['sn'][0]['d'], 'solrusi.ru')
+
+        self.assertEqual(res['sn'][99]['t'], u'История соли - Соль: история и факты')
+        self.assertEqual(res['sn'][99]['u'], u'http://www.o-soli.ru/istoriya-soli/')
+        self.assertEqual(res['sn'][99]['d'], 'o-soli.ru')
+
+        pe = GoogleParser.pagination_exists(g.content)
+        self.assertTrue(pe)
+
+    def test58(self):
+        u""""
+            Проверка подозрительной выдачи
+        """
+        html = self.get_data('mobile-2017-06-01.html')
+        g = GoogleMobileParser(html)
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+        self.assertEqual(res['pc'], None)
+        self.assertEqual(len(res['sn']), 50)
+
+        self.assertEqual(res['sn'][0]['t'], u'Обеденные столы для кухни - купить обеденный стол от ...')
+        self.assertEqual(res['sn'][0]['s'], u'Mebelvia.ru предлагает обеденные столы от производителя в Москве. Вы можете купить обеденный стол с ...')
+        self.assertEqual(res['sn'][0]['u'], u'http://mebelvia.ru/katalog/kuhni_i_stolovye_gruppy/obedennie_stoli/')
+        self.assertEqual(res['sn'][0]['d'], 'mebelvia.ru')
+
+        self.assertEqual(res['sn'][49]['t'], u'куплю стол. Мебель. Столы и стулья. Южно-Сахалинск. Объявления Сахалина')
+        self.assertEqual(res['sn'][49]['s'], u'8 февр. 2017 г. - куплю маникюрный стол или стол подходящий для работы с клиентом, обязательно со шкафчиками в пределах 3000 тысяч предложение писать в ватсап ...')
+        self.assertEqual(res['sn'][49]['u'], u'https://market.sakh.com/1698962.html')
+        self.assertEqual(res['sn'][49]['d'], 'market.sakh.com')
+
+        pe = GoogleMobileParser.pagination_exists(html)
+        self.assertTrue(pe)
+
+    def test59(self):
+        u""""
+            Проверка подозрительной выдачи
+        """
+        html = self.get_data('mobile-2017-06-01-1.html')
+        g = GoogleMobileParser(html)
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+        self.assertEqual(res['pc'], None)
+        self.assertEqual(len(res['sn']), 5)
+
+        self.assertEqual(res['sn'][0]['t'], u'Обеденные столы. Купить стол обеденный в Москве - MKS-shop.ru')
+        self.assertEqual(res['sn'][0]['s'], u'Магазин MKS-shop предлагает большой выбор обеденных столов по выгодным ценам. Тел: 8 (800) 555- 75-12.')
+        self.assertEqual(res['sn'][0]['u'], u'http://www.mks-shop.ru/catalog/obedennye_stoly/')
+        self.assertEqual(res['sn'][0]['d'], 'mks-shop.ru')
+
+        self.assertEqual(res['sn'][4]['t'], u'Каталог обеденных столов за массива дерева от компании &quot;Стелла&quot; - Spbmebel.ru')
+        self.assertEqual(res['sn'][4]['s'], u'Обеденные столы из массива для дома, бара, ресторана и кафе от мебельной фабрики Стелла! ..... Вы можете выбрать понравившуюся модель из каталога или заказать уникальный стол, сделанный в ...')
+        self.assertEqual(res['sn'][4]['u'], u'http://www.spbmebel.ru/catalog/obed')
+        self.assertEqual(res['sn'][4]['d'], 'spbmebel.ru')
+
+        self.assertFalse(GoogleMobileParser.pagination_exists(html))
+
+    def test60(self):
+        u""""
+            Проверка подозрительной выдачи
+        """
+        html = self.get_data('mobile-2017-06-01-2.html')
+        g = GoogleMobileParser(html)
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+        self.assertEqual(res['pc'], 0)
+        self.assertEqual(len(res['sn']), 0)
+        self.assertFalse(GoogleMobileParser.pagination_exists(html))
+
+    def test61(self):
+        u""""
+            Проверка подозрительной выдачи
+        """
+        html = self.get_data('mobile-2017-06-01-3.html')
+        g = GoogleMobileParser(html)
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+        self.assertEqual(res['pc'], None)
+        self.assertEqual(len(res['sn']), 8)
+
+        self.assertEqual(res['sn'][0]['t'], u'фывафыва фывафыва - Одноклассники')
+        self.assertEqual(res['sn'][0]['s'], u'8 июл. 2016 г. - фывафыва фывафыва. 20 лет. Место проживания - Москва, Россия.')
+        self.assertEqual(res['sn'][0]['u'], u'https://m.ok.ru/profile/559406806336')
+        self.assertEqual(res['sn'][0]['d'], 'm.ok.ru')
+
+        self.assertEqual(res['sn'][1]['t'], u'Фывафыва Фывафыва | ВКонтакте')
+        self.assertEqual(res['sn'][1]['s'], u'Фывафыва Фывафыва, Harare, Зимбабве. Окончил школу Школа изучения системы игры в Counter-strike 1.6 в 2010, Harare. Войдите на сайт или зарегистрируйтесь, чтобы связаться с Фывафывой ...')
+        self.assertEqual(res['sn'][1]['u'], u'https://m.vk.com/0x00dec0de')
+        self.assertEqual(res['sn'][1]['d'], 'm.vk.com')
+
+        self.assertEqual(res['sn'][2]['t'], u'Необычное слово «фывафыва»')
+        self.assertEqual(res['sn'][2]['s'], u'Боимся, что слова фывафыва не существует. Если фывафыва существует, то мы Вам скорее всего ничем не поможем в поиске фывафыва. Но мы позволим себе предположить, что вы искали не ...')
+        self.assertEqual(res['sn'][2]['u'], u'http://bird-phoenix.ru/ru/fyvafyva.html')
+        self.assertEqual(res['sn'][2]['d'], 'bird-phoenix.ru')
+
+        self.assertEqual(res['sn'][7]['t'], u'фывафыва - Pikabu')
+        self.assertEqual(res['sn'][7]['s'], u'фывафыва. добавить тег. Любые посты за всё время, сначала свежее, с рейтингом больше 25. Текст. Картинки. Видео. Тег [Моё]. Свежее. Лучшие. Найти посты. сбросить. загрузка... ... Посты не найдены.')
+        self.assertEqual(res['sn'][7]['u'], u'http://m.pikabu.ru/tag/%F4%FB%E2%E0%F4%FB%E2%E0/hot')
+        self.assertEqual(res['sn'][7]['d'], 'm.pikabu.ru')
+
+        self.assertTrue(GoogleMobileParser.pagination_exists(html))
+
+    def test62(self):
+        u""""
+            Проверка подозрительной выдачи
+        """
+        html = self.get_data('mobile-2017-06-01-4.html')
+        g = GoogleMobileParser(html)
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+        self.assertEqual(res['pc'], None)
+        self.assertEqual(len(res['sn']), 1)
+
+        self.assertEqual(res['sn'][0]['t'], u'Купить стол — Только хорошая мебель')
+        self.assertEqual(res['sn'][0]['s'], u'5 дек. 2016 г. - Mebelvia.ru предлагает обеденные столы от производителя в Москве. Вы можете купить ...')
+        self.assertEqual(res['sn'][0]['u'], u'http://vyborkreslodoma.byethost7.com/2016/12/05/kupit-stol/')
+        self.assertEqual(res['sn'][0]['d'], 'vyborkreslodoma.byethost7.com')
+
+        self.assertFalse(GoogleMobileParser.pagination_exists(html))
 
     def print_sn(self, res):
         for i in res['sn']:
