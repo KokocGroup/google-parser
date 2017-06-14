@@ -395,7 +395,7 @@ class GoogleParser(object):
 
 
 class SnippetsParserDefault(object):
-    snippets_regexp = re.compile(ur'<div class="g">(.*?)</div><!--n--></div>', re.I | re.M | re.S)
+    snippets_regexp = re.compile(ur'(<div class="g">.*?</div><!--n--></div>)', re.I | re.M | re.S)
     result_regexp = re.compile(ur'(<div class="srg">.*?<hr class=")', re.I | re.M | re.S)
 
     def __init__(self, snippet_fields):
@@ -444,7 +444,12 @@ class SnippetsParserDefault(object):
             'm': self._is_map_snippet(url),
             't': self._get_title(title),
             's': self._get_descr(snippet, url),
+            'h': self._get_html(snippet),
         }
+
+    def _get_html(self, snippet):
+        if 'h' in self.snippet_fields:
+            return snippet
 
     def _get_descr(self, snippet, url):
         if 's' in self.snippet_fields:
@@ -524,11 +529,11 @@ class SnippetsParserDefault(object):
             return res.group(1)
 
 class SnippetsParserUnil_2015_07_23(SnippetsParserDefault):
-    snippets_regexp = re.compile(ur'<(?:li|div) class="g">((?:<span|<h3|<table).*?(?:(?:<br>|</a>)\s*</div>|</table>))\s*</(?:li|div)>', re.I | re.M | re.S)
+    snippets_regexp = re.compile(ur'(<(?:li|div) class="g">(?:<span|<h3|<table).*?(?:(?:<br>|</a>)\s*</div>|</table>)\s*</(?:li|div)>)', re.I | re.M | re.S)
     result_regexp = re.compile(ur'(<div id="ires">.*?</ol>\s*</div>)', re.I | re.M | re.S)
 
 class SnippetsParserAfter_2016_03_10(SnippetsParserDefault):
-    snippets_regexp = re.compile(ur'<div class="g\s*(?:card-section)?"(?: data-hveid="\d+")?(?: data-ved="[^"]+?")?>(\s*(?:<div data-hveid="\d+">|<div>)?<!--m-->\s*.*?)</div><!--n-->\s*(?:<table|</div>)', re.I | re.M | re.S)
+    snippets_regexp = re.compile(ur'(<div class="g\s*(?:card-section)?"(?: data-hveid="\d+")?(?: data-ved="[^"]+?")?>\s*(?:<div data-hveid="\d+">|<div>)?<!--m-->\s*.*?</div><!--n-->\s*(?:</div>))', re.I | re.M | re.S)
     result_regexp = re.compile(ur'(<div class="med" id="res" role="main">.*?<!--z-->)', re.I | re.M | re.S)
 
     def get_snippets(self, body):

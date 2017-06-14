@@ -947,7 +947,7 @@ class GoogleParserTestCase(GoogleParserTests):
             Проверка подозрительной выдачи
         """
         html = self.get_data('2017-03-28.txt')
-        g = GoogleJsonParser(html)
+        g = GoogleJsonParser(html, snippet_fields=('d', 'p', 'u', 't', 's', 'm', 'h'))
         self.assertFalse(g.is_suspicious_traffic())
 
         res = g.get_serp()
@@ -957,10 +957,12 @@ class GoogleParserTestCase(GoogleParserTests):
         self.assertEqual(res['sn'][0]['t'], u'ПАО «СОЛЬ РУСИ»')
         self.assertEqual(res['sn'][0]['u'], u'http://solrusi.ru/')
         self.assertEqual(res['sn'][0]['d'], 'solrusi.ru')
+        self.assertTrue('h' in res['sn'][0] and res['sn'][0]['h'])
 
         self.assertEqual(res['sn'][99]['t'], u'История соли - Соль: история и факты')
         self.assertEqual(res['sn'][99]['u'], u'http://www.o-soli.ru/istoriya-soli/')
         self.assertEqual(res['sn'][99]['d'], 'o-soli.ru')
+        self.assertTrue('h' in res['sn'][99] and res['sn'][99]['h'])
 
         pe = GoogleParser.pagination_exists(g.content)
         self.assertTrue(pe)
@@ -1087,6 +1089,7 @@ class GoogleParserTestCase(GoogleParserTests):
             print i.get('u')
             print i.get('t')
             print i.get('s')
+            print i.get('h')
 
 
     def check2(self, snippets, founded):
