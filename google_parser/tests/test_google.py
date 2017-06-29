@@ -957,11 +957,13 @@ class GoogleParserTestCase(GoogleParserTests):
         self.assertEqual(res['sn'][0]['t'], u'ПАО «СОЛЬ РУСИ»')
         self.assertEqual(res['sn'][0]['u'], u'http://solrusi.ru/')
         self.assertEqual(res['sn'][0]['d'], 'solrusi.ru')
+        self.assertEqual(res['sn'][0]['vu'], u'solrusi.ru/')
         self.assertTrue('h' in res['sn'][0] and res['sn'][0]['h'])
 
         self.assertEqual(res['sn'][99]['t'], u'История соли - Соль: история и факты')
         self.assertEqual(res['sn'][99]['u'], u'http://www.o-soli.ru/istoriya-soli/')
         self.assertEqual(res['sn'][99]['d'], 'o-soli.ru')
+        self.assertEqual(res['sn'][99]['vu'], u'www.o-soli.ru/istoriya-soli/')
         self.assertTrue('h' in res['sn'][99] and res['sn'][99]['h'])
 
         pe = GoogleParser.pagination_exists(g.content)
@@ -983,11 +985,13 @@ class GoogleParserTestCase(GoogleParserTests):
         self.assertEqual(res['sn'][0]['s'], u'Mebelvia.ru предлагает обеденные столы от производителя в Москве. Вы можете купить обеденный стол с ...')
         self.assertEqual(res['sn'][0]['u'], u'http://mebelvia.ru/katalog/kuhni_i_stolovye_gruppy/obedennie_stoli/')
         self.assertEqual(res['sn'][0]['d'], 'mebelvia.ru')
+        self.assertEqual(res['sn'][0]['vu'], u'mebelvia.ru › katalog › obedennie_stoli')
 
         self.assertEqual(res['sn'][49]['t'], u'куплю стол. Мебель. Столы и стулья. Южно-Сахалинск. Объявления Сахалина')
         self.assertEqual(res['sn'][49]['s'], u'8 февр. 2017 г. - куплю маникюрный стол или стол подходящий для работы с клиентом, обязательно со шкафчиками в пределах 3000 тысяч предложение писать в ватсап ...')
         self.assertEqual(res['sn'][49]['u'], u'https://market.sakh.com/1698962.html')
         self.assertEqual(res['sn'][49]['d'], 'market.sakh.com')
+        self.assertEqual(res['sn'][49]['vu'], u'https://market.sakh.com › ...')
 
         pe = GoogleMobileParser.pagination_exists(html)
         self.assertTrue(pe)

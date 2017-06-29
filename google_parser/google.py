@@ -7,6 +7,7 @@ from urllib import quote, unquote
 from urlparse import urlparse, urlunsplit, urlsplit
 from HTMLParser import HTMLParser
 
+
 from google_parser.exceptions import EmptySerp, NoBodyInResponseError, BadGoogleParserError, \
     SnippetsParserException, BadUrlError
 
@@ -445,7 +446,14 @@ class SnippetsParserDefault(object):
             't': self._get_title(title),
             's': self._get_descr(snippet, url),
             'h': self._get_html(snippet),
+            'vu': self._get_vu(snippet),
         }
+
+    def _get_vu(self, snippet):
+        match = re.search(ur'<cite class="_Rm[^"]*?">([^<]+?)</cite>', snippet, re.I | re.M | re.S)
+        if not match:
+            return None
+        return HTMLParser().unescape(match.group(1))
 
     def _get_html(self, snippet):
         if 'h' in self.snippet_fields:
