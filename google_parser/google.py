@@ -451,7 +451,7 @@ class SnippetsParserDefault(object):
 
     @classmethod
     def get_html_descr(cls, snippet):
-        res = re.compile(ur'(<span class="st">.*?</span>)\s*</div>', re.I | re.M | re.S).search(snippet)
+        res = re.compile(ur'(<span class="st">.*?</span>)\s*</?div', re.I | re.M | re.S).search(snippet)
         if res:
             return res.group(1)
 

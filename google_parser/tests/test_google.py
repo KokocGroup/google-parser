@@ -1094,6 +1094,14 @@ class GoogleParserTestCase(GoogleParserTests):
         html_descr = SnippetsParserDefault.get_html_descr(html)
         self.assertEqual(html_descr, '<span class="st">Mebelvia.ru предлагает обеденные столы от производителя в Москве. Вы можете купить обеденный <em>стол</em> с доставкой и заказать сборку. Самые низкие&nbsp;...</span>')
 
+    def test64(self):
+        u""""
+            Парсинг html-описания
+        """
+        html = self.get_data('snippet-2017-06-30-1.html')
+        html_descr = SnippetsParserDefault.get_html_descr(html)
+        self.assertEqual(html_descr, '<span class="st"><span class="f">12 дек. 2011 г. - </span><em>Фотографии</em> из частного альбомы <em>Леди Гага</em>, такая милая девушка превратилась не пойми в кого.</span>')
+
     def print_sn(self, res):
         for i in res['sn']:
             print
