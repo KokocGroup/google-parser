@@ -1086,6 +1086,14 @@ class GoogleParserTestCase(GoogleParserTests):
 
         self.assertFalse(GoogleMobileParser.pagination_exists(html))
 
+    def test63(self):
+        u""""
+            Парсинг html-описания
+        """
+        html = self.get_data('snippet-2017-06-30.html')
+        html_descr = SnippetsParserDefault.get_html_descr(html)
+        self.assertEqual(html_descr, '<span class="st">Mebelvia.ru предлагает обеденные столы от производителя в Москве. Вы можете купить обеденный <em>стол</em> с доставкой и заказать сборку. Самые низкие&nbsp;...</span>')
+
     def print_sn(self, res):
         for i in res['sn']:
             print
