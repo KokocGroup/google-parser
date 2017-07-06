@@ -1102,6 +1102,43 @@ class GoogleParserTestCase(GoogleParserTests):
         html_descr = SnippetsParserDefault.get_html_descr(html)
         self.assertEqual(html_descr, '<span class="st"><span class="f">12 дек. 2011 г. - </span><em>Фотографии</em> из частного альбомы <em>Леди Гага</em>, такая милая девушка превратилась не пойми в кого.</span>')
 
+    def test65(self):
+        u""""
+            Парсинг html-описания
+        """
+        html = self.get_data('snippet-2017-06-30-2.html')
+        html_descr = SnippetsParserDefault.get_html_descr(html)
+        self.assertEqual(html_descr, '<span class="st"><em>Детские комнаты</em> в разных странах мира (43 <em>фото</em>). Автор: Fuchsia. 04 марта 2015 12:24. Метки: дети комната мир. 9528. 43. Миллионы детей в разных&nbsp;...</span>')
+
+    def test66(self):
+        u""""
+            Проверка подозрительной выдачи
+        """
+        html = self.get_data('2017-07-06.html')
+        g = GoogleParser(html, snippet_fields=('d', 'p', 'u', 't', 's', 'm', 'h'))
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+        self.assertEqual(res['pc'], 79500)
+        self.assertEqual(len(res['sn']), 50)
+
+        self.assertEqual(res['sn'][0]['t'], u'Домашние блендеры BORK для смузи и коктейлей - купить ...')
+        self.assertEqual(res['sn'][0]['s'], u'Главной особенностью домашних блендеров BORK является высокая мощность и удобство приготовления коктейле, смузи и других полезных напитков.')
+        self.assertEqual(res['sn'][0]['u'], u'http://www.bork.ru/eShop/Blenders/')
+        self.assertEqual(res['sn'][0]['d'], 'bork.ru')
+        self.assertEqual(res['sn'][0]['vu'], u'www.bork.ru/eShop/Blenders/')
+        self.assertTrue('h' in res['sn'][0] and res['sn'][0]['h'])
+
+        self.assertEqual(res['sn'][49]['t'], u'Блендер Bork (Борк) - цена в интернет-магазине, отзывы ...')
+        self.assertEqual(res['sn'][49]['s'], u'Идеальное измельчение и смешивание за считанные секунды - легко. Блендер B780 от Bork поможет добиться нежнейшей консистенции супов-пюре, ...')
+        self.assertEqual(res['sn'][49]['u'], u'http://blender.tkat.ru/vendor/BORK/')
+        self.assertEqual(res['sn'][49]['d'], 'blender.tkat.ru')
+        self.assertEqual(res['sn'][49]['vu'], u'blender.tkat.ru/vendor/BORK/')
+        self.assertTrue('h' in res['sn'][49] and res['sn'][49]['h'])
+
+        pe = GoogleParser.pagination_exists(g.content)
+        self.assertTrue(pe)
+
     def print_sn(self, res):
         for i in res['sn']:
             print
