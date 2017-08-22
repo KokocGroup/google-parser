@@ -72,7 +72,13 @@ class GoogleParserTests(GoogleQueryTests):
         self.assertEquals(res['uule'], 'a+cm9sZToxCnByb2R1Y2VyOjEyCnByb3ZlbmFuY2U6Ngp0aW1lc3RhbXA6IDE0OTI2MDk1MTAwMDAwMApsYXRsbmd7CmxhdGl0dWRlX2U3OjU1NzU1ODI2MApsb25naXR1ZGVfZTc6Mzc2MTczMDAwCn0KcmFkaXVzOjI5MTQw')
         self.assertEquals(res['zone'], 'ru')
 
+        res213 = GoogleQuery.get_zone_and_region(u'213')
+        self.assertEquals(res['uule'], res213['uule'])
+
     def test18(self):
         res = GoogleQuery.get_zone_and_region(u'Казахстан')
         self.assertEquals(res['uule'], 'a+cm9sZToxCnByb2R1Y2VyOjEyCnByb3ZlbmFuY2U6Ngp0aW1lc3RhbXA6IDE0OTI2MDk1MTAwMDAwMApsYXRsbmd7CmxhdGl0dWRlX2U3OjQ4MDE5NTczMApsb25naXR1ZGVfZTc6NjY5MjM2ODQwCn0KcmFkaXVzOjI5MTQw')
         self.assertEquals(res['zone'], 'kz')
+
+        res159 = GoogleQuery.get_zone_and_region(u'159')
+        self.assertEquals(res['uule'], res159['uule'])
