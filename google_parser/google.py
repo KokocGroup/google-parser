@@ -602,13 +602,22 @@ class GoogleJsonParser(GoogleParser):
                 continue
 
             d = json.loads(block).get('d', '')
-            if '"i":"search"' in d or '"i":"appbar"' in d or '"i":"xjs"' in d or '"i":"topstuff"' in d:
+            if '"i":"search"' in d or '"i":"appbar"' in d or '"i":"xjs"' in d or '"i":"topstuff"' in d or not self._is_je_api(d):
                 ret += d
         return ret
 
+    def _is_je_api(self, content):
+        return u'<script>je.api' in content
+
     def _prepare_content(self, content):
         need_blocks = self._get_need_blocks(content)
+
+        # second and other pages
+        if not self._is_je_api(need_blocks):
+            return need_blocks
+
         je_apis = re.findall(ur'<script>je.api\((.*?)\);</script>', need_blocks, re.I | re.M | re.S)
+
         ret = '<body><div class="med" id="res" role="main"><div class="srg">'
         for je_api in je_apis:
             if '"i":"search"' not in je_api and '"i":"appbar"' not in je_api and '"i":"xjs"' not in je_api and '"i":"topstuff"' not in je_api:
