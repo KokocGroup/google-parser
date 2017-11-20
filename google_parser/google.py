@@ -387,6 +387,7 @@ class GoogleParser(object):
         patterns = [
             re.compile(ur'По\s*запросу\s*<(?:em|b)>.*?</(?:em|b)>\s*ничего\s*не\s*найдено\.', re.I | re.M | re.S),
             re.compile(ur'Извините,\s*у\s*нас\s*нет\s*информации\s*об\s*адресе\s*<(?:em|b)>.*?</(?:em|b)>', re.I | re.M | re.S),
+            re.compile(ur'<div id="sbfrm_l"></div>', re.I | re.M | re.S),
         ]
         res = False
         for pattern in patterns:

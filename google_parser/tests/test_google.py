@@ -1141,30 +1141,32 @@ class GoogleParserTestCase(GoogleParserTests):
 
     def test67(self):
         u""""
-            Проверка подозрительной выдачи
+            Пустая выдача info:stekswood.ru/product/banketka-chippendejl-bejs/
         """
-        html = self.get_data('2017-08-29-1.txt')
+        html = self.get_data('2017-11-20.txt')
         g = GoogleJsonParser(html, snippet_fields=('d', 'p', 'u', 't', 's', 'm', 'h'))
         self.assertFalse(g.is_suspicious_traffic())
 
         res = g.get_serp()
-        self.assertEqual(res['pc'], 128000000)
-        self.assertEqual(len(res['sn']), 50)
+        self.assertEqual(res['pc'], 0)
 
-        self.assertEqual(res['sn'][0]['t'], u'Трофей Run the Table / Накрыть стол игры Uncharted 4: A Thief&#39;s ...')
-        self.assertEqual(res['sn'][0]['u'], u'https://www.stratege.ru/ps4/trophies/uncharted_4/spisok_1/run_the_table')
-        self.assertEqual(res['sn'][0]['d'], 'stratege.ru')
-        self.assertEqual(res['sn'][0]['vu'], u'https://www.stratege.ru/ps4/trophies/uncharted_4/spisok_1/run_the_table')
+    def test68(self):
+        u""""
+            Выдача из одного результата info:bdbd.ru
+        """
+        html = self.get_data('2017-11-20-1.txt')
+        g = GoogleJsonParser(html, snippet_fields=('d', 'p', 'u', 't', 's', 'm', 'h'))
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+        self.assertEqual(res['pc'], 1)
+
+        self.assertEqual(res['sn'][0]['t'], u'Продвижение сайтов в поисковых системах, seo раскрутка сайтов ...')
+        self.assertEqual(res['sn'][0]['s'], u'Продвижение сайтов в поисковых системах Яндекс и Google. Эффективное увеличение продаж и продвижение сайта от bdbd.ru с оплатой за ...')
+        self.assertEqual(res['sn'][0]['u'], u'http://www.bdbd.ru/')
+        self.assertEqual(res['sn'][0]['d'], 'bdbd.ru')
+        self.assertEqual(res['sn'][0]['vu'], u'www.bdbd.ru/')
         self.assertTrue('h' in res['sn'][0] and res['sn'][0]['h'])
-
-        self.assertEqual(res['sn'][49]['t'], u'Паспортный стол ОВД «Ховрино» - Chelovek-Online.ru')
-        self.assertEqual(res['sn'][49]['u'], u'http://chelovek-online.ru/zakon/institution/pasportnye-stoly/5939/')
-        self.assertEqual(res['sn'][49]['d'], 'chelovek-online.ru')
-        self.assertEqual(res['sn'][49]['vu'], u'chelovek-online.ru/zakon/institution/pasportnye-stoly/5939/')
-        self.assertTrue('h' in res['sn'][49] and res['sn'][49]['h'])
-
-        pe = GoogleParser.pagination_exists(g.content)
-        self.assertTrue(pe)
 
     def print_sn(self, res):
         for i in res['sn']:
