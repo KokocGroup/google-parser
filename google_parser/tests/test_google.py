@@ -1166,7 +1166,35 @@ class GoogleParserTestCase(GoogleParserTests):
         self.assertEqual(res['sn'][0]['u'], u'http://www.bdbd.ru/')
         self.assertEqual(res['sn'][0]['d'], 'bdbd.ru')
         self.assertEqual(res['sn'][0]['vu'], u'www.bdbd.ru/')
-        self.assertTrue('h' in res['sn'][0] and res['sn'][0]['h'])
+
+    def test69(self):
+        u""""
+            Убираем порт из домена
+        """
+        html = self.get_data('2017-11-22.txt')
+        g = GoogleJsonParser(html, snippet_fields=('d', 'p', 'u', 't', 's', 'm', 'h'))
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+        self.assertEqual(res['pc'], 404000)
+
+        self.assertEqual(res['sn'][0]['t'], u'Керамическая брусчатка Керамейя. Низкая цена от завода ...')
+        self.assertEqual(res['sn'][0]['s'], u'В ТД Кирпичный Двор вы можете купить керамическую брусчатку завода Керамейя с доставкой. Низкая цена от завода производителя!')
+        self.assertEqual(res['sn'][0]['u'], u'http://kirpdvor.ru/katalog_produktsii/klinkernaya_bruschatka/kerameyya/bruschatka_kerameyya_brukkeram_oniks_234/')
+        self.assertEqual(res['sn'][0]['d'], 'kirpdvor.ru')
+        self.assertEqual(res['sn'][0]['vu'], u'kirpdvor.ru/katalog_produktsii/.../bruschatka_kerameyya_brukkeram_oniks_234/')
+
+        self.assertEqual(res['sn'][23]['t'], u'Кирпич и Кровля . Керамические блоки, клинкерная плитка ...')
+        self.assertEqual(res['sn'][23]['s'], u'Кирпич и Кровля. Керамические блоки, клинкерная плитка, керамическая черепица, брусчатка, клинкерный, облицовочный кирпич, тротуарная плитка, ...')
+        self.assertEqual(res['sn'][23]['u'], u'http://xn--e1aicmebjeik.xn--p1ai:8080/')
+        self.assertEqual(res['sn'][23]['d'], 'xn--e1aicmebjeik.xn--p1ai')
+        self.assertEqual(res['sn'][23]['vu'], u'реконстрой.рф:8080/')
+
+        self.assertEqual(res['sn'][98]['t'], u'Немецкий клинкер Фелдхаус Клинкер :: Feldhaus Klinker ...')
+        self.assertEqual(res['sn'][98]['s'], u'По сравнению с обычными изделиями из группы строительной грубой керамики (обыкновенная керамическая плитка, кирпич и т.д.) брусчатка клинкер ...')
+        self.assertEqual(res['sn'][98]['u'], u'http://www.feldhaus-kama.ru/')
+        self.assertEqual(res['sn'][98]['d'], 'feldhaus-kama.ru')
+        self.assertEqual(res['sn'][98]['vu'], u'www.feldhaus-kama.ru/')
 
     def print_sn(self, res):
         for i in res['sn']:

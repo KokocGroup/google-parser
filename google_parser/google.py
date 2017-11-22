@@ -152,7 +152,8 @@ def get_absolute_url(url):
 
 def get_full_domain_without_scheme(url):
     parsed = urlparse(get_absolute_url(url))
-    return urlunsplit(('', parsed.netloc, '', '', '')).replace('//', '')
+    domain = re.sub(ur':.+', '' , parsed.netloc)
+    return urlunsplit(('', domain, '', '', '')).replace('//', '')
 
 
 class GoogleSerpCleaner(object):
