@@ -1196,6 +1196,30 @@ class GoogleParserTestCase(GoogleParserTests):
         self.assertEqual(res['sn'][98]['d'], 'feldhaus-kama.ru')
         self.assertEqual(res['sn'][98]['vu'], u'www.feldhaus-kama.ru/')
 
+    def test70(self):
+        u""""
+            Ошибка парсинга от 2018-08-01
+        """
+        html = self.get_data('2018-08-01.txt')
+        g = GoogleJsonParser(html, snippet_fields=('d', 'p', 'u', 't', 's', 'm'))
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+        self.assertEqual(res['pc'], 9290)
+        self.assertEqual(len(res['sn']), 100)
+
+        self.assertEqual(res['sn'][0]['t'], u'Массаж на Новослободской:(495)786-97-98, ул ... - Целлюлайтhttps://www.cellulait.ru/contacts/')
+        self.assertEqual(res['sn'][0]['s'], u'9 мая 2018 г. - Массаж на Новослободской. Адрес клиники косметологии которая поможет Вам привести Вашу фигуру к идеальным формам.')
+        self.assertEqual(res['sn'][0]['u'], u'https://www.cellulait.ru/contacts/')
+        self.assertEqual(res['sn'][0]['d'], 'cellulait.ru')
+        self.assertEqual(res['sn'][0]['vu'], u'https://www.cellulait.ru/contacts/')
+
+        self.assertEqual(res['sn'][99]['t'], u'Целлюлайт: Москва Новослободская улица 61с1 - RusMap.nethttps://rusmap.net &rsaquo; Москва &rsaquo; Фирмы &rsaquo; Салоны красоты')
+        self.assertEqual(res['sn'][99]['s'], u'Салоны красоты: Целлюлайт находится по адресу Москва Новослободская улица 61с1, время работы: пн-сб 09:00-21:00; вс 10:00-19:00.')
+        self.assertEqual(res['sn'][99]['u'], u'https://rusmap.net/%D0%9C%D0%BE%D1%81%D0%BA%D0%B2%D0%B0/%D0%A4%D0%B8%D1%80%D0%BC%D0%B0/53922')
+        self.assertEqual(res['sn'][99]['d'], 'rusmap.net')
+        self.assertEqual(res['sn'][99]['vu'], u'https://rusmap.net › Москва › Фирмы › Салоны красоты')
+
     def print_sn(self, res):
         for i in res['sn']:
             print

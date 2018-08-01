@@ -12,10 +12,13 @@ class GoogleParserTests(unittest.TestCase):
     def setUp(self):
         pass
 
+    def get_data_path(self, file):
+        return os.path.join(TEST_DATA_DIR, file)
+
     def get_data(self, path):
         u'возвращает содержимое любого файла по указанному пути относительно директории data'
 
-        return open(os.path.join(TEST_DATA_DIR, path), 'r').read()
+        return open(self.get_data_path(path), 'r').read()
 
 if __name__ == '__main__':
     suite = unittest.TestLoader().discover(TESTS_DIR)

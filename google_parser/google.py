@@ -458,7 +458,7 @@ class SnippetsParserDefault(object):
             return res.group(1)
 
     def _get_vu(self, snippet):
-        match = re.search(ur'<cite class="_Rm[^"]*?">([^<]+?)</cite>', snippet, re.I | re.M | re.S)
+        match = re.search(ur'<cite class="(?:_Rm|iUh)[^"]*?">([^<]+?)</cite>', snippet, re.I | re.M | re.S)
         if not match:
             return None
         return HTMLParser().unescape(match.group(1))
@@ -488,7 +488,7 @@ class SnippetsParserDefault(object):
         return '<h3 class="r"></h3>' in snippet
 
     def _parse_title_snippet(self, snippet, position):
-        res = re.compile(ur'<h3 class="r">.*?<a[^>]+?href="([^"]+?)"[^>]*?>(.*?)</a>', re.I | re.M | re.S).search(snippet)
+        res = re.compile(ur'<(?:h3|div) class="r">.*?<a[^>]+?href="([^"]+?)"[^>]*?>(.*?)</a>', re.I | re.M | re.S).search(snippet)
         if res:
             return SnippetsParserDefault.strip_tags(res.group(2)), SnippetsParserDefault.format_link(res.group(1)),
         raise SnippetsParserException(u'Parsing error. Broken snippet at {0}: {1}'.format(position, snippet))
@@ -531,7 +531,7 @@ class SnippetsParserDefault(object):
         raise BadGoogleParserError(u'не удалось найти описание сниппета: {}'.format(snippet))
 
     def _parse_description_snippet(self, snippet):
-        res = re.compile(ur'<span class="st">(.*?)</span>', re.I | re.M | re.S).search(snippet)
+        res = re.compile(ur'<span class="st">(.*?)</span>\s*(?:<br>|</div>|<div)', re.I | re.M | re.S).search(snippet)
         if res:
             return SnippetsParserDefault.strip_tags(res.group(1))
 
