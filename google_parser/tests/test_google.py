@@ -1220,6 +1220,30 @@ class GoogleParserTestCase(GoogleParserTests):
         self.assertEqual(res['sn'][99]['d'], 'rusmap.net')
         self.assertEqual(res['sn'][99]['vu'], u'https://rusmap.net › Москва › Фирмы › Салоны красоты')
 
+    def test71(self):
+        u""""
+            Ошибка парсинга от 2018-08-01
+        """
+        html = self.get_data('2018-11-06.txt')
+        g = GoogleJsonParser(html, snippet_fields=('d', 'p', 'u', 't', 's', 'm'))
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+        self.assertEqual(res['pc'], 1160000)
+        self.assertEqual(len(res['sn']), 48)
+
+        self.assertEqual(res['sn'][0]['t'], u'Посуда Fissler – купить посуду Фисслер в Москве, цены в ...www.fissler-shop.ru/')
+        self.assertEqual(res['sn'][0]['s'], u'В интернет-магазине компании Сандер в Москве представлен ассортимент немецкой посуды для индукционных плит Fissler. Она удовлетворит вкусы ...')
+        self.assertEqual(res['sn'][0]['u'], u'http://www.fissler-shop.ru/')
+        self.assertEqual(res['sn'][0]['d'], 'fissler-shop.ru')
+        self.assertEqual(res['sn'][0]['vu'], u'www.fissler-shop.ru/')
+
+        self.assertEqual(res['sn'][47]['t'], u'Наборы посуды для готовки — купить на Яндекс.Маркетеhttps://market.yandex.ru/catalog--nabory-posudy-dlia-gotovki/61640/list?glfilter...')
+        self.assertEqual(res['sn'][47]['s'], u'FISSLER Набор посуды из 5-ти предметов: три кастрюли, сотейник и ковшик без ... наборы посуды и кастрюль Fissler Набор кастрюль, 5 предметов, ...')
+        self.assertEqual(res['sn'][47]['u'], u'https://market.yandex.ru/catalog--nabory-posudy-dlia-gotovki/61640/list?glfilter=7893318%3A10713559')
+        self.assertEqual(res['sn'][47]['d'], 'market.yandex.ru')
+        self.assertEqual(res['sn'][47]['vu'], u'https://market.yandex.ru/catalog--nabory-posudy-dlia-gotovki/61640/list?glfilter...')
+
     def print_sn(self, res):
         for i in res['sn']:
             print
