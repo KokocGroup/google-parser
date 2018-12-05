@@ -1244,6 +1244,30 @@ class GoogleParserTestCase(GoogleParserTests):
         self.assertEqual(res['sn'][47]['d'], 'market.yandex.ru')
         self.assertEqual(res['sn'][47]['vu'], u'https://market.yandex.ru/catalog--nabory-posudy-dlia-gotovki/61640/list?glfilter...')
 
+    def test72(self):
+        u""""
+            Ошибка парсинга от 2018-08-01
+        """
+        html = self.get_data('2018-12-05.txt')
+        g = GoogleJsonParser(html, snippet_fields=('d', 'p', 'u', 't', 's', 'm'))
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+        self.assertEqual(res['pc'], 4180)
+        self.assertEqual(len(res['sn']), 99)
+
+        self.assertEqual(res['sn'][0]['t'], u'Флавитал инструкция по применению, Флавитал цена, Флавитал ...https://www.piluli.ru &rsaquo; ... &rsaquo; Лечение онкологических заболеваний')
+        self.assertEqual(res['sn'][0]['s'], u'Цены на Флавитал, подробная инструкция по применению, противопоказания, побочные действия, состав на сайте интернет-аптеки www.piluli.ru.')
+        self.assertEqual(res['sn'][0]['u'], u'https://www.piluli.ru/product/flavital')
+        self.assertEqual(res['sn'][0]['d'], 'piluli.ru')
+        self.assertEqual(res['sn'][0]['vu'], u'https://www.piluli.ru › ... › Лечение онкологических заболеваний')
+
+        self.assertEqual(res['sn'][98]['t'], u'Flavital - Profile - Robloxhttps://www.roblox.com/users/529521610/profile')
+        self.assertEqual(res['sn'][98]['s'], u'Flavital is one of the millions playing, creating and exploring the endless possibilities of Roblox. Join Flavital on Roblox and explore together!')
+        self.assertEqual(res['sn'][98]['u'], u'https://www.roblox.com/users/529521610/profile')
+        self.assertEqual(res['sn'][98]['d'], 'roblox.com')
+        self.assertEqual(res['sn'][98]['vu'], u'https://www.roblox.com/users/529521610/profile')
+
     def print_sn(self, res):
         for i in res['sn']:
             print
