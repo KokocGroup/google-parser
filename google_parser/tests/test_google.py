@@ -1268,6 +1268,30 @@ class GoogleParserTestCase(GoogleParserTests):
         self.assertEqual(res['sn'][98]['d'], 'roblox.com')
         self.assertEqual(res['sn'][98]['vu'], u'https://www.roblox.com/users/529521610/profile')
 
+    def test73(self):
+        u""""
+            Ошибка парсинга от 2018-12-06
+        """
+        html = self.get_data('2018-12-06.txt')
+        g = GoogleJsonParser(html, snippet_fields=('d', 'p', 'u', 't', 's', 'm'))
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+        self.assertEqual(res['pc'], 606000)
+        self.assertEqual(len(res['sn']), 96)
+
+        self.assertEqual(res['sn'][0]['t'], u'ВТБ Капитал Управление активами. Искусство инвестиций ...https://www.vtbcapital-am.ru/')
+        self.assertEqual(res['sn'][0]['s'], u'Управление активами, паевые инвестиционные фонды, индивидуальное доверительное управление, портфельные инвестиции -управляющая ...')
+        self.assertEqual(res['sn'][0]['u'], u'https://www.vtbcapital-am.ru/')
+        self.assertEqual(res['sn'][0]['d'], 'vtbcapital-am.ru')
+        self.assertEqual(res['sn'][0]['vu'], u'https://www.vtbcapital-am.ru/')
+
+        self.assertEqual(res['sn'][95]['t'], u'Отставки и назначения — Bankir.Ru - Банкир.руhttps://bankir.ru/novosti/otstavki-i-naznacheniya/?p=96')
+        self.assertEqual(res['sn'][95]['s'], u'24, 25, 26, 27, 28, 29, 30. 31, 1, 2, 3, 4, 5, 6 ... В компании «Сбербанк Управление активами» произошли новые назначения ... Лариса Жигирева назначена управляющим розничного бизнеса ВТБ в Псковской области ... Геннадий Ходарин занял пост гендиректора Группы «КапиталЪ Управление активами».')
+        self.assertEqual(res['sn'][95]['u'], u'https://bankir.ru/novosti/otstavki-i-naznacheniya/?p=96')
+        self.assertEqual(res['sn'][95]['d'], 'bankir.ru')
+        self.assertEqual(res['sn'][95]['vu'], u'https://bankir.ru/novosti/otstavki-i-naznacheniya/?p=96')
+
     def print_sn(self, res):
         for i in res['sn']:
             print

@@ -549,7 +549,7 @@ class SnippetsParserUnil_2015_07_23(SnippetsParserDefault):
     result_regexp = re.compile(ur'(<div id="ires">.*?</ol>\s*</div>)', re.I | re.M | re.S)
 
 class SnippetsParserAfter_2016_03_10(SnippetsParserDefault):
-    snippets_regexp = re.compile(ur'(<div class="g\s*(?:card-section)?"(?: data-hveid="[^"]+?")?(?: data-ved="[^"]+?")?>\s*(?:<div data-hveid="\d+">|<div>)?<!--m-->\s*.*?</div><!--n-->\s*(?:</div>))', re.I | re.M | re.S)
+    snippets_regexp = re.compile(ur'(<div class="g\s*(?:card-section)?"(?: data-hveid="[^"]+?")?(?: data-ved="[^"]+?")?>\s*(?:<h2[^>]+?>[^<]+?</h2>)?\s*(?:<div data-hveid="[^"]+?">|<div>)?<!--m-->\s*.*?</div><!--n-->\s*(?:</div>))', re.I | re.M | re.S)
     result_regexp = re.compile(ur'(<div class="med" id="res" role="main">.*?<!--z-->)', re.I | re.M | re.S)
 
     def get_snippets(self, body):
