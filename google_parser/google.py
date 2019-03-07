@@ -490,7 +490,10 @@ class SnippetsParserDefault(object):
     def _parse_title_snippet(self, snippet, position):
         res = re.compile(ur'<(?:h3|div) class="r">.*?<a[^>]+?href="([^"]+?)"[^>]*?>(.*?)</a>', re.I | re.M | re.S).search(snippet)
         if res:
-            return SnippetsParserDefault.strip_tags(res.group(2)), SnippetsParserDefault.format_link(res.group(1)),
+            title = res.group(2)
+            if '<cite' in title:
+                title = re.sub(ur'<cite.*?</cite>', '', title)
+            return SnippetsParserDefault.strip_tags(title), SnippetsParserDefault.format_link(res.group(1)),
         raise SnippetsParserException(u'Parsing error. Broken snippet at {0}: {1}'.format(position, snippet))
 
     def _is_image_snippet(self, url):

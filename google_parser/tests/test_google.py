@@ -1208,13 +1208,13 @@ class GoogleParserTestCase(GoogleParserTests):
         self.assertEqual(res['pc'], 9290)
         self.assertEqual(len(res['sn']), 100)
 
-        self.assertEqual(res['sn'][0]['t'], u'Массаж на Новослободской:(495)786-97-98, ул ... - Целлюлайтhttps://www.cellulait.ru/contacts/')
+        self.assertEqual(res['sn'][0]['t'], u'Массаж на Новослободской:(495)786-97-98, ул ... - Целлюлайт')
         self.assertEqual(res['sn'][0]['s'], u'9 мая 2018 г. - Массаж на Новослободской. Адрес клиники косметологии которая поможет Вам привести Вашу фигуру к идеальным формам.')
         self.assertEqual(res['sn'][0]['u'], u'https://www.cellulait.ru/contacts/')
         self.assertEqual(res['sn'][0]['d'], 'cellulait.ru')
         self.assertEqual(res['sn'][0]['vu'], u'https://www.cellulait.ru/contacts/')
 
-        self.assertEqual(res['sn'][99]['t'], u'Целлюлайт: Москва Новослободская улица 61с1 - RusMap.nethttps://rusmap.net &rsaquo; Москва &rsaquo; Фирмы &rsaquo; Салоны красоты')
+        self.assertEqual(res['sn'][99]['t'], u'Целлюлайт: Москва Новослободская улица 61с1 - RusMap.net')
         self.assertEqual(res['sn'][99]['s'], u'Салоны красоты: Целлюлайт находится по адресу Москва Новослободская улица 61с1, время работы: пн-сб 09:00-21:00; вс 10:00-19:00.')
         self.assertEqual(res['sn'][99]['u'], u'https://rusmap.net/%D0%9C%D0%BE%D1%81%D0%BA%D0%B2%D0%B0/%D0%A4%D0%B8%D1%80%D0%BC%D0%B0/53922')
         self.assertEqual(res['sn'][99]['d'], 'rusmap.net')
@@ -1232,13 +1232,13 @@ class GoogleParserTestCase(GoogleParserTests):
         self.assertEqual(res['pc'], 1160000)
         self.assertEqual(len(res['sn']), 48)
 
-        self.assertEqual(res['sn'][0]['t'], u'Посуда Fissler – купить посуду Фисслер в Москве, цены в ...www.fissler-shop.ru/')
+        self.assertEqual(res['sn'][0]['t'], u'Посуда Fissler – купить посуду Фисслер в Москве, цены в ...')
         self.assertEqual(res['sn'][0]['s'], u'В интернет-магазине компании Сандер в Москве представлен ассортимент немецкой посуды для индукционных плит Fissler. Она удовлетворит вкусы ...')
         self.assertEqual(res['sn'][0]['u'], u'http://www.fissler-shop.ru/')
         self.assertEqual(res['sn'][0]['d'], 'fissler-shop.ru')
         self.assertEqual(res['sn'][0]['vu'], u'www.fissler-shop.ru/')
 
-        self.assertEqual(res['sn'][47]['t'], u'Наборы посуды для готовки — купить на Яндекс.Маркетеhttps://market.yandex.ru/catalog--nabory-posudy-dlia-gotovki/61640/list?glfilter...')
+        self.assertEqual(res['sn'][47]['t'], u'Наборы посуды для готовки — купить на Яндекс.Маркете')
         self.assertEqual(res['sn'][47]['s'], u'FISSLER Набор посуды из 5-ти предметов: три кастрюли, сотейник и ковшик без ... наборы посуды и кастрюль Fissler Набор кастрюль, 5 предметов, ...')
         self.assertEqual(res['sn'][47]['u'], u'https://market.yandex.ru/catalog--nabory-posudy-dlia-gotovki/61640/list?glfilter=7893318%3A10713559')
         self.assertEqual(res['sn'][47]['d'], 'market.yandex.ru')
@@ -1256,13 +1256,13 @@ class GoogleParserTestCase(GoogleParserTests):
         self.assertEqual(res['pc'], 4180)
         self.assertEqual(len(res['sn']), 99)
 
-        self.assertEqual(res['sn'][0]['t'], u'Флавитал инструкция по применению, Флавитал цена, Флавитал ...https://www.piluli.ru &rsaquo; ... &rsaquo; Лечение онкологических заболеваний')
+        self.assertEqual(res['sn'][0]['t'], u'Флавитал инструкция по применению, Флавитал цена, Флавитал ...')
         self.assertEqual(res['sn'][0]['s'], u'Цены на Флавитал, подробная инструкция по применению, противопоказания, побочные действия, состав на сайте интернет-аптеки www.piluli.ru.')
         self.assertEqual(res['sn'][0]['u'], u'https://www.piluli.ru/product/flavital')
         self.assertEqual(res['sn'][0]['d'], 'piluli.ru')
         self.assertEqual(res['sn'][0]['vu'], u'https://www.piluli.ru › ... › Лечение онкологических заболеваний')
 
-        self.assertEqual(res['sn'][98]['t'], u'Flavital - Profile - Robloxhttps://www.roblox.com/users/529521610/profile')
+        self.assertEqual(res['sn'][98]['t'], u'Flavital - Profile - Roblox')
         self.assertEqual(res['sn'][98]['s'], u'Flavital is one of the millions playing, creating and exploring the endless possibilities of Roblox. Join Flavital on Roblox and explore together!')
         self.assertEqual(res['sn'][98]['u'], u'https://www.roblox.com/users/529521610/profile')
         self.assertEqual(res['sn'][98]['d'], 'roblox.com')
@@ -1280,13 +1280,13 @@ class GoogleParserTestCase(GoogleParserTests):
         self.assertEqual(res['pc'], 606000)
         self.assertEqual(len(res['sn']), 96)
 
-        self.assertEqual(res['sn'][0]['t'], u'ВТБ Капитал Управление активами. Искусство инвестиций ...https://www.vtbcapital-am.ru/')
+        self.assertEqual(res['sn'][0]['t'], u'ВТБ Капитал Управление активами. Искусство инвестиций ...')
         self.assertEqual(res['sn'][0]['s'], u'Управление активами, паевые инвестиционные фонды, индивидуальное доверительное управление, портфельные инвестиции -управляющая ...')
         self.assertEqual(res['sn'][0]['u'], u'https://www.vtbcapital-am.ru/')
         self.assertEqual(res['sn'][0]['d'], 'vtbcapital-am.ru')
         self.assertEqual(res['sn'][0]['vu'], u'https://www.vtbcapital-am.ru/')
 
-        self.assertEqual(res['sn'][95]['t'], u'Отставки и назначения — Bankir.Ru - Банкир.руhttps://bankir.ru/novosti/otstavki-i-naznacheniya/?p=96')
+        self.assertEqual(res['sn'][95]['t'], u'Отставки и назначения — Bankir.Ru - Банкир.ру')
         self.assertEqual(res['sn'][95]['s'], u'24, 25, 26, 27, 28, 29, 30. 31, 1, 2, 3, 4, 5, 6 ... В компании «Сбербанк Управление активами» произошли новые назначения ... Лариса Жигирева назначена управляющим розничного бизнеса ВТБ в Псковской области ... Геннадий Ходарин занял пост гендиректора Группы «КапиталЪ Управление активами».')
         self.assertEqual(res['sn'][95]['u'], u'https://bankir.ru/novosti/otstavki-i-naznacheniya/?p=96')
         self.assertEqual(res['sn'][95]['d'], 'bankir.ru')
