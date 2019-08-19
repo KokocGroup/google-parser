@@ -1292,6 +1292,30 @@ class GoogleParserTestCase(GoogleParserTests):
         self.assertEqual(res['sn'][95]['d'], 'bankir.ru')
         self.assertEqual(res['sn'][95]['vu'], u'https://bankir.ru/novosti/otstavki-i-naznacheniya/?p=96')
 
+    def test74(self):
+        u""""
+            Ошибка парсинга от 2019-08-19
+        """
+        html = self.get_data('2019-08-19.txt')
+        g = GoogleJsonParser(html, snippet_fields=('d', 'p', 'u', 't', 's', 'm'))
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+        self.assertEqual(res['pc'], 3460000)
+        self.assertEqual(len(res['sn']), 50)
+
+        self.assertEqual(res['sn'][0]['t'], u'Диваны – купить диван от производителя в Москве с доставкой на ...')
+        self.assertEqual(res['sn'][0]['s'], u'Диваны - 402 модели от 6420₽. Гарантия лучшей цены. Дешевая доставка по Москве и области. Бесплатный подъем на лифте.')
+        self.assertEqual(res['sn'][0]['u'], u'https://mebelvia.ru/katalog/myagkaya_mebel/divany/')
+        self.assertEqual(res['sn'][0]['d'], 'mebelvia.ru')
+        self.assertEqual(res['sn'][0]['vu'], u'https://mebelvia.ru/katalog/myagkaya_mebel/divany/')
+
+        self.assertEqual(res['sn'][49]['t'], u'Угловой диван Сиэтл 8 Марта | Купить угловой диван Сиэтл с ...')
+        self.assertEqual(res['sn'][49]['s'], u'Продажа угловой диван Сиэтл - цена от производителя 8 Марта. Интернет-магазин мебели: угловые диваны на заказ и большой выбор готовых ...')
+        self.assertEqual(res['sn'][49]['u'], u'https://www.8marta.ru/catalog/8marta/divany-uglovye/sietl.htm')
+        self.assertEqual(res['sn'][49]['d'], '8marta.ru')
+        self.assertEqual(res['sn'][49]['vu'], u'https://www.8marta.ru › Основная коллекция › Угловые диваны')
+
     def print_sn(self, res):
         for i in res['sn']:
             print

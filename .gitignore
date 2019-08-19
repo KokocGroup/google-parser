@@ -1,2 +1,5 @@
 *.pyc
 .idea
+dist/*
+google_parser.egg-info/*
+setup.pysetup.py
