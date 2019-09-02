@@ -693,6 +693,10 @@ class MobileSnippetsParser(SnippetsParserDefault):
                 continue
 
             for mnr_div in mnr_divs:
+
+                if 'card-section' in mnr_div.attrib.get('class', ''):
+                    continue
+
                 snippets.append(mnr_div)
 
         result = []

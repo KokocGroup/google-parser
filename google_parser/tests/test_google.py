@@ -1461,6 +1461,58 @@ class GoogleParserTestCase(GoogleParserTests):
         self.assertEqual(res['sn'][0]['d'], 'voronkingoepesos.blogspot.com')
         self.assertEqual(res['sn'][0]['vu'], u'voronkingoepesos.blogspot.com › 2...')
 
+    def test80(self):
+        u""""
+            Ошибка парсинга от 2019-09-02
+        """
+        html = self.get_data('mobile-2019-09-02-3.txt')
+        g = GoogleJsonParser(html, snippet_fields=('d', 'p', 'u', 't', 's', 'm'))
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+
+        # В мобильной выдаче похоже нет общего кол-ва результатов
+        self.assertEqual(res['pc'], 0)
+        self.assertEqual(len(res['sn']), 94)
+
+        self.assertEqual(res['sn'][0]['t'], u'График USD TRY – Investing.com')
+        self.assertEqual(res['sn'][0]['s'], u'Получите мгновенный доступ к бесплатному потоковому графику USD TRY. Этот уникальный график Доллар США Турецкая лира позволяет четко наблюдать за поведением этой пары.')
+        self.assertEqual(res['sn'][0]['u'], 'https://m.ru.investing.com/currencies/usd-try-chart')
+        self.assertEqual(res['sn'][0]['d'], 'm.ru.investing.com')
+        self.assertEqual(res['sn'][0]['vu'], u'https://m.ru.investing.com › usd-try-...')
+
+        self.assertEqual(res['sn'][93]['t'], u'[Beaches] курс доллара к турецкой лире график за год')
+        self.assertEqual(res['sn'][93]['s'], u'курс доллара к турецкой лире график за год album. USD TRY – Курс и график Доллар Лира — TradingView pic. USD TRY – Курс и график Доллар Лира — TradingView pic. Курс Доллара США к Турецкой лире ...')
+        self.assertEqual(res['sn'][93]['u'], 'https://chekol.info/photos/%D0%BA%D1%83%D1%80%D1%81-%D0%B4%D0%BE%D0%BB%D0%BB%D0%B0%D1%80%D0%B0-%D0%BA-%D1%82%D1%83%D1%80%D0%B5%D1%86%D0%BA%D0%BE%D0%B9-%D0%BB%D0%B8%D1%80%D0%B5-%D0%B3%D1%80%D0%B0%D1%84%D0%B8%D0%BA-%D0%B7%D0%B0-%D0%B3%D0%BE%D0%B4')
+        self.assertEqual(res['sn'][93]['d'], 'chekol.info')
+        self.assertEqual(res['sn'][93]['vu'], u'https://chekol.info › photos › курс-...')
+
+    def test81(self):
+        u""""
+            Ошибка парсинга от 2019-09-02
+        """
+        html = self.get_data('mobile-2019-09-02-4.txt')
+        g = GoogleJsonParser(html, snippet_fields=('d', 'p', 'u', 't', 's', 'm'))
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+
+        # В мобильной выдаче похоже нет общего кол-ва результатов
+        self.assertEqual(res['pc'], 0)
+        self.assertEqual(len(res['sn']), 99)
+
+        self.assertEqual(res['sn'][0]['t'], 'Convert SGD/JPY. Singapore Dollar to Japan Yen - XE')
+        self.assertEqual(res['sn'][0]['s'], u'22 авг. 2019 г. · Convert 1 Singapore Dollar to Japanese Yen. Get live exchange rates, historical rates & charts for SGD to JPY with XE\'s free currency calculator.')
+        self.assertEqual(res['sn'][0]['u'], 'https://www.xe.com/currencyconverter/convert/?Amount=1&From=SGD&To=JPY')
+        self.assertEqual(res['sn'][0]['d'], 'xe.com')
+        self.assertEqual(res['sn'][0]['vu'], u'https://www.xe.com › convert › To=...')
+
+        self.assertEqual(res['sn'][98]['t'], 'The Foreign Exchange and Money Markets Guide')
+        self.assertEqual(res['sn'][98]['s'], u'If in the preceding case it had been Singapore that had been on holiday on the 8th, the USD/SGD rate would ... We therefore have: USD/JPY 131.25/131.30 (May 9) 120/100 (May 9–June 10) USD/SGD 1.8770/1.8780 ...')
+        self.assertEqual(res['sn'][98]['u'], 'https://books.google.ru/books?id=KS_5pRVfH_EC&pg=PA215&lpg=PA215&dq=sgd+jpy&source=bl&ots=JEYIPqqDrl&sig=ACfU3U0vkKkAP0zeykJw_vmgiGdbbRKcKg&hl=ru&sa=X&sqi=2&ved=2ahUKEwjDldqTt7LkAhWJiVwKHbi4BoIQ6AEwbXoECEoQAQ')
+        self.assertEqual(res['sn'][98]['d'], 'books.google.ru')
+        self.assertEqual(res['sn'][98]['vu'], u'https://books.google.ru › books')
+
     def print_sn(self, res):
         for i in res['sn']:
             print
