@@ -1316,6 +1316,151 @@ class GoogleParserTestCase(GoogleParserTests):
         self.assertEqual(res['sn'][49]['d'], '8marta.ru')
         self.assertEqual(res['sn'][49]['vu'], u'https://www.8marta.ru › Основная коллекция › Угловые диваны')
 
+    def test75(self):
+        u""""
+            Ошибка парсинга от 2019-08-29
+        """
+        html = self.get_data('mobile-2019-08-29.txt')
+        g = GoogleJsonParser(html, snippet_fields=('d', 'p', 'u', 't', 's', 'm'))
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+
+        # В мобильной выдаче похоже не общего кол-ва результатов
+        self.assertEqual(res['pc'], 0)
+        self.assertEqual(len(res['sn']), 99)
+
+        self.assertEqual(res['sn'][0]['t'], u'Плюсы и минусы открытого и закрытого синус-лифтинга')
+        self.assertEqual(res['sn'][0]['s'], u"""Когда применяется открытый синус-лифтинг, а когда закрытый? Какие костные материалы 
+используются? Можно ли проводить имплантацию сразу после синус-лифтинга?""")
+        self.assertEqual(res['sn'][0]['u'], u'https://akademstom.ru/articles/sinus-lifting/')
+        self.assertEqual(res['sn'][0]['d'], 'akademstom.ru')
+        self.assertEqual(res['sn'][0]['vu'], None)
+
+        self.assertEqual(res['sn'][8]['t'], u'открытый синус-лифтинг Импро - YouTube')
+        self.assertEqual(res['sn'][8]['s'], None)
+        self.assertEqual(res['sn'][8]['u'], u'https://m.youtube.com/watch?v=6NWtKBe77JA')
+        self.assertEqual(res['sn'][8]['d'], 'm.youtube.com')
+        self.assertEqual(res['sn'][8]['vu'], None)
+
+        self.assertEqual(res['sn'][98]['t'], u'Синус лифтинг открытый и закрытый - Стеллит')
+        self.assertEqual(res['sn'][98]['s'], u"""Синус лифтинг, открытый или закрытый – это операция, которая проводится на верхней челюсти для 
+того, чтобы подготовить альвеолярный отросток к установке имплантата. Верхнечелюстная кость внутри
+ ...""")
+        self.assertEqual(res['sn'][98]['u'], u'https://www.stellit-spb.com/sinus-lifting-otkrytyj-i-zakrytyj')
+        self.assertEqual(res['sn'][98]['d'], 'stellit-spb.com')
+        self.assertEqual(res['sn'][98]['vu'], None)
+
+    def test76(self):
+        u""""
+            Ошибка парсинга от 2019-08-29
+        """
+        html = self.get_data('mobile-2019-08-29-1.txt')
+        g = GoogleJsonParser(html, snippet_fields=('d', 'p', 'u', 't', 's', 'm'))
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+
+        # В мобильной выдаче похоже нет общего кол-ва результатов
+        self.assertEqual(res['pc'], 0)
+        self.assertEqual(len(res['sn']), 100)
+
+        self.assertEqual(res['sn'][0]['t'], u'Связь-Банк > «Военная ипотека»')
+        self.assertEqual(res['sn'][0]['s'], u'«Военная ипотека» – специальная программа, разработанная в соответствии с Федеральным ... НИС ( накопительно-ипотечной системы) может приобрести недвижимость с использованием ипотечного ...')
+        self.assertEqual(res['sn'][0]['u'], 'https://www.sviaz-bank.ru/service/hypotec-new/military/')
+        self.assertEqual(res['sn'][0]['d'], 'sviaz-bank.ru')
+        self.assertEqual(res['sn'][0]['vu'], u'https://www.sviaz-bank.ru › military')
+
+        self.assertEqual(res['sn'][1]['t'], u'Связь-Банк > Калькулятор. Военная ипотека')
+        self.assertEqual(res['sn'][1]['s'], u'Военная ипотека. Расчет ипотечного калькулятора является предварительным. Чтобы выбрать наиболее подходящий Вам вариант получения денежных средств и узнать точный размер Вашего кредита ...')
+        self.assertEqual(res['sn'][1]['u'], 'https://www.sviaz-bank.ru/service/hypotec-new/calc-mil-credit/')
+        self.assertEqual(res['sn'][1]['d'], 'sviaz-bank.ru')
+        self.assertEqual(res['sn'][1]['vu'], 'https://www.sviaz-bank.ru')
+
+        self.assertEqual(res['sn'][2]['t'], u'Связь банк: военная ипотека и её условия в 2019 году')
+        self.assertEqual(res['sn'][2]['s'], u'20 авг. 2018 г. · Военная ипотека Связь-банка 2019: Размер максимальной суммы ипотечного кредита военнослужащему, процентная ставка, условия, калькулятор и отзывы клиентов.')
+        self.assertEqual(res['sn'][2]['u'], 'https://ipotekaved.ru/voennaya/ipoteka-svyaz-bank.html')
+        self.assertEqual(res['sn'][2]['d'], 'ipotekaved.ru')
+        self.assertEqual(res['sn'][2]['vu'], u'https://ipotekaved.ru › voennaya › i...')
+
+        self.assertEqual(res['sn'][3]['t'], u'Военная ипотека от Связь-Банка - Молодострой')
+        self.assertEqual(res['sn'][3]['s'], u'Аккредитованные новостройки Связь-Банка по военной ипотеке. Скидки участникам Молодостроя.')
+        self.assertEqual(res['sn'][3]['u'], 'https://www.molodostroy24.ru/voennaya-ipoteka-novostroyki/svyazbank/')
+        self.assertEqual(res['sn'][3]['d'], 'molodostroy24.ru')
+        self.assertEqual(res['sn'][3]['vu'], u'https://www.molodostroy24.ru › svy...')
+
+        self.assertEqual(res['sn'][4]['t'], u'Список банков работающих по военной ипотеке - условия, дополнительный кредит военнослужащим, сумма, проценты - Молодострой')
+        self.assertEqual(res['sn'][4]['s'], u'Условия Военной ипотеки (по состоянию на 1 августа 2019 года) .... ставка от 11,9%. Максимальная сумма по военной ипотеке - 3 100 000 рублей. Возможно рефинансирование. СвязьБанк. от 9.4%. 2,70 ...')
+        self.assertEqual(res['sn'][4]['u'], 'https://www.molodostroy24.ru/voennaya_ipoteka/banki/')
+        self.assertEqual(res['sn'][4]['d'], 'molodostroy24.ru')
+        self.assertEqual(res['sn'][4]['vu'], 'https://www.molodostroy24.ru')
+
+        self.assertEqual(res['sn'][99]['t'], u'Купить квартиру по программе военной ипотеки в Санкт-Петербурге можно по ставке от 9% годовых - Novostroy-Spb.ru')
+        self.assertEqual(res['sn'][99]['s'], u'11 июл. 2018 г. · Для получения предложения по военной ипотеке можно обратиться напрямую в банк или к ... по развитию розничного бизнеса Санкт-Петербургского филиала ПАО АКБ «Связь-Банк».')
+        self.assertEqual(res['sn'][99]['u'], 'https://www.novostroy-spb.ru/statyi/voennaya_ipoteka_v_novostroykah')
+        self.assertEqual(res['sn'][99]['d'], 'novostroy-spb.ru')
+        self.assertEqual(res['sn'][99]['vu'], u'https://www.novostroy-spb.ru › statyi')
+
+    def test77(self):
+        u""""
+            Ошибка парсинга от 2019-09-02
+        """
+        html = self.get_data('mobile-2019-09-02.txt')
+        g = GoogleJsonParser(html, snippet_fields=('d', 'p', 'u', 't', 's', 'm'))
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+
+        # В мобильной выдаче похоже нет общего кол-ва результатов
+        self.assertEqual(res['pc'], 0)
+        self.assertEqual(len(res['sn']), 0)
+
+    def test78(self):
+        u""""
+            Ошибка парсинга от 2019-09-02
+        """
+        html = self.get_data('mobile-2019-09-02-1.txt')
+        g = GoogleJsonParser(html, snippet_fields=('d', 'p', 'u', 't', 's', 'm'))
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+
+        # В мобильной выдаче похоже нет общего кол-ва результатов
+        self.assertEqual(res['pc'], 0)
+        self.assertEqual(len(res['sn']), 99)
+
+        self.assertEqual(res['sn'][0]['t'], u'Метро Автозаводская - Москва - Карты метро')
+        self.assertEqual(res['sn'][0]['s'], u'Карты и станции метро - быстрый поиск станций на карте. ... карта метро Москва расположение станции ^ Станция "Автозаводская" на карте метро, Москва ^ карта станции метро Автозаводская ^ Карта ...')
+        self.assertEqual(res['sn'][0]['u'], 'http://metro.umka.org/map-moscow/2-zamoskvoreckaya-liniya/avtozavodskaya.html')
+        self.assertEqual(res['sn'][0]['d'], 'metro.umka.org')
+        self.assertEqual(res['sn'][0]['vu'], u'metro.umka.org › avtozavodskaya')
+
+        self.assertEqual(res['sn'][98]['t'], u'Росреестр')
+        self.assertEqual(res['sn'][98]['s'], u'Москва. Личный кабинет. единый справочный телефон: 8 (800) 100-34-34. Звонок из регионов России бесплатный. Телефон доверия: (495) 917-38-25 ... Публичная кадастровая карта · Планы и результаты ...')
+        self.assertEqual(res['sn'][98]['u'], 'https://rosreestr.ru/site/')
+        self.assertEqual(res['sn'][98]['d'], 'rosreestr.ru')
+        self.assertEqual(res['sn'][98]['vu'], u'https://rosreestr.ru › site')
+
+    def test79(self):
+        u""""
+            Ошибка парсинга от 2019-09-02
+        """
+        html = self.get_data('mobile-2019-09-02-2.txt')
+        g = GoogleJsonParser(html, snippet_fields=('d', 'p', 'u', 't', 's', 'm'))
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+
+        # В мобильной выдаче похоже нет общего кол-ва результатов
+        self.assertEqual(res['pc'], 0)
+        self.assertEqual(len(res['sn']), 1)
+
+        self.assertEqual(res['sn'][0]['t'], u'Ну вот и мой блог!: «Зелёный Марафон» продлится 10 часов')
+        self.assertEqual(res['sn'][0]['s'], u'ЯРОСЛАВЛЬ, 30 мая — РИА Новости. Ярославский священник Алексей Кириллов попросил мэрию Ярославля отказаться от проведения праздника, где ...')
+        self.assertEqual(res['sn'][0]['u'], 'http://voronkingoepesos.blogspot.com/2019/05/10_30.html')
+        self.assertEqual(res['sn'][0]['d'], 'voronkingoepesos.blogspot.com')
+        self.assertEqual(res['sn'][0]['vu'], u'voronkingoepesos.blogspot.com › 2...')
+
     def print_sn(self, res):
         for i in res['sn']:
             print

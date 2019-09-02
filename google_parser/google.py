@@ -6,6 +6,8 @@ import urllib
 from urllib import quote, unquote
 from urlparse import urlparse, urlunsplit, urlsplit
 from HTMLParser import HTMLParser
+from pyquery import PyQuery
+from lxml import etree
 
 
 from google_parser.exceptions import EmptySerp, NoBodyInResponseError, BadGoogleParserError, \
@@ -378,6 +380,8 @@ class GoogleParser(object):
 
         if '<div class="med" id="res" role="main">' in self.content:
             return SnippetsParserAfter_2016_03_10(self.snippet_fields).get_snippets(self.content)
+        elif '<body jsmodel="' in self.content:
+            return MobileSnippetsParser(self.snippet_fields).get_snippets(self.content)
         elif '<div class="srg"' in self.content:
             return SnippetsParserDefault(self.snippet_fields).get_snippets(self.content)
         elif '<div id="search"><div id="ires">' in self.content:
@@ -399,7 +403,7 @@ class GoogleParser(object):
 
 class SnippetsParserDefault(object):
     snippets_regexp = re.compile(ur'(<div class="g">.*?</div><!--n--></div>)', re.I | re.M | re.S)
-    result_regexp = re.compile(ur'(<div class="srg">.*?<hr class=")', re.I | re.M | re.S)
+    result_regexp = re.compile(ur'(<div( class="srg"|[^>]+?id="rso"[^>]*?)>.*?<hr class=")', re.I | re.M | re.S)
 
     def __init__(self, snippet_fields):
         self.snippet_fields = snippet_fields
@@ -489,7 +493,7 @@ class SnippetsParserDefault(object):
 
     def _parse_title_snippet(self, snippet, position):
         snippet = re.sub(ur'<div class="action-menu.*?</div>', '', snippet, flags=re.I | re.M | re.S)
-        res = re.compile(ur'<(?:h3|div) class="r">.*?<a[^>]+?href="([^"]+?)"[^>]*?>(.*?)</a>', re.I | re.M | re.S).search(snippet)
+        res = re.compile(ur'<(?:h3|div)(?: class="r")?>.*?<a[^>]+?href="([^"]+?)"[^>]*?>(.*?)</a>', re.I | re.M | re.S).search(snippet)
         if res:
             title = res.group(2)
             if '<cite' in title:
@@ -554,9 +558,178 @@ class SnippetsParserDefault(object):
         if res:
             return res.group(1)
 
+
+class MobileSnippetsParser(SnippetsParserDefault):
+    snippets_regexp = re.compile(ur'(<div data-hveid="[^"]+?">.*?</div>\s*</div>\s*</div>\s*</div>)', re.I | re.M | re.S)
+
+    def _ignore_block(self, snippet):
+        if self._is_context_snippet(snippet):
+            return True
+
+    def _is_context_snippet(self, snippet):
+        # Рекламный блок
+        if snippet.xpath('.//div[contains(@class,"label_color_yellow")]'):
+            return True
+
+        if snippet.xpath('.//div[contains(@class,"label_theme_direct")]'):
+            return True
+
+        return 'serp-adv' in snippet.attrib['class'] or 't-construct-adapter__adv' in snippet.attrib['class']
+
+    def _parse_adv_logo(self, logo):
+        logo_div = logo.findall('div')
+        if not logo_div:
+            raise BadGoogleParserError(etree.tostring(logo))
+
+        spans = logo_div[0].findall('span')
+        if len(spans) != 2:
+            raise BadGoogleParserError(etree.tostring(logo))
+
+        return spans[0].text, spans[1].text
+
+    def _parse_logo(self, logo):
+        imgs = logo.findall('img')
+        if len(imgs) != 1:
+            raise BadGoogleParserError(etree.tostring(logo))
+
+        spans = logo.findall('span')
+        if len(spans) != 1:
+            raise BadGoogleParserError(etree.tostring(logo))
+
+        return imgs[0].attrib['src'], spans[0].text
+
+    def _parse_header(self, header):
+        aa = header.findall('a')
+        if aa:
+            if len(aa) != 1:
+                raise BadGoogleParserError(etree.tostring(header))
+
+            a = aa[0]
+            elements = a.findall('div')
+            if len(elements) < 2:
+                raise BadGoogleParserError(etree.tostring(header))
+
+            url = a.attrib['href']
+            logo, vu = self._parse_adv_logo(elements[0])
+            title = elements[1].text
+            return logo, vu, url, title
+
+    def _parse_title(self, header):
+
+        aa = header.findall('a')
+        if not aa:
+            divs = header.findall('div')
+            if not divs:
+                raise BadGoogleParserError(etree.tostring(header))
+
+            aa = divs[0].findall('a')
+            if not aa:
+                raise BadGoogleParserError(etree.tostring(header))
+            a = aa[0]
+        elif len(aa) == 1:
+            a = aa[0]
+        else:
+            raise BadGoogleParserError(etree.tostring(header))
+
+        divs = a.findall('div')
+        if len(divs) < 2:
+            raise BadGoogleParserError(etree.tostring(header))
+
+        spans = divs[0].findall('span')
+        if not spans:
+            raise BadGoogleParserError(etree.tostring(header))
+
+        return a.attrib['href'], spans[0].text, divs[1].text
+
+    def _parse_descr(self, descr):
+        divs = descr.findall('div')
+        if not divs:
+            raise BadGoogleParserError(etree.tostring(descr))
+
+        sub_divs = divs[0].findall('div')
+        if not sub_divs:
+            return self.strip_element_tags(divs[0])
+
+        return self.strip_element_tags(sub_divs[0])
+
+    @classmethod
+    def strip_element_tags(cls, element):
+        html = etree.tostring(element)
+        return HTMLParser().unescape(SnippetsParserDefault.strip_tags(html))
+
+    def _get_descr(self, descr):
+        if 's' not in self.snippet_fields:
+            return
+        return descr
+
+    def _get_html(self, snippet):
+        if 'h' in self.snippet_fields:
+            return etree.tostring(snippet)
+
+    def _get_vu(self, vu):
+        return vu
+
+    def get_snippets(self, body):
+        dom = PyQuery(body)
+        serp = dom('div[data-hveid]')
+
+        snippets = []
+        for snippet in serp:
+            # реклама
+            if snippet.xpath('./div/div[1]/a/div[1]/div/span[1]'):
+                continue
+
+            # вложенные в сниппет различные блоки
+            if 'mnr-' in snippet.attrib.get('class', ''):
+                continue
+
+            divs = snippet.findall('div')
+            if not divs:
+                continue
+
+            # нужный сниппет содержится в div с классом mnr-
+            mnr_divs = filter(lambda x: 'mnr-' in x.attrib.get('class', ''), divs)
+            if not mnr_divs:
+                continue
+
+            for mnr_div in mnr_divs:
+                snippets.append(mnr_div)
+
+        result = []
+        position = 0
+        for snippet in snippets:
+            block_divs = snippet.findall('div')
+            if not block_divs:
+                raise BadGoogleParserError(etree.tostring(snippet))
+
+            if len(block_divs) == 1:
+                block_divs = block_divs[0].findall('div')
+
+            if len(block_divs) < 2:
+                raise BadGoogleParserError(etree.tostring(snippet))
+
+            position += 1
+            u, vu, t = self._parse_title(block_divs[0])
+            s = self._parse_descr(block_divs[1])
+
+            result.append({
+                    'p': position,
+                    'u': u,
+                    'd': self._get_domain(u),
+                    'm': self._is_map_snippet(u),
+                    't': self._get_title(t),
+                    's': self._get_descr(s),
+                    'h': self._get_html(snippet),
+                    'vu': self._get_vu(vu),
+            })
+
+        return result
+
+
 class SnippetsParserUnil_2015_07_23(SnippetsParserDefault):
     snippets_regexp = re.compile(ur'(<(?:li|div) class="g">(?:<span|<h3|<table).*?(?:(?:<br>|</a>)\s*</div>|</table>)\s*</(?:li|div)>)', re.I | re.M | re.S)
     result_regexp = re.compile(ur'(<div id="ires">.*?</ol>\s*</div>)', re.I | re.M | re.S)
+
 
 class SnippetsParserAfter_2016_03_10(SnippetsParserDefault):
     snippets_regexp = re.compile(ur'(<div class="g\s*(?:card-section)?"(?: data-hveid="[^"]+?")?(?: data-ved="[^"]+?")?>\s*(?:<h2[^>]+?>[^<]+?</h2>)?\s*(?:<div data-hveid="[^"]+?">|<div>)?<!--m-->\s*.*?</div><!--n-->\s*(?:</div>))', re.I | re.M | re.S)
