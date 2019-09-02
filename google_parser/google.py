@@ -670,6 +670,9 @@ class MobileSnippetsParser(SnippetsParserDefault):
         return vu
 
     def get_snippets(self, body):
+        # with open('go.html', 'w') as f:
+        #     f.write(body)
+
         dom = PyQuery(body)
         serp = dom('div[data-hveid]')
 
@@ -677,6 +680,10 @@ class MobileSnippetsParser(SnippetsParserDefault):
         for snippet in serp:
             # реклама
             if snippet.xpath('./div/div[1]/a/div[1]/div/span[1]'):
+                continue
+
+            # реклама google play
+            if snippet.xpath('./div/div[1]/a/div[1]/div[1]/div[1]/span[1]'):
                 continue
 
             # вложенные в сниппет различные блоки
@@ -707,14 +714,15 @@ class MobileSnippetsParser(SnippetsParserDefault):
                 raise BadGoogleParserError(etree.tostring(snippet))
 
             if len(block_divs) == 1:
-                block_divs = block_divs[0].findall('div')
-
-            if len(block_divs) < 2:
-                raise BadGoogleParserError(etree.tostring(snippet))
+                if not block_divs[0].findall('a'):
+                    block_divs = block_divs[0].findall('div')
 
             position += 1
             u, vu, t = self._parse_title(block_divs[0])
-            s = self._parse_descr(block_divs[1])
+            if len(block_divs) > 1:
+                s = self._parse_descr(block_divs[1])
+            else:
+                s = None
 
             result.append({
                     'p': position,

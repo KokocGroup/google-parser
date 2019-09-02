@@ -1513,6 +1513,64 @@ class GoogleParserTestCase(GoogleParserTests):
         self.assertEqual(res['sn'][98]['d'], 'books.google.ru')
         self.assertEqual(res['sn'][98]['vu'], u'https://books.google.ru › books')
 
+    def test82(self):
+        u""""
+            Ошибка парсинга от 2019-09-02
+        """
+        html = self.get_data('mobile-2019-09-02-5.txt')
+        g = GoogleJsonParser(html, snippet_fields=('d', 'p', 'u', 't', 's', 'm'))
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+
+        # В мобильной выдаче похоже нет общего кол-ва результатов
+        self.assertEqual(res['pc'], 0)
+        self.assertEqual(len(res['sn']), 98)
+
+        self.assertEqual(res['sn'][0]['t'], u'FB | Акции Facebook - Investing.com')
+        self.assertEqual(res['sn'][0]['s'], u'Получите подробную информацию о акциях Facebook Inc (FB) включая Цену, Графики, Теханализ, Исторические данные, Отчеты и др. Facebook.')
+        self.assertEqual(res['sn'][0]['u'], 'https://m.ru.investing.com/equities/facebook-inc')
+        self.assertEqual(res['sn'][0]['d'], 'm.ru.investing.com')
+        self.assertEqual(res['sn'][0]['vu'], u'https://m.ru.investing.com › equities')
+
+        self.assertEqual(res['sn'][97]['t'], u'Обвал акций Facebook на 26% - в чем причина - Страна')
+        self.assertEqual(res['sn'][97]['s'], u'26 июл. 2018 г. · Facebook не выполнил показателей ни по прибыли, ни по пользователям, поэтому его акции обвалились.')
+        self.assertEqual(res['sn'][97]['u'], 'https://amp.strana.ua/news/153046-aktsii-facebook-rekordno-upali-posle-razhromnoho-otcheta-o-sostojanii-kompanii.html')
+        self.assertEqual(res['sn'][97]['d'], 'amp.strana.ua')
+        self.assertEqual(res['sn'][97]['vu'], u'https://strana.ua › news › 15304...')
+
+    def test83(self):
+        u""""
+            Ошибка парсинга от 2019-09-02
+        """
+        html = self.get_data('mobile-2019-09-02-6.txt')
+        g = GoogleJsonParser(html, snippet_fields=('d', 'p', 'u', 't', 's', 'm'))
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+
+        # В мобильной выдаче похоже нет общего кол-ва результатов
+        self.assertEqual(res['pc'], 0)
+        self.assertEqual(len(res['sn']), 99)
+
+        self.assertEqual(res['sn'][0]['t'], u'Платформа MetaTrader 4 для анализа котировок и торговли на Форексе')
+        self.assertEqual(res['sn'][0]['s'], u'MetaTrader 4 — это бесплатная торговая платформа, предназначенная для торговли на рынке Форекс. Широкие аналитические возможности, гибкая торговая система, алгоритмический и мобильный ...')
+        self.assertEqual(res['sn'][0]['u'], 'https://www.metatrader4.com/ru')
+        self.assertEqual(res['sn'][0]['d'], 'metatrader4.com')
+        self.assertEqual(res['sn'][0]['vu'], u'https://www.metatrader4.com › ...')
+
+        self.assertEqual(res['sn'][95]['t'], u'Язык программирования MQL5: Продвинутое использование ...')
+        self.assertEqual(res['sn'][95]['s'], None)
+        self.assertEqual(res['sn'][95]['u'], 'https://books.google.ru/books?id=ROSYDwAAQBAJ&pg=PT171&lpg=PT171&dq=%D0%BC%D0%B5%D1%82%D0%B0%D1%82%D1%80%D0%B5%D0%B9%D0%B4%D0%B5%D1%80&source=bl&ots=EtMdmWWB9c&sig=ACfU3U2barZH6UJb8CzQPz6v4u7YTo-Qww&hl=ru&sa=X&sqi=2&ved=2ahUKEwijkYbRv7LkAhWDnVwKHfK_CygQ6AEwfHoECGAQAQ')
+        self.assertEqual(res['sn'][95]['d'], 'books.google.ru')
+        self.assertEqual(res['sn'][95]['vu'], u'https://books.google.ru › books')
+
+        self.assertEqual(res['sn'][98]['t'], 'Hma metatrader - morghparvar')
+        self.assertEqual(res['sn'][98]['s'], u'It emphasizes recent prices over older ones, resulting in a fast-acting yet smooth moving average HMA Trend Indicator for MetaTrader 4. . The diagram below shows moving averages HMA and SMA with the same ...')
+        self.assertEqual(res['sn'][98]['u'], 'http://morghparvar.ir/hod/hma-metatrader.html')
+        self.assertEqual(res['sn'][98]['d'], 'morghparvar.ir')
+        self.assertEqual(res['sn'][98]['vu'], u'morghparvar.ir › hod › hma-metatr...')
+
     def print_sn(self, res):
         for i in res['sn']:
             print
