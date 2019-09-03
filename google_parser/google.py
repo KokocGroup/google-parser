@@ -704,6 +704,10 @@ class MobileSnippetsParser(SnippetsParserDefault):
                 if 'card-section' in mnr_div.attrib.get('class', ''):
                     continue
 
+                # описание товара, ответ на вопрос
+                if 'wholepage-card' in mnr_div.attrib.get('class', ''):
+                    continue
+
                 snippets.append(mnr_div)
 
         result = []

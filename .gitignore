@@ -3,3 +3,4 @@
 dist/*
 google_parser.egg-info/*
 setup.pysetup.py
+download.sh

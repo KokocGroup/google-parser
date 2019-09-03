@@ -1571,6 +1571,32 @@ class GoogleParserTestCase(GoogleParserTests):
         self.assertEqual(res['sn'][98]['d'], 'morghparvar.ir')
         self.assertEqual(res['sn'][98]['vu'], u'morghparvar.ir › hod › hma-metatr...')
 
+    def test84(self):
+        u""""
+            Ошибка парсинга от 2019-09-02
+        """
+        html = self.get_data('mobile-2019-09-03.txt')
+        g = GoogleJsonParser(html, snippet_fields=('d', 'p', 'u', 't', 's', 'm'))
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+
+        # В мобильной выдаче похоже нет общего кол-ва результатов
+        self.assertEqual(res['pc'], 0)
+        self.assertEqual(len(res['sn']), 99)
+
+        self.assertEqual(res['sn'][0]['t'], u'Купить шампанское брют — цены на шампанское и игристые вина Brut в магазине Winestyle')
+        self.assertEqual(res['sn'][0]['s'], u'Каталог сухого шампанского и игристых вин брют различных марок и сортов. Продажа игристых вин брют в магазинах Winestyle.ru.')
+        self.assertEqual(res['sn'][0]['u'], 'https://winestyle.ru/champagnes-and-sparkling/brut/')
+        self.assertEqual(res['sn'][0]['d'], 'winestyle.ru')
+        self.assertEqual(res['sn'][0]['vu'], u'https://winestyle.ru › brut')
+
+        self.assertEqual(res['sn'][98]['t'], u'Российское шампанское брют белое "OREANDA CHARDONNAY" серии "Premium line" ООО "Крымский Винный Дом" (19-я линия 53) — Скидки сегодня в магазинах Ростова ...')
+        self.assertEqual(res['sn'][98]['s'], u'Где купить "Российское шампанское брют белое "OREANDA CHARDONNAY" серии "Premium line" ООО " Крымский Винный Дом" (19-я линия 53)" cо скидкой в Ростов-на-Дону. Узнайте, где покупать ...')
+        self.assertEqual(res['sn'][98]['u'], 'https://edadeal.ru/rostov-na-donu/offers/4d4e10bd-c4e4-4819-b3f2-f9d24dfe5e63')
+        self.assertEqual(res['sn'][98]['d'], 'edadeal.ru')
+        self.assertEqual(res['sn'][98]['vu'], u'https://edadeal.ru › offers')
+
     def print_sn(self, res):
         for i in res['sn']:
             print
