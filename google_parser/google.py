@@ -702,7 +702,25 @@ class MobileSnippetsParser(SnippetsParserDefault):
         #     f.write(body)
 
         dom = PyQuery(body)
-        serp = dom('div[data-hveid]')
+        rso_div = dom('#rso')
+        if not rso_div:
+            raise BadGoogleParserError()
+
+        divs = rso_div[0].findall('div')
+
+        serp = []
+        if divs and 'kp-wholepage' in divs[0].attrib.get('class', ''):
+            serp = dom('div.srg>div[data-hveid]')
+        else:
+            for div in divs:
+                if 'data-hveid' in div.attrib:
+                    serp.append(div)
+                    continue
+                if 'srg' == div.attrib.get('class'):
+                    data_hveid_divs = div.findall('div')
+                    for item in data_hveid_divs:
+                        if 'data-hveid' in item.attrib:
+                            serp.append(item)
 
         snippets = []
         for snippet in serp:

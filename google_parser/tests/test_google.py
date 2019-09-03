@@ -1635,7 +1635,7 @@ class GoogleParserTestCase(GoogleParserTests):
 
         # В мобильной выдаче похоже нет общего кол-ва результатов
         self.assertEqual(res['pc'], 0)
-        self.assertEqual(len(res['sn']), 97)
+        self.assertEqual(len(res['sn']), 96)
 
         self.assertEqual(res['sn'][0]['t'], u'Курорты Калининградской области | Loratravels - Путешествия и туризм')
         self.assertEqual(res['sn'][0]['s'], u'Курорты Калининградской области: Светлогорск, Зеленоградск, Куршская коса, посёлок Янтарный и другие.')
@@ -1643,17 +1643,11 @@ class GoogleParserTestCase(GoogleParserTests):
         self.assertEqual(res['sn'][0]['d'], 'loratravels.ru')
         self.assertEqual(res['sn'][0]['vu'], u'https://loratravels.ru › glavnaya › ku...')
 
-        self.assertEqual(res['sn'][75]['t'], u'30 лучших отелей в Пионерском (от 1 320 руб.) - Booking.com')
-        self.assertEqual(res['sn'][75]['s'], u'Приятный тихий поселок. В будни людей совсем мало, в выходные приезжают из Калининграда на пляж. ... НЕ ЗРЯ САМ ПРЕЗИДЕНТ ВЫБРАЛ ГОРОД ПИОНЕРСКИЙ В КАЛИНИНГРАДСКОЙ ОБЛАСТИ ...')
-        self.assertEqual(res['sn'][75]['u'], 'https://www.booking.com/city/ru/pionerskiy.ru.html')
-        self.assertEqual(res['sn'][75]['d'], 'booking.com')
-        self.assertEqual(res['sn'][75]['vu'], u'https://www.booking.com › city › pi...')
-
-        self.assertEqual(res['sn'][96]['t'], u'Белинцева И.В. Архитектура морских курортов Калининградской области. – М.-СПб.: Нестор-История, 2018. – 216 с. - НИИТИАГ')
-        self.assertEqual(res['sn'][96]['s'], u'Монография посвящена длительной истории формирования архитектурно-градостроительной среды наиболее известных морских курортов Самбии в Восточной Пруссии (совр. Калининградский полуостров  ...')
-        self.assertEqual(res['sn'][96]['u'], 'http://www.niitiag.ru/pub/pub_cat/belintseva_arkhitektura_morskikh_kurortov_kaliningradskoy_oblasti')
-        self.assertEqual(res['sn'][96]['d'], 'niitiag.ru')
-        self.assertEqual(res['sn'][96]['vu'], u'www.niitiag.ru › pub › pub_cat › b...')
+        self.assertEqual(res['sn'][95]['t'], u'Белинцева И.В. Архитектура морских курортов Калининградской области. – М.-СПб.: Нестор-История, 2018. – 216 с. - НИИТИАГ')
+        self.assertEqual(res['sn'][95]['s'], u'Монография посвящена длительной истории формирования архитектурно-градостроительной среды наиболее известных морских курортов Самбии в Восточной Пруссии (совр. Калининградский полуостров  ...')
+        self.assertEqual(res['sn'][95]['u'], 'http://www.niitiag.ru/pub/pub_cat/belintseva_arkhitektura_morskikh_kurortov_kaliningradskoy_oblasti')
+        self.assertEqual(res['sn'][95]['d'], 'niitiag.ru')
+        self.assertEqual(res['sn'][95]['vu'], u'www.niitiag.ru › pub › pub_cat › b...')
 
     def test87(self):
         u""""
@@ -1680,6 +1674,32 @@ class GoogleParserTestCase(GoogleParserTests):
         self.assertEqual(res['sn'][97]['u'], 'https://m.kvartirka.com/russia/bahchisaray/')
         self.assertEqual(res['sn'][97]['d'], 'm.kvartirka.com')
         self.assertEqual(res['sn'][97]['vu'], u'https://m.kvartirka.com › bahchisaray')
+
+    def test88(self):
+        u""""
+            Ошибка парсинга от 2019-09-03
+        """
+        html = self.get_data('mobile-2019-09-03-4.txt')
+        g = GoogleJsonParser(html, snippet_fields=('d', 'p', 'u', 't', 's', 'm'))
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+
+        # В мобильной выдаче похоже нет общего кол-ва результатов
+        self.assertEqual(res['pc'], 0)
+        self.assertEqual(len(res['sn']), 100)
+
+        self.assertEqual(res['sn'][0]['t'], u'Путевки в Крым 2019 цены: купить путевку в Крым - пансионат Береговой')
+        self.assertEqual(res['sn'][0]['s'], u'Путевки в Крым 2019 - ваш вариант отдыха на полуострове! Стоимость путевок, подробное описание, программы, направления - на сайте, по тел. +7 978 709 14 32, скайп: beregovoy-alushta.')
+        self.assertEqual(res['sn'][0]['u'], 'https://beregovoy-alushta.com/actions/pytevki-krym')
+        self.assertEqual(res['sn'][0]['d'], 'beregovoy-alushta.com')
+        self.assertEqual(res['sn'][0]['vu'], u'https://beregovoy-alushta.com › pyt...')
+
+        self.assertEqual(res['sn'][99]['t'], u'Путевка в санаторий Крыма – купить путевку в санаторий «Киев», Алушта - Санаторий Киев Алушта 2019')
+        self.assertEqual(res['sn'][99]['s'], u'Отдых и лечение в Крыму в 2019 году: цены в санатории Алушты, купить путевку в Крым на 2019 год в ... В стоимость путевки в санаторий Алушты «Киев» по лечению заболеваний органов дыхания входят:.')
+        self.assertEqual(res['sn'][99]['u'], 'https://kiev-alushta.com/putevki-sanatorij')
+        self.assertEqual(res['sn'][99]['d'], 'kiev-alushta.com')
+        self.assertEqual(res['sn'][99]['vu'], u'https://kiev-alushta.com › putevki-sa...')
 
     def print_sn(self, res):
         for i in res['sn']:
