@@ -614,7 +614,35 @@ class MobileSnippetsParser(SnippetsParserDefault):
             title = elements[1].text
             return logo, vu, url, title
 
-    def _parse_title(self, header):
+    def _parse_rc_title(self, header):
+        divs = header.findall('div')
+        if len(divs) < 2:
+            raise BadGoogleParserError(etree.tostring(header))
+
+        vu_divs = divs[0].findall('div')
+        if not vu_divs:
+            raise BadGoogleParserError(etree.tostring(header))
+
+        vu_cite = vu_divs[0].findall('cite')
+        if not vu_cite:
+            raise BadGoogleParserError(etree.tostring(header))
+
+        vu = vu_cite[0].text
+
+        h3 = divs[1].findall('h3')
+        if not h3:
+            raise BadGoogleParserError(etree.tostring(header))
+
+        a = h3[0].findall('a')
+        if not a:
+            raise BadGoogleParserError(etree.tostring(header))
+
+        return a[0].attrib['href'], vu, a[0].text
+
+
+    def _parse_title(self, header, is_rc):
+        if is_rc:
+            return self._parse_rc_title(header)
 
         aa = header.findall('a')
         if not aa:
@@ -682,6 +710,10 @@ class MobileSnippetsParser(SnippetsParserDefault):
             if snippet.xpath('./div/div[1]/a/div[1]/div/span[1]'):
                 continue
 
+            # реклама
+            if snippet.xpath('./div/div[1]/g-tray-header'):
+                continue
+
             # реклама google play
             if snippet.xpath('./div/div[1]/a/div[1]/div[1]/div[1]/span[1]'):
                 continue
@@ -690,12 +722,17 @@ class MobileSnippetsParser(SnippetsParserDefault):
             if 'mnr-' in snippet.attrib.get('class', ''):
                 continue
 
+            # результаты поиска на карте
+            h2 = snippet.findall('h2')
+            if h2:
+                continue
+
             divs = snippet.findall('div')
             if not divs:
                 continue
 
             # нужный сниппет содержится в div с классом mnr-
-            mnr_divs = filter(lambda x: 'mnr-' in x.attrib.get('class', ''), divs)
+            mnr_divs = filter(lambda x: 'mnr-' in x.attrib.get('class', '') or 'rc' == x.attrib.get('class', ''), divs)
             if not mnr_divs:
                 continue
 
@@ -713,16 +750,19 @@ class MobileSnippetsParser(SnippetsParserDefault):
         result = []
         position = 0
         for snippet in snippets:
+            # сниппет с немного иной структурой
+            is_rc = 'rc' == snippet.attrib.get('class')
+
             block_divs = snippet.findall('div')
             if not block_divs:
-                raise BadGoogleParserError(etree.tostring(snippet))
+                continue
 
             if len(block_divs) == 1:
                 if not block_divs[0].findall('a'):
                     block_divs = block_divs[0].findall('div')
 
             position += 1
-            u, vu, t = self._parse_title(block_divs[0])
+            u, vu, t = self._parse_title(block_divs[0], is_rc)
             if len(block_divs) > 1:
                 s = self._parse_descr(block_divs[1])
             else:
