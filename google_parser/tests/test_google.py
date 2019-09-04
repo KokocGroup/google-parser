@@ -1701,6 +1701,58 @@ class GoogleParserTestCase(GoogleParserTests):
         self.assertEqual(res['sn'][99]['d'], 'kiev-alushta.com')
         self.assertEqual(res['sn'][99]['vu'], u'https://kiev-alushta.com › putevki-sa...')
 
+    def test89(self):
+        u""""
+            Ошибка парсинга от 2019-09-04
+        """
+        html = self.get_data('mobile-2019-09-04.txt')
+        g = GoogleJsonParser(html, snippet_fields=('d', 'p', 'u', 't', 's', 'm'))
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+
+        # В мобильной выдаче похоже нет общего кол-ва результатов
+        self.assertEqual(res['pc'], 0)
+        self.assertEqual(len(res['sn']), 96)
+
+        self.assertEqual(res['sn'][0]['t'], 'Xiaomi')
+        self.assertEqual(res['sn'][0]['s'], u'Все товары')
+        self.assertEqual(res['sn'][0]['u'], 'https://www.mi.com/ru/')
+        self.assertEqual(res['sn'][0]['d'], 'mi.com')
+        self.assertEqual(res['sn'][0]['vu'], u'https://www.mi.com › ...')
+
+        self.assertEqual(res['sn'][95]['t'], 'Smartphone maker Xiaomi plans $1.5b buyback [Video] - Yahoo Finance')
+        self.assertEqual(res['sn'][95]['s'], u'Опубликовано:15 часов назад')
+        self.assertEqual(res['sn'][95]['u'], 'https://finance.yahoo.com/video/smartphone-maker-xiaomi-plans-1-150245874.html')
+        self.assertEqual(res['sn'][95]['d'], 'finance.yahoo.com')
+        self.assertEqual(res['sn'][95]['vu'], u'https://finance.yahoo.com › video')
+
+    def test90(self):
+        u""""
+            Ошибка парсинга от 2019-09-04
+        """
+        html = self.get_data('mobile-2019-09-04-1.txt')
+        g = GoogleJsonParser(html, snippet_fields=('d', 'p', 'u', 't', 's', 'm'))
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+
+        # В мобильной выдаче похоже нет общего кол-ва результатов
+        self.assertEqual(res['pc'], 0)
+        self.assertEqual(len(res['sn']), 98)
+
+        self.assertEqual(res['sn'][0]['t'], u'MacBook – Apple (RU)')
+        self.assertEqual(res['sn'][0]['s'], u'Невероятно лёгкий и тонкий MacBook оснащается процессорами седьмого поколения и улучшенными SSD-накопителями. И работает без подзарядки до 10 часов.')
+        self.assertEqual(res['sn'][0]['u'], 'https://www.apple.com/ru/macbook/index.html')
+        self.assertEqual(res['sn'][0]['d'], 'apple.com')
+        self.assertEqual(res['sn'][0]['vu'], u'https://www.apple.com › macbook')
+
+        self.assertEqual(res['sn'][97]['t'], u'Les meilleures réductions sur les MacBook Pro 13 et MacBook Air 2019 | MacGeneration')
+        self.assertEqual(res['sn'][97]['s'], u"15 часов назад · Si vous êtes à la recherche d'un MacBook Pro 13\" ou d'un MacBook Air 13\" Retina des toutes dernières générations, pas la peine de payer le prix fort sur l'Apple Store, il y a quelques ...")
+        self.assertEqual(res['sn'][97]['u'], 'https://www.macg.co/materiel/2019/09/les-meilleures-reductions-sur-les-macbook-pro-13-et-macbook-air-2019-107955?amp')
+        self.assertEqual(res['sn'][97]['d'], 'macg.co')
+        self.assertEqual(res['sn'][97]['vu'], u'https://www.macg.co › 2019/09')
+
     def print_sn(self, res):
         for i in res['sn']:
             print

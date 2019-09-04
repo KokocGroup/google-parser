@@ -708,19 +708,21 @@ class MobileSnippetsParser(SnippetsParserDefault):
 
         divs = rso_div[0].findall('div')
 
-        serp = []
-        if divs and 'kp-wholepage' in divs[0].attrib.get('class', ''):
-            serp = dom('div.srg>div[data-hveid]')
-        else:
-            for div in divs:
-                if 'data-hveid' in div.attrib:
-                    serp.append(div)
-                    continue
-                if 'srg' == div.attrib.get('class'):
-                    data_hveid_divs = div.findall('div')
-                    for item in data_hveid_divs:
-                        if 'data-hveid' in item.attrib:
-                            serp.append(item)
+
+        serp1 = dom('div.srg>div[data-hveid]')
+
+        serp2 = []
+        for div in divs:
+            if 'data-hveid' in div.attrib:
+                serp2.append(div)
+                continue
+            if 'srg' == div.attrib.get('class'):
+                data_hveid_divs = div.findall('div')
+                for item in data_hveid_divs:
+                    if 'data-hveid' in item.attrib:
+                        serp2.append(item)
+
+        serp = serp1 if len(serp1) > len(serp2) else serp2
 
         snippets = []
         for snippet in serp:
@@ -775,9 +777,8 @@ class MobileSnippetsParser(SnippetsParserDefault):
             if not block_divs:
                 continue
 
-            if len(block_divs) == 1:
-                if not block_divs[0].findall('a'):
-                    block_divs = block_divs[0].findall('div')
+            if not block_divs[0].findall('a'):
+                block_divs = block_divs[0].findall('div')
 
             position += 1
             u, vu, t = self._parse_title(block_divs[0], is_rc)
