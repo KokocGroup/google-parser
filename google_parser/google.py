@@ -780,6 +780,9 @@ class MobileSnippetsParser(SnippetsParserDefault):
             if not block_divs[0].findall('a'):
                 block_divs = block_divs[0].findall('div')
 
+            if not block_divs:
+                raise BadGoogleParserError(etree.tostring(snippet))
+
             position += 1
             u, vu, t = self._parse_title(block_divs[0], is_rc)
             if len(block_divs) > 1:
