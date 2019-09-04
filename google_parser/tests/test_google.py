@@ -1753,6 +1753,32 @@ class GoogleParserTestCase(GoogleParserTests):
         self.assertEqual(res['sn'][97]['d'], 'macg.co')
         self.assertEqual(res['sn'][97]['vu'], u'https://www.macg.co › 2019/09')
 
+    def test91(self):
+        u""""
+            Ошибка парсинга от 2019-09-04
+        """
+        html = self.get_data('mobile-2019-09-04-2.txt')
+        g = GoogleJsonParser(html, snippet_fields=('d', 'p', 'u', 't', 's', 'm'))
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+
+        # В мобильной выдаче похоже нет общего кол-ва результатов
+        self.assertEqual(res['pc'], 0)
+        self.assertEqual(len(res['sn']), 95)
+
+        self.assertEqual(res['sn'][0]['t'], 'S7 Airlines')
+        self.assertEqual(res['sn'][0]['s'], 'S7 Airlines')
+        self.assertEqual(res['sn'][0]['u'], 'https://www.s7.ru/mobile/')
+        self.assertEqual(res['sn'][0]['d'], 's7.ru')
+        self.assertEqual(res['sn'][0]['vu'], u'https://www.s7.ru › mobile')
+
+        self.assertEqual(res['sn'][94]['t'], u'«Ведомости» узнали об отказе России от выпуска «укороченных» суперджетов. Минпромторг это отрицает — Meduza')
+        self.assertEqual(res['sn'][94]['s'], u'1 день назад · S7, напоминают «Ведомости», в 2018 году подписала предварительное соглашение о покупке ... а «Аэрофлот» решил не отказываться от планов купить еще 100 таких самолетов.')
+        self.assertEqual(res['sn'][94]['u'], 'https://meduza.io/amp/news/2019/09/03/vedomosti-uznali-ob-otkaze-rossii-ot-vypuska-ukorochennyh-superdzhetov-minpromtorg-eto-otritsaet')
+        self.assertEqual(res['sn'][94]['d'], 'meduza.io')
+        self.assertEqual(res['sn'][94]['vu'], u'https://meduza.io › 2019/09/03')
+
     def print_sn(self, res):
         for i in res['sn']:
             print
