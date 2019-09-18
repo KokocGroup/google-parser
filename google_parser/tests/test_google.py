@@ -1779,6 +1779,64 @@ class GoogleParserTestCase(GoogleParserTests):
         self.assertEqual(res['sn'][94]['d'], 'meduza.io')
         self.assertEqual(res['sn'][94]['vu'], u'https://meduza.io › 2019/09/03')
 
+    def test92(self):
+        u""""
+            Ошибка парсинга от 2019-09-04
+        """
+        html = self.get_data('2019-09-18.txt')
+        g = GoogleJsonParser(html, snippet_fields=('d', 'p', 'u', 't', 's', 'm'))
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+
+        # В мобильной выдаче похоже нет общего кол-ва результатов
+        self.assertEqual(res['pc'], 19)
+        self.assertEqual(len(res['sn']), 19)
+
+        self.assertEqual(res['sn'][0]['t'], u'Круглый канальный вентилятор: для вытяжки; для притока')
+        self.assertEqual(res['sn'][0]['s'], u'Канальные вентиляторы марки TD Вы можете без проблем выбрать и заказать в ... Типы товаров: ... CFk 125 MAX Shuft круглый канальный вентилятор.')
+        self.assertEqual(res['sn'][0]['u'], u'https://www.roomklimat.ru/section/5/62-kanalnye-ventilyatory-dlya-kruglykh-kanalov/')
+        self.assertEqual(res['sn'][0]['d'], 'roomklimat.ru')
+        self.assertEqual(res['sn'][0]['vu'], u'https://www.roomklimat.ru › Каталог › Вентиляция › Вентиляторы')
+
+        self.assertEqual(res['sn'][18]['t'], u'Вентиляционные каналы в Перми от 74 рублей')
+        self.assertEqual(res['sn'][18]['s'], u'Где недорого купить вентиляционные каналы в Перми. Самые выгодные предложения, цены, магазины. ... Канальный вентилятор VENTS ТТ 100 &middot; 4.5.')
+        self.assertEqual(res['sn'][18]['u'], u'https://perm.bestprice.su/promyshlennost/ventiljacionnye-kanaly/')
+        self.assertEqual(res['sn'][18]['d'], 'perm.bestprice.su')
+        self.assertEqual(res['sn'][18]['vu'], u'https://perm.bestprice.su › promyshlennost › ventiljacionnye-kanaly')
+
+    def test93(self):
+        u""""
+            Ошибка парсинга от 2019-09-04
+        """
+        html = self.get_data('2019-09-18-1.txt')
+        g = GoogleJsonParser(html, snippet_fields=('d', 'p', 'u', 't', 's', 'm'))
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+
+        # В мобильной выдаче похоже нет общего кол-ва результатов
+        self.assertEqual(res['pc'], 408000)
+        self.assertEqual(len(res['sn']), 98)
+
+        self.assertEqual(res['sn'][0]['t'], u'Купить кварцевые обогреватели в Москве – доступная ...')
+        self.assertEqual(res['sn'][0]['s'], u'В магазине БУРАН Вы можете купить кварцевые обогреватели недорого с удобной доставкой по Москве. Характеристики, отзывы, описание, ...')
+        self.assertEqual(res['sn'][0]['u'], u'https://buranrussia.ru/catalog/infrakrasnye-obogrevateli/kvarcevye/')
+        self.assertEqual(res['sn'][0]['d'], 'buranrussia.ru')
+        self.assertEqual(res['sn'][0]['vu'], u'https://buranrussia.ru › catalog › infrakrasnye-obogrevateli › kvarcevye')
+
+        self.assertEqual(res['sn'][1]['t'], u'Обогреватели в Москве - Tepleko.ru')
+        self.assertEqual(res['sn'][1]['s'], u'Купить обогреватель МКТЭН в любом городе России можно, связавшись с нами по телефонам в ... Что значит качественный кварцевый обогреватель?')
+        self.assertEqual(res['sn'][1]['u'], u'http://tepleko.ru/moscow.html')
+        self.assertEqual(res['sn'][1]['d'], 'tepleko.ru')
+        self.assertEqual(res['sn'][1]['vu'], u'tepleko.ru › Контакты')
+
+        self.assertEqual(res['sn'][97]['t'], u'Обогреватели кварцевые купить в Иркутске (от 539 руб.) 🥇')
+        self.assertEqual(res['sn'][97]['s'], u'1046 товаров в наличии! В категории: Обогреватели кварцевые - купить по выгодной цене, доставка: Иркутск, скидки!')
+        self.assertEqual(res['sn'][97]['u'], u'https://irkutsk.regmarkets.ru/obogrevateli-kvartsevye-62036/')
+        self.assertEqual(res['sn'][97]['d'], 'irkutsk.regmarkets.ru')
+        self.assertEqual(res['sn'][97]['vu'], u'https://irkutsk.regmarkets.ru › obogrevateli-kvartsevye-62036')
+
     def print_sn(self, res):
         for i in res['sn']:
             print

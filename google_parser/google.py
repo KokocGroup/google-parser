@@ -6,6 +6,8 @@ import urllib
 from urllib import quote, unquote
 from urlparse import urlparse, urlunsplit, urlsplit
 from HTMLParser import HTMLParser
+
+from datetime import datetime
 from pyquery import PyQuery
 from lxml import etree
 
@@ -378,6 +380,9 @@ class GoogleParser(object):
         if not res:
             raise NoBodyInResponseError()
 
+        # with open('go.html', 'w') as f:
+        #     f.write(self.content)
+
         if '<div class="med" id="res" role="main">' in self.content:
             return SnippetsParserAfter_2016_03_10(self.snippet_fields).get_snippets(self.content)
         elif '<body jsmodel="' in self.content:
@@ -545,7 +550,7 @@ class SnippetsParserDefault(object):
         raise BadGoogleParserError(u'не удалось найти описание сниппета: {}'.format(snippet))
 
     def _parse_description_snippet(self, snippet):
-        res = re.compile(ur'<span class="st">(.*?)</span>\s*(?:<br>|</div>|<div)', re.I | re.M | re.S).search(snippet)
+        res = re.compile(ur'<span class="st">(.*?)</span>\s*(?:<br>|</div>|<div|</a>)', re.I | re.M | re.S).search(snippet)
         if res:
             return SnippetsParserDefault.strip_tags(res.group(1))
 
@@ -698,9 +703,6 @@ class MobileSnippetsParser(SnippetsParserDefault):
         return vu
 
     def get_snippets(self, body):
-        # with open('go.html', 'w') as f:
-        #     f.write(body)
-
         dom = PyQuery(body)
         rso_div = dom('#rso')
         if not rso_div:
@@ -814,7 +816,7 @@ class SnippetsParserUnil_2015_07_23(SnippetsParserDefault):
 
 
 class SnippetsParserAfter_2016_03_10(SnippetsParserDefault):
-    snippets_regexp = re.compile(ur'(<div class="g\s*(?:card-section)?"(?: data-hveid="[^"]+?")?(?: data-ved="[^"]+?")?>\s*(?:<h2[^>]+?>[^<]+?</h2>)?\s*(?:<div data-hveid="[^"]+?">|<div>)?<!--m-->\s*.*?</div><!--n-->\s*(?:</div>))', re.I | re.M | re.S)
+    snippets_regexp = re.compile(ur'(<div class=(?:"g\s*(?:card-section)?"|"g\s*[^"]*" id="[^"]+")(?: data-hveid="[^"]+?")?(?: data-ved="[^"]+?")?>\s*(?:<h2[^>]+?>[^<]+?</h2>)?\s*(?:<div data-hveid="[^"]+?">|<div>)?<!--m-->\s*.*?</div><!--n-->\s*(?:</div>))', re.I | re.M | re.S)
     result_regexp = re.compile(ur'(<div class="med" id="res" role="main">.*?<!--z-->)', re.I | re.M | re.S)
 
     def get_snippets(self, body):
