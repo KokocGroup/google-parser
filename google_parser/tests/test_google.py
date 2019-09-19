@@ -1837,6 +1837,58 @@ class GoogleParserTestCase(GoogleParserTests):
         self.assertEqual(res['sn'][97]['d'], 'irkutsk.regmarkets.ru')
         self.assertEqual(res['sn'][97]['vu'], u'https://irkutsk.regmarkets.ru › obogrevateli-kvartsevye-62036')
 
+    def test94(self):
+        u""""
+            Ошибка парсинга от 2019-09-19
+        """
+        html = self.get_data('2019-09-19.txt')
+        g = GoogleJsonParser(html, snippet_fields=('d', 'p', 'u', 't', 's', 'm'))
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+
+        # В мобильной выдаче похоже нет общего кол-ва результатов
+        self.assertEqual(res['pc'], 297000000)
+        self.assertEqual(len(res['sn']), 100)
+
+        self.assertEqual(res['sn'][0]['t'], u'Планшет на Windows 10 - купить на E-katalog.ru &gt; цены ...')
+        self.assertEqual(res['sn'][0]['s'], None)
+        self.assertEqual(res['sn'][0]['u'], u'https://www.e-katalog.ru/list/30/pr-19371/')
+        self.assertEqual(res['sn'][0]['d'], 'e-katalog.ru')
+        self.assertEqual(res['sn'][0]['vu'], u'https://www.e-katalog.ru › list')
+
+        self.assertEqual(res['sn'][99]['t'], u'Планшеты на Windows 10 с клавиатурой')
+        self.assertEqual(res['sn'][99]['s'], u'В последнее время популярностью стали пользоваться планшеты на базе ОС Windows 10 с клавиатурой. Это неудивительно, ведь пользователям они ...')
+        self.assertEqual(res['sn'][99]['u'], u'https://androidnik.ru/planshet-s-klaviaturoj-windows-10-kupit/')
+        self.assertEqual(res['sn'][99]['d'], 'androidnik.ru')
+        self.assertEqual(res['sn'][99]['vu'], u'https://androidnik.ru › planshet-s-klaviaturoj-windows-10-kupit')
+
+    def test95(self):
+        u""""
+            Ошибка парсинга от 2019-09-19
+        """
+        html = self.get_data('2019-09-19-1.txt')
+        g = GoogleJsonParser(html, snippet_fields=('d', 'p', 'u', 't', 's', 'm'))
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+
+        # В мобильной выдаче похоже нет общего кол-ва результатов
+        self.assertEqual(res['pc'], 161000)
+        self.assertEqual(len(res['sn']), 98)
+
+        self.assertEqual(res['sn'][0]['t'], u'Планшеты ASUS - купить планшет АСУС: цена, продажа ...')
+        self.assertEqual(res['sn'][0]['s'], u'Интернет-магазин «Технопарк» в Москве это: ▷ Большой выбор планшетов ASUS ▷ Онлайн кредит за 5 минут ▷ Бонусы за покупку ▷ Гарантия на ...')
+        self.assertEqual(res['sn'][0]['u'], u'https://www.technopark.ru/planshety/asus/')
+        self.assertEqual(res['sn'][0]['d'], 'technopark.ru')
+        self.assertEqual(res['sn'][0]['vu'], u'https://www.technopark.ru › ... › Планшеты › Планшеты ASUS')
+
+        self.assertEqual(res['sn'][97]['t'], u'Новинки - Мобильный форум')
+        self.assertEqual(res['sn'][97]['s'], u'Компания HMD Global объявила российские цены смартфонов Nokia 6.2 и Nokia 7.2, ... Apple представила обновлённый планшет iPad седьмого поколения. ... На IFA 2019 компания ASUS официально представила смартфон ASUS ...')
+        self.assertEqual(res['sn'][97]['u'], u'http://www.mforum.ru/phones/news/')
+        self.assertEqual(res['sn'][97]['d'], 'mforum.ru')
+        self.assertEqual(res['sn'][97]['vu'], u'www.mforum.ru › phones › news')
+
     def print_sn(self, res):
         for i in res['sn']:
             print

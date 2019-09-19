@@ -709,10 +709,7 @@ class MobileSnippetsParser(SnippetsParserDefault):
             raise BadGoogleParserError()
 
         divs = rso_div[0].findall('div')
-
-
         serp1 = dom('div.srg>div[data-hveid]')
-
         serp2 = []
         for div in divs:
             if 'data-hveid' in div.attrib:
@@ -816,7 +813,7 @@ class SnippetsParserUnil_2015_07_23(SnippetsParserDefault):
 
 
 class SnippetsParserAfter_2016_03_10(SnippetsParserDefault):
-    snippets_regexp = re.compile(ur'(<div class=(?:"g\s*(?:card-section)?"|"g\s*[^"]*" id="[^"]+")(?: data-hveid="[^"]+?")?(?: data-ved="[^"]+?")?>\s*(?:<h2[^>]+?>[^<]+?</h2>)?\s*(?:<div data-hveid="[^"]+?">|<div>)?<!--m-->\s*.*?</div><!--n-->\s*(?:</div>))', re.I | re.M | re.S)
+    snippets_regexp = re.compile(ur'(<div class=(?:"g\s*(?:card-section)?"(?: data-hveid="[^"]+?")?(?: data-ved="[^"]+?")?>|"g\s+[^_"]*"[^>]*>)\s*(?:<h2[^>]+?>[^<]+?</h2>)?\s*(?:<div data-hveid="[^"]+?">|<div>)?<!--m-->\s*.*?</div><!--n-->\s*(?:</div>))', re.I | re.M | re.S)
     result_regexp = re.compile(ur'(<div class="med" id="res" role="main">.*?<!--z-->)', re.I | re.M | re.S)
 
     def get_snippets(self, body):
@@ -827,9 +824,6 @@ class SnippetsParserAfter_2016_03_10(SnippetsParserDefault):
         result = []
         position = 0
         for body in res:
-            # вырезаем отзывы
-            body = re.sub(ur'<div class="g mnr-c g-blk".*?<div class="[^"]*?kno-ftr">\s*', '', body, re.I | re.M | re.S)
-
             snippets = self.snippets_regexp.findall(body)
             for snippet in snippets:
                 position += 1
