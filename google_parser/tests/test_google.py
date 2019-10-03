@@ -1865,29 +1865,29 @@ class GoogleParserTestCase(GoogleParserTests):
 
     def test95(self):
         u""""
-            Ошибка парсинга от 2019-09-19
+            Ошибка парсинга от 2019-10-03
         """
-        html = self.get_data('2019-09-19-1.txt')
+        html = self.get_data('2019-10-03.txt')
         g = GoogleJsonParser(html, snippet_fields=('d', 'p', 'u', 't', 's', 'm'))
         self.assertFalse(g.is_suspicious_traffic())
 
         res = g.get_serp()
 
         # В мобильной выдаче похоже нет общего кол-ва результатов
-        self.assertEqual(res['pc'], 161000)
+        self.assertEqual(res['pc'], 15500000)
         self.assertEqual(len(res['sn']), 98)
 
-        self.assertEqual(res['sn'][0]['t'], u'Планшеты ASUS - купить планшет АСУС: цена, продажа ...')
-        self.assertEqual(res['sn'][0]['s'], u'Интернет-магазин «Технопарк» в Москве это: ▷ Большой выбор планшетов ASUS ▷ Онлайн кредит за 5 минут ▷ Бонусы за покупку ▷ Гарантия на ...')
-        self.assertEqual(res['sn'][0]['u'], u'https://www.technopark.ru/planshety/asus/')
-        self.assertEqual(res['sn'][0]['d'], 'technopark.ru')
-        self.assertEqual(res['sn'][0]['vu'], u'https://www.technopark.ru › ... › Планшеты › Планшеты ASUS')
+        self.assertEqual(res['sn'][0]['t'], u'Гарнитур — Википедия')
+        self.assertEqual(res['sn'][0]['s'], u'Гарнитур — комплект каких-либо предметов, выполненный в едином стиле (обычно о мебели или одежде). Гарнитура женская, гарнитур мужской (от ...')
+        self.assertEqual(res['sn'][0]['u'], u'https://ru.wikipedia.org/wiki/%D0%93%D0%B0%D1%80%D0%BD%D0%B8%D1%82%D1%83%D1%80')
+        self.assertEqual(res['sn'][0]['d'], 'ru.wikipedia.org')
+        self.assertEqual(res['sn'][0]['vu'], u'https://ru.wikipedia.org › wiki › Гарнитур')
 
-        self.assertEqual(res['sn'][97]['t'], u'Новинки - Мобильный форум')
-        self.assertEqual(res['sn'][97]['s'], u'Компания HMD Global объявила российские цены смартфонов Nokia 6.2 и Nokia 7.2, ... Apple представила обновлённый планшет iPad седьмого поколения. ... На IFA 2019 компания ASUS официально представила смартфон ASUS ...')
-        self.assertEqual(res['sn'][97]['u'], u'http://www.mforum.ru/phones/news/')
-        self.assertEqual(res['sn'][97]['d'], 'mforum.ru')
-        self.assertEqual(res['sn'][97]['vu'], u'www.mforum.ru › phones › news')
+        self.assertEqual(res['sn'][97]['t'], u'Кухонные гарнитуры: каталог, фото, цены | Скидка + ...')
+        self.assertEqual(res['sn'][97]['s'], u'Кухонные гарнитуры - купить кухонный гарнитур в Москве с бесплатной доставкой | Рассрочка без % | Льготная доставка в Северные и отдалённые ...')
+        self.assertEqual(res['sn'][97]['u'], u'https://davita-mebel.ru/category/kukhni/kukhonnye-garnitury/')
+        self.assertEqual(res['sn'][97]['d'], 'davita-mebel.ru')
+        self.assertEqual(res['sn'][97]['vu'], u'https://davita-mebel.ru › category › kukhni › kukhonnye-garnitury')
 
     def print_sn(self, res):
         for i in res['sn']:
