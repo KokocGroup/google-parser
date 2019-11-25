@@ -498,7 +498,7 @@ class SnippetsParserDefault(object):
 
     def _parse_title_snippet(self, snippet, position):
         snippet = re.sub(ur'<div class="action-menu.*?</div>', '', snippet, flags=re.I | re.M | re.S)
-        res = re.compile(ur'<(?:h3|div)(?: class="r")?>.*?<a[^>]+?href="([^"]+?)"[^>]*?>(.*?)</a>', re.I | re.M | re.S).search(snippet)
+        res = re.compile(ur'<(?:h3|div)(?: class="r")?[^>]+?>.*?<a[^>]+?href="([^"]+?)"[^>]*?>(.*?)</a>', re.I | re.M | re.S).search(snippet)
         if res:
             title = res.group(2)
             if '<cite' in title:

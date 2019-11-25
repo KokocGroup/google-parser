@@ -1889,6 +1889,38 @@ class GoogleParserTestCase(GoogleParserTests):
         self.assertEqual(res['sn'][97]['d'], 'davita-mebel.ru')
         self.assertEqual(res['sn'][97]['vu'], u'https://davita-mebel.ru › category › kukhni › kukhonnye-garnitury')
 
+    def test96(self):
+        u""""
+            Ошибка парсинга от 2019-10-03
+        """
+        html = self.get_data('2019-11-25.txt')
+        g = GoogleJsonParser(html, snippet_fields=('d', 'p', 'u', 't', 's', 'm'))
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+
+        # В мобильной выдаче похоже нет общего кол-ва результатов
+        self.assertEqual(res['pc'], 35)
+        self.assertEqual(len(res['sn']), 35)
+
+        self.assertEqual(res['sn'][0]['t'], u'DentaLab - стоматологическая клиника нового поколения')
+        self.assertEqual(res['sn'][0]['s'], u'... вас способом и сделайте первый шаг к лучшей версии своей улыбки. +7 (812) 903-42-03 priem@dentalab.ru м. Новочеркасская, Большеохтинский пр.')
+        self.assertEqual(res['sn'][0]['u'], u'https://dentalab.ru/')
+        self.assertEqual(res['sn'][0]['d'], 'dentalab.ru')
+        self.assertEqual(res['sn'][0]['vu'], u'https://dentalab.ru')
+
+        self.assertEqual(res['sn'][6]['t'], u'“ МедСоюз ”')
+        self.assertEqual(res['sn'][6]['s'], u'Новочеркасский пр.д.33 к.3, лит А, пом 21-Н. 16. &quot;Дента Лаб&quot;. ст. м. «Новочеркасская». Большеохтинский пр. 10, пом. 1-Н. 17. «Семейная Стоматология».')
+        self.assertEqual(res['sn'][6]['u'], u'https://guideh.com/wp-content/uploads/2017/11/%D0%A1%D0%BF%D0%B8%D1%81%D0%BE%D0%BA%20%D0%BA%D0%BB%D0%B8%D0%BD%D0%B8%D0%BA%20%D0%9C%D0%B5%D0%B4%D0%A1%D0%BE%D1%8E%D0%B7.doc')
+        self.assertEqual(res['sn'][6]['d'], 'guideh.com')
+        self.assertEqual(res['sn'][6]['vu'], u'https://guideh.com › wp-content › uploads › 2017/11')
+
+        self.assertEqual(res['sn'][34]['t'], u'челюстно-лицевая хирургия в Санкт-Петербурге ...')
+        self.assertEqual(res['sn'][34]['s'], u'м; медицинская лаборатория &middot; медицинский центр ..... Большеохтинский проспект, 37, 1 этаж; вход с торца. пн.-вс. ... Медицинский центр Дента L.')
+        self.assertEqual(res['sn'][34]['u'], u'https://spb.kliniki.ru/med-chelyustno-litsevaya-hirurgiya')
+        self.assertEqual(res['sn'][34]['d'], 'spb.kliniki.ru')
+        self.assertEqual(res['sn'][34]['vu'], u'https://spb.kliniki.ru › med-chelyustno-litsevaya-hirurgiya')
+
     def print_sn(self, res):
         for i in res['sn']:
             print
