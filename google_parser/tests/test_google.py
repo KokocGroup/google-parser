@@ -1921,6 +1921,44 @@ class GoogleParserTestCase(GoogleParserTests):
         self.assertEqual(res['sn'][34]['d'], 'spb.kliniki.ru')
         self.assertEqual(res['sn'][34]['vu'], u'https://spb.kliniki.ru › med-chelyustno-litsevaya-hirurgiya')
 
+    def test97(self):
+        u""""
+            Ошибка парсинга от 2019-12-12
+        """
+        html = self.get_data('mobile-2019-12-12.txt')
+        g = GoogleJsonParser(html, snippet_fields=('d', 'p', 'u', 't', 's', 'm'))
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+
+        # В мобильной выдаче похоже нет общего кол-ва результатов
+        self.assertEqual(res['pc'], 0)
+        self.assertEqual(len(res['sn']), 9)
+
+        self.assertEqual(res['sn'][0]['t'], u'Глянцевые кухни - купить от 5 977 руб в Москве | Интерент-магазин гарнитуров Мебель 169 - Mebel169.ru')
+        self.assertEqual(res['sn'][0]['s'], u'Продажа и изготовление глянцевых кухонь от ⭐ 5 977 руб ⭐ за комплект со скидкой до 30%. Онлайн- конструктор готовых кухонь на ... Белый глянец/Салатовый глянец. 17 420 р. Цена за всю кухню · -30%.')
+        self.assertEqual(res['sn'][0]['u'], 'https://mebel169.ru/kukhni/glyancevye/')
+        self.assertEqual(res['sn'][0]['d'], 'mebel169.ru')
+        self.assertEqual(res['sn'][0]['vu'], 'https://mebel169.ru')
+
+        self.assertEqual(res['sn'][4]['t'], u'Купить глянцевую кухню недорого в Москве: каталог прямых и угловых кухонь с фото, цветами, ценами - Антарес Мебель')
+        self.assertEqual(res['sn'][4]['s'], u'Кухня Валерия-М 2,4 метра. Длина 2392. Ширина 1692. Высота 2140. Глубина 480. 43930руб. 43930 45564Купить. Доставка бесплатно. 1 день. Цвета: Белый глянец (СуМ); Лайм глянец (СуМ); Венге (СуМ) ...')
+        self.assertEqual(res['sn'][4]['u'], 'https://www.antarescompany.ru/shop/kuhni/glyancevye/')
+        self.assertEqual(res['sn'][4]['d'], 'antarescompany.ru')
+        self.assertEqual(res['sn'][4]['vu'], 'https://www.antarescompany.ru')
+
+        self.assertEqual(res['sn'][5]['t'], u'Купить белую кухню - глянцевые и матовые кухонные гарнитуры белого цвета с фото и ценами - Антарес Мебель')
+        self.assertEqual(res['sn'][5]['s'], u'Каталог кухонной мебели с белыми фасадами от российских производителей в интернет-магазине. Мы предлагаем онлайн расчет и бесплатную доставку кухонь белого цвета по Москве.')
+        self.assertEqual(res['sn'][5]['u'], 'https://www.antarescompany.ru/shop/kuhni/belye/')
+        self.assertEqual(res['sn'][5]['d'], 'antarescompany.ru')
+        self.assertEqual(res['sn'][5]['vu'], 'https://www.antarescompany.ru')
+
+        self.assertEqual(res['sn'][8]['t'], u'Глянцевые кухни в стиле модерн купить недорого в Москве - San09')
+        self.assertEqual(res['sn'][8]['s'], u'Недорогие кухни Модерн от производителя. Выбор цвета, конфигурации, размеров. ... Кухонный набор « Модерн», цвет «белый глянец», 2 предмета, общая длина 1м. Глубина: 600 мм; Длина: 1000 мм ...')
+        self.assertEqual(res['sn'][8]['u'], 'https://san09.ru/mebel_dlya_kuhni/kuhni_komplekty_modern/')
+        self.assertEqual(res['sn'][8]['d'], 'san09.ru')
+        self.assertEqual(res['sn'][8]['vu'], 'https://san09.ru')
+
     def print_sn(self, res):
         for i in res['sn']:
             print

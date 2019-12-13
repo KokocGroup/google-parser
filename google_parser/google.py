@@ -712,10 +712,14 @@ class MobileSnippetsParser(SnippetsParserDefault):
         serp1 = dom('div.srg>div[data-hveid]')
         serp2 = []
         for div in divs:
-            if 'data-hveid' in div.attrib:
+            attrib = div.attrib
+            attrib_class = div.attrib.get('class')
+
+            if 'data-hveid' in attrib:
                 serp2.append(div)
                 continue
-            if 'srg' == div.attrib.get('class'):
+
+            if 'srg' == attrib_class:
                 data_hveid_divs = div.findall('div')
                 for item in data_hveid_divs:
                     if 'data-hveid' in item.attrib:
@@ -738,7 +742,11 @@ class MobileSnippetsParser(SnippetsParserDefault):
                 continue
 
             # вложенные в сниппет различные блоки
-            if 'mnr-' in snippet.attrib.get('class', ''):
+            if 'mnr-c' in snippet.attrib.get('class', '') and 'srg' in snippet.attrib.get('class', ''):
+                continue
+
+            # вложенные в сниппет различные блоки
+            if 'mnr-' in snippet.attrib.get('class', '') and 'data-hveid'not in snippet.attrib:
                 continue
 
             # результаты поиска на карте
@@ -751,8 +759,15 @@ class MobileSnippetsParser(SnippetsParserDefault):
                 continue
 
             # нужный сниппет содержится в div с классом mnr-
-            mnr_divs = filter(lambda x: 'mnr-' in x.attrib.get('class', '') or 'rc' == x.attrib.get('class', ''), divs)
+            mnr_divs = filter(
+                lambda x: 'mnr-' in x.attrib.get('class', '') or 'rc' == x.attrib.get('class', '') or 'data-hveid' in x.attrib,
+                divs
+            )
             if not mnr_divs:
+                continue
+
+            # исключаем места
+            if '<g-dialog' in etree.tostring(snippet):
                 continue
 
             for mnr_div in mnr_divs:
