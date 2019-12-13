@@ -828,64 +828,6 @@ class MobileSnippetsParser(SnippetsParserDefault):
                 serp.extend(snippets)
                 continue
 
-        # snippets = []
-        # for snippet in serp:
-            # # реклама
-            # if snippet.xpath('./div/div[1]/a/div[1]/div/span[1]'):
-            #     continue
-            #
-            # # реклама
-            # if snippet.xpath('./div/div[1]/g-tray-header'):
-            #     continue
-            #
-            # # реклама google play
-            # if snippet.xpath('./div/div[1]/a/div[1]/div[1]/div[1]/span[1]'):
-            #     continue
-            #
-            # # вложенные в сниппет различные блоки
-            # if 'mnr-c' in snippet.attrib.get('class', '') and 'srg' in snippet.attrib.get('class', ''):
-            #     continue
-            #
-            # # вложенные в сниппет различные блоки
-            # if 'mnr-' in snippet.attrib.get('class', '') and 'data-hveid'not in snippet.attrib:
-            #     continue
-            #
-            # # результаты поиска на карте
-            # h2 = snippet.findall('h2')
-            # if h2:
-            #     continue
-            #
-            # divs = snippet.findall('div')
-            # if not divs:
-            #     continue
-            #
-            # # нужный сниппет содержится в div с классом mnr-
-            # mnr_divs = filter(
-            #     lambda x: 'mnr-' in x.attrib.get('class', '') or 'rc' == x.attrib.get('class', '') or 'data-hveid' in x.attrib,
-            #     divs
-            # )
-            # if not mnr_divs:
-            #     continue
-            #
-            # # исключаем места
-            # if '<g-dialog' in etree.tostring(snippet):
-            #     continue
-
-            # for mnr_div in mnr_divs:
-            #
-            #     if 'card-section' in mnr_div.attrib.get('class', ''):
-            #         continue
-            #
-            #     # рейсы авиакомпаний
-            #     if 'app-container' in mnr_div.attrib.get('class', ''):
-            #         continue
-            #
-            #     # описание товара, ответ на вопрос
-            #     if 'wholepage-card' in mnr_div.attrib.get('class', ''):
-            #         continue
-            #
-            #     snippets.append(mnr_div)
-
         result = []
         position = 0
         for snippet in serp:
