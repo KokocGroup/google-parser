@@ -702,6 +702,87 @@ class MobileSnippetsParser(SnippetsParserDefault):
     def _get_vu(self, vu):
         return vu
 
+    def _filter_mnr_c_dual_snippets(self, div):
+        result = []
+        attrib_class = div.attrib.get('class', '')
+
+        if 'mnr-c' not in attrib_class:
+            return
+
+        hveid_divs = div.findall('div')
+        if len(hveid_divs) < 2:
+            return
+
+        for hveid_div in hveid_divs:
+            if 'data-hveid' in hveid_div.attrib:
+                result.append(hveid_div)
+
+        if len(result) != 2:
+            return
+
+        return result
+
+    def _filter_hveid_dual_snippets(self, div):
+        result = []
+
+        if 'data-hveid' not in div.attrib:
+            return
+
+        # результаты поиска на карте
+        if div.findall('h2'):
+            return
+
+
+        mnr_c_divs = div.findall('div')
+        if len(mnr_c_divs) == 0:
+            return
+        elif len(mnr_c_divs) == 1:
+            div = mnr_c_divs[0].findall('div')
+            if 1 > len(div) or len(div) > 2:
+                return
+
+            div = div[0].findall('div')
+            if len(div) == 0:
+                return
+            else:
+                return [div[0]]
+
+        for mnr_c_div in mnr_c_divs:
+            if 'mnr-c' not in mnr_c_div.attrib.get('class', ''):
+                continue
+
+            for div in mnr_c_div.findall('div'):
+                result.append(div)
+
+        return result
+
+    def _filter_srg_snippets(self, div):
+        result = []
+
+        attrib_class = div.attrib.get('class', '')
+        if attrib_class != 'srg':
+            return
+
+        hveid_divs = div.findall('div')
+        for hveid_div in hveid_divs:
+            if 'data-hveid' not in hveid_div.attrib:
+                continue
+
+            mnr_c_divs = hveid_div.findall('div')
+            if len(mnr_c_divs) != 1:
+                continue
+
+            snippets = mnr_c_divs[0].findall('div')
+            if len(snippets) == 1:
+                if mnr_c_divs[0].xpath('./div/a'):
+                    result.append(mnr_c_divs[0])
+                else:
+                    result.append(snippets[0])
+            else:
+                result.append(mnr_c_divs[0])
+
+        return result
+
     def get_snippets(self, body):
         dom = PyQuery(body)
         rso_div = dom('#rso')
@@ -709,97 +790,117 @@ class MobileSnippetsParser(SnippetsParserDefault):
             raise BadGoogleParserError()
 
         divs = rso_div[0].findall('div')
-        serp1 = dom('div.srg>div[data-hveid]')
-        serp2 = []
+        serp = []
         for div in divs:
-            attrib = div.attrib
-            attrib_class = div.attrib.get('class')
+            attrib_class = div.attrib.get('class', '')
 
-            if 'data-hveid' in attrib:
-                serp2.append(div)
+            if 'card-section' in attrib_class:
                 continue
 
-            if 'srg' == attrib_class:
-                data_hveid_divs = div.findall('div')
-                for item in data_hveid_divs:
-                    if 'data-hveid' in item.attrib:
-                        serp2.append(item)
-
-        serp = serp1 if len(serp1) > len(serp2) else serp2
-
-        snippets = []
-        for snippet in serp:
-            # реклама
-            if snippet.xpath('./div/div[1]/a/div[1]/div/span[1]'):
+            # рейсы авиакомпаний
+            if 'app-container' in attrib_class:
                 continue
 
-            # реклама
-            if snippet.xpath('./div/div[1]/g-tray-header'):
+            # описание товара, ответ на вопрос
+            if 'wholepage' in attrib_class:
                 continue
 
-            # реклама google play
-            if snippet.xpath('./div/div[1]/a/div[1]/div[1]/div[1]/span[1]'):
+            # оставить отзыв
+            if 'kno-result' in attrib_class:
                 continue
 
-            # вложенные в сниппет различные блоки
-            if 'mnr-c' in snippet.attrib.get('class', '') and 'srg' in snippet.attrib.get('class', ''):
+            # видео
+            if 'data-fz' in div.attrib:
                 continue
 
-            # вложенные в сниппет различные блоки
-            if 'mnr-' in snippet.attrib.get('class', '') and 'data-hveid'not in snippet.attrib:
+            snippets = self._filter_mnr_c_dual_snippets(div)
+            if snippets:
+                serp.extend(snippets)
                 continue
 
-            # результаты поиска на карте
-            h2 = snippet.findall('h2')
-            if h2:
+            snippets = self._filter_hveid_dual_snippets(div)
+            if snippets:
+                serp.extend(snippets)
                 continue
 
-            divs = snippet.findall('div')
-            if not divs:
+            snippets = self._filter_srg_snippets(div)
+            if snippets:
+                serp.extend(snippets)
                 continue
 
-            # нужный сниппет содержится в div с классом mnr-
-            mnr_divs = filter(
-                lambda x: 'mnr-' in x.attrib.get('class', '') or 'rc' == x.attrib.get('class', '') or 'data-hveid' in x.attrib,
-                divs
-            )
-            if not mnr_divs:
-                continue
+        # snippets = []
+        # for snippet in serp:
+            # # реклама
+            # if snippet.xpath('./div/div[1]/a/div[1]/div/span[1]'):
+            #     continue
+            #
+            # # реклама
+            # if snippet.xpath('./div/div[1]/g-tray-header'):
+            #     continue
+            #
+            # # реклама google play
+            # if snippet.xpath('./div/div[1]/a/div[1]/div[1]/div[1]/span[1]'):
+            #     continue
+            #
+            # # вложенные в сниппет различные блоки
+            # if 'mnr-c' in snippet.attrib.get('class', '') and 'srg' in snippet.attrib.get('class', ''):
+            #     continue
+            #
+            # # вложенные в сниппет различные блоки
+            # if 'mnr-' in snippet.attrib.get('class', '') and 'data-hveid'not in snippet.attrib:
+            #     continue
+            #
+            # # результаты поиска на карте
+            # h2 = snippet.findall('h2')
+            # if h2:
+            #     continue
+            #
+            # divs = snippet.findall('div')
+            # if not divs:
+            #     continue
+            #
+            # # нужный сниппет содержится в div с классом mnr-
+            # mnr_divs = filter(
+            #     lambda x: 'mnr-' in x.attrib.get('class', '') or 'rc' == x.attrib.get('class', '') or 'data-hveid' in x.attrib,
+            #     divs
+            # )
+            # if not mnr_divs:
+            #     continue
+            #
+            # # исключаем места
+            # if '<g-dialog' in etree.tostring(snippet):
+            #     continue
 
-            # исключаем места
-            if '<g-dialog' in etree.tostring(snippet):
-                continue
-
-            for mnr_div in mnr_divs:
-
-                if 'card-section' in mnr_div.attrib.get('class', ''):
-                    continue
-
-                # рейсы авиакомпаний
-                if 'app-container' in mnr_div.attrib.get('class', ''):
-                    continue
-
-                # описание товара, ответ на вопрос
-                if 'wholepage-card' in mnr_div.attrib.get('class', ''):
-                    continue
-
-                snippets.append(mnr_div)
+            # for mnr_div in mnr_divs:
+            #
+            #     if 'card-section' in mnr_div.attrib.get('class', ''):
+            #         continue
+            #
+            #     # рейсы авиакомпаний
+            #     if 'app-container' in mnr_div.attrib.get('class', ''):
+            #         continue
+            #
+            #     # описание товара, ответ на вопрос
+            #     if 'wholepage-card' in mnr_div.attrib.get('class', ''):
+            #         continue
+            #
+            #     snippets.append(mnr_div)
 
         result = []
         position = 0
-        for snippet in snippets:
+        for snippet in serp:
             # сниппет с немного иной структурой
             is_rc = 'rc' == snippet.attrib.get('class')
 
             block_divs = snippet.findall('div')
             if not block_divs:
-                continue
-
-            if not block_divs[0].findall('a'):
-                block_divs = block_divs[0].findall('div')
-
-            if not block_divs:
                 raise BadGoogleParserError(etree.tostring(snippet))
+
+            # if not block_divs[0].findall('a'):
+            #     block_divs = block_divs[0].findall('div')
+            #
+            # if not block_divs:
+            #     raise BadGoogleParserError(etree.tostring(snippet))
 
             position += 1
             u, vu, t = self._parse_title(block_divs[0], is_rc)

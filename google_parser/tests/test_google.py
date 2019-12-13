@@ -1571,32 +1571,6 @@ class GoogleParserTestCase(GoogleParserTests):
         self.assertEqual(res['sn'][98]['d'], 'morghparvar.ir')
         self.assertEqual(res['sn'][98]['vu'], u'morghparvar.ir › hod › hma-metatr...')
 
-    def test84(self):
-        u""""
-            Ошибка парсинга от 2019-09-02
-        """
-        html = self.get_data('mobile-2019-09-03.txt')
-        g = GoogleJsonParser(html, snippet_fields=('d', 'p', 'u', 't', 's', 'm'))
-        self.assertFalse(g.is_suspicious_traffic())
-
-        res = g.get_serp()
-
-        # В мобильной выдаче похоже нет общего кол-ва результатов
-        self.assertEqual(res['pc'], 0)
-        self.assertEqual(len(res['sn']), 99)
-
-        self.assertEqual(res['sn'][0]['t'], u'Купить шампанское брют — цены на шампанское и игристые вина Brut в магазине Winestyle')
-        self.assertEqual(res['sn'][0]['s'], u'Каталог сухого шампанского и игристых вин брют различных марок и сортов. Продажа игристых вин брют в магазинах Winestyle.ru.')
-        self.assertEqual(res['sn'][0]['u'], 'https://winestyle.ru/champagnes-and-sparkling/brut/')
-        self.assertEqual(res['sn'][0]['d'], 'winestyle.ru')
-        self.assertEqual(res['sn'][0]['vu'], u'https://winestyle.ru › brut')
-
-        self.assertEqual(res['sn'][98]['t'], u'Российское шампанское брют белое "OREANDA CHARDONNAY" серии "Premium line" ООО "Крымский Винный Дом" (19-я линия 53) — Скидки сегодня в магазинах Ростова ...')
-        self.assertEqual(res['sn'][98]['s'], u'Где купить "Российское шампанское брют белое "OREANDA CHARDONNAY" серии "Premium line" ООО " Крымский Винный Дом" (19-я линия 53)" cо скидкой в Ростов-на-Дону. Узнайте, где покупать ...')
-        self.assertEqual(res['sn'][98]['u'], 'https://edadeal.ru/rostov-na-donu/offers/4d4e10bd-c4e4-4819-b3f2-f9d24dfe5e63')
-        self.assertEqual(res['sn'][98]['d'], 'edadeal.ru')
-        self.assertEqual(res['sn'][98]['vu'], u'https://edadeal.ru › offers')
-
     def test85(self):
         u""""
             Ошибка парсинга от 2019-09-02
@@ -1716,7 +1690,7 @@ class GoogleParserTestCase(GoogleParserTests):
         self.assertEqual(len(res['sn']), 96)
 
         self.assertEqual(res['sn'][0]['t'], 'Xiaomi')
-        self.assertEqual(res['sn'][0]['s'], u'Все товары')
+        self.assertEqual(res['sn'][0]['s'], u'Миссия Xiaomi – сделать инновации доступными каждому. Приобретайте смартфоны, ноутбуки, умные устройства и аксессуары Xiaomi с официальной гарантией.')
         self.assertEqual(res['sn'][0]['u'], 'https://www.mi.com/ru/')
         self.assertEqual(res['sn'][0]['d'], 'mi.com')
         self.assertEqual(res['sn'][0]['vu'], u'https://www.mi.com › ...')
@@ -1726,32 +1700,6 @@ class GoogleParserTestCase(GoogleParserTests):
         self.assertEqual(res['sn'][95]['u'], 'https://finance.yahoo.com/video/smartphone-maker-xiaomi-plans-1-150245874.html')
         self.assertEqual(res['sn'][95]['d'], 'finance.yahoo.com')
         self.assertEqual(res['sn'][95]['vu'], u'https://finance.yahoo.com › video')
-
-    def test90(self):
-        u""""
-            Ошибка парсинга от 2019-09-04
-        """
-        html = self.get_data('mobile-2019-09-04-1.txt')
-        g = GoogleJsonParser(html, snippet_fields=('d', 'p', 'u', 't', 's', 'm'))
-        self.assertFalse(g.is_suspicious_traffic())
-
-        res = g.get_serp()
-
-        # В мобильной выдаче похоже нет общего кол-ва результатов
-        self.assertEqual(res['pc'], 0)
-        self.assertEqual(len(res['sn']), 98)
-
-        self.assertEqual(res['sn'][0]['t'], u'MacBook – Apple (RU)')
-        self.assertEqual(res['sn'][0]['s'], u'Невероятно лёгкий и тонкий MacBook оснащается процессорами седьмого поколения и улучшенными SSD-накопителями. И работает без подзарядки до 10 часов.')
-        self.assertEqual(res['sn'][0]['u'], 'https://www.apple.com/ru/macbook/index.html')
-        self.assertEqual(res['sn'][0]['d'], 'apple.com')
-        self.assertEqual(res['sn'][0]['vu'], u'https://www.apple.com › macbook')
-
-        self.assertEqual(res['sn'][97]['t'], u'Les meilleures réductions sur les MacBook Pro 13 et MacBook Air 2019 | MacGeneration')
-        self.assertEqual(res['sn'][97]['s'], u"15 часов назад · Si vous êtes à la recherche d'un MacBook Pro 13\" ou d'un MacBook Air 13\" Retina des toutes dernières générations, pas la peine de payer le prix fort sur l'Apple Store, il y a quelques ...")
-        self.assertEqual(res['sn'][97]['u'], 'https://www.macg.co/materiel/2019/09/les-meilleures-reductions-sur-les-macbook-pro-13-et-macbook-air-2019-107955?amp')
-        self.assertEqual(res['sn'][97]['d'], 'macg.co')
-        self.assertEqual(res['sn'][97]['vu'], u'https://www.macg.co › 2019/09')
 
     def test91(self):
         u""""
@@ -1768,7 +1716,7 @@ class GoogleParserTestCase(GoogleParserTests):
         self.assertEqual(len(res['sn']), 95)
 
         self.assertEqual(res['sn'][0]['t'], 'S7 Airlines')
-        self.assertEqual(res['sn'][0]['s'], 'S7 Airlines')
+        self.assertEqual(res['sn'][0]['s'], u'Расписания и маршруты. Более 900 направлений по всему миру — все рейсы S7 Airlines и авиакомпаний -партнёров альянса oneworld в нашей маршрутной сети. ... Блог S7 Airlines. Все статьи ...')
         self.assertEqual(res['sn'][0]['u'], 'https://www.s7.ru/mobile/')
         self.assertEqual(res['sn'][0]['d'], 's7.ru')
         self.assertEqual(res['sn'][0]['vu'], u'https://www.s7.ru › mobile')
@@ -1958,6 +1906,76 @@ class GoogleParserTestCase(GoogleParserTests):
         self.assertEqual(res['sn'][8]['u'], 'https://san09.ru/mebel_dlya_kuhni/kuhni_komplekty_modern/')
         self.assertEqual(res['sn'][8]['d'], 'san09.ru')
         self.assertEqual(res['sn'][8]['vu'], 'https://san09.ru')
+
+    def test98(self):
+        u""""
+            Ошибка парсинга от 2019-12-13
+        """
+        html = self.get_data('mobile-2019-12-13.txt')
+        g = GoogleJsonParser(html, snippet_fields=('d', 'p', 'u', 't', 's', 'm'))
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+
+        # В мобильной выдаче похоже нет общего кол-ва результатов
+        self.assertEqual(res['pc'], 0)
+        self.assertEqual(len(res['sn']), 9)
+
+        self.assertEqual(res['sn'][0]['t'], u'Купить Воздухоувлажнитель Electrolux EHU-3510D в каталоге интернет магазина М.Видео по выгодной цене с доставкой, отзывы, фотографии - Москва')
+        self.assertEqual(res['sn'][0]['s'], u'Купить Воздухоувлажнитель Electrolux EHU-3510D по доступной цене в интернет-магазине М.Видео или в розничной сети магазинов М.Видео города Москвы. Electrolux EHU-3510D - аксессуары, отзывы, ...')
+        self.assertEqual(res['sn'][0]['u'], 'https://www.mvideo.ru/products/vozduhouvlazhnitel-electrolux-ehu-3510d-20026855')
+        self.assertEqual(res['sn'][0]['d'], 'mvideo.ru')
+        self.assertEqual(res['sn'][0]['vu'], 'https://www.mvideo.ru')
+
+        self.assertEqual(res['sn'][5]['t'], u'Отзывы о Увлажнитель воздуха Electrolux EHU 3510D - Отзовик')
+        self.assertEqual(res['sn'][5]['s'], u'Увлажнитель воздуха Electrolux EHU 3510D - отзывы. Рекомендуют 70%. Отзыв о Увлажнитель воздуха Electrolux EHU 3510D. Качество. Надежность. Внешний вид. Удобство. Добавить отзыв Всего отзывов: ...')
+        self.assertEqual(res['sn'][5]['u'], 'https://otzovik.com/reviews/uvlazhnitel_vozduha_electrolux_ehu_3510d/')
+        self.assertEqual(res['sn'][5]['d'], 'otzovik.com')
+        self.assertEqual(res['sn'][5]['vu'], 'https://otzovik.com')
+
+        self.assertEqual(res['sn'][8]['t'], u'Увлажнитель воздуха Electrolux EHU 3510D в Москве, цена по запросу - отзывы инструкции и схемы, официальная гарантия - купить очиститель воздуха Электролюкс ...')
+        self.assertEqual(res['sn'][8]['s'], u'Увлажнитель воздуха Electrolux EHU 3510D в Москве с официальной гарантией, цена по запросу - купить очиститель воздуха Электролюкс EHU 3510D в интернет-магазине - Доставка, сравните отзывы и ...Режимы работы увлажнителя: Теплый пар, Холодный пар, Детский режим, Био...Основной фильтр: Фильтр-картридж Ag Ionic Silver')
+        self.assertEqual(res['sn'][8]['u'], 'https://elux-ru.ru/electrolux/ochistiteli-i-uvlajniteli-vozduha/Uvlazhnitel_vozduha_Electrolux_EHU_3510D.php')
+        self.assertEqual(res['sn'][8]['d'], 'elux-ru.ru')
+        self.assertEqual(res['sn'][8]['vu'], 'https://elux-ru.ru')
+
+    def test99(self):
+        u""""
+            Ошибка парсинга от 2019-12-13
+        """
+        html = self.get_data('mobile-2019-12-13-1.txt')
+        g = GoogleJsonParser(html, snippet_fields=('d', 'p', 'u', 't', 's', 'm'))
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+
+        # В мобильной выдаче похоже нет общего кол-ва результатов
+        self.assertEqual(res['pc'], 0)
+        self.assertEqual(len(res['sn']), 9)
+
+        self.assertEqual(res['sn'][0]['t'], u'Делитесь гигабайтами Tele2 - описание и как воспользоваться Москва и Московская область - Теле2')
+        self.assertEqual(res['sn'][0]['s'], u'Подробное описание и как воспользоваться услугой Делитесь гигабайтами Tele2. Стоимость подключения Делитесь гигабайтами.')
+        self.assertEqual(res['sn'][0]['u'], 'https://msk.tele2.ru/option/share-gb')
+        self.assertEqual(res['sn'][0]['d'], 'msk.tele2.ru')
+        self.assertEqual(res['sn'][0]['vu'], 'https://msk.tele2.ru')
+
+        self.assertEqual(res['sn'][1]['t'], u'Как делиться гигабайтами - Теле2')
+        self.assertEqual(res['sn'][1]['s'], u'24 окт. 2018 г. · Рассказываем, как поделиться гигабайтами с другими абонентами Теле2. ... С новой услугой «Делитесь гигабайтами» вы можете легко делиться интернет-трафиком с другими абонентами ...')
+        self.assertEqual(res['sn'][1]['u'], 'https://msk.tele2.ru/journal/article/gb-share')
+        self.assertEqual(res['sn'][1]['d'], 'msk.tele2.ru')
+        self.assertEqual(res['sn'][1]['vu'], 'https://msk.tele2.ru')
+
+        self.assertEqual(res['sn'][5]['t'], u'«Как поделиться гигабайтами теле2 с тарифом классическим и мой разговор?» – Яндекс.Знатоки')
+        self.assertEqual(res['sn'][5]['s'], u'8 ответов')
+        self.assertEqual(res['sn'][5]['u'], 'https://yandex.ru/znatoki/question/computers/kak_podelitsia_gigabaitami_tele2_s_adb7db8a/')
+        self.assertEqual(res['sn'][5]['d'], 'yandex.ru')
+        self.assertEqual(res['sn'][5]['vu'], 'https://yandex.ru')
+
+        self.assertEqual(res['sn'][8]['t'], u'Как поделиться гигабайтами на Теле2 - Личный кабинет Теле2')
+        self.assertEqual(res['sn'][8]['s'], u'25 дек. 2018 г. · Кому доступна услуга “Делись Гигабайтами” от Теле2? Как поделиться трафиком интернета на ... настроить необходимые пакеты – это легко сделать с помощью Личного кабинета Теле2 .')
+        self.assertEqual(res['sn'][8]['u'], 'https://www.tele2expert.ru/novaya-usluga-tele2-delites-gigabajtami/')
+        self.assertEqual(res['sn'][8]['d'], 'tele2expert.ru')
+        self.assertEqual(res['sn'][8]['vu'], 'https://www.tele2expert.ru')
 
     def print_sn(self, res):
         for i in res['sn']:
