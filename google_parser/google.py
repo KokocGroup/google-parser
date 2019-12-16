@@ -664,15 +664,65 @@ class MobileSnippetsParser(SnippetsParserDefault):
         else:
             raise BadGoogleParserError(etree.tostring(header))
 
-        divs = a.findall('div')
-        if len(divs) < 2:
-            raise BadGoogleParserError(etree.tostring(header))
+        vu = self._get_vu_from_header(header)
+        t = self._get_text_title(a)
+        return a.attrib['href'], vu, t
 
+    def _get_text_title(self, a):
+        divs = a.findall('div')
+
+        if len(divs) >= 2:
+            return divs[1].text
+        elif len(divs) == 1:
+            return divs[0].text
+        else:
+            raise BadGoogleParserError(etree.tostring(a))
+
+    def _get_vu_from_header(self, header):
+        vu = self._get_vu1(header)
+        if not vu:
+            vu = self._get_vu2(header)
+        return vu
+
+    def _get_vu2(self, header):
+        aa = header.findall('a')
+        if not aa:
+            divs = header.findall('div')
+            if not divs:
+                raise BadGoogleParserError(etree.tostring(header))
+
+            aa = divs[0].findall('a')
+
+        divs = aa[0].findall('div')
+        if not divs:
+            return
         spans = divs[0].findall('span')
         if not spans:
-            raise BadGoogleParserError(etree.tostring(header))
+            return
+        return spans[0].text
 
-        return a.attrib['href'], spans[0].text, divs[1].text
+    def _get_vu1(self, header):
+        divs = header.findall('div')
+        if not divs:
+            return
+
+        divs = divs[0].findall('div')
+        if not divs:
+            return
+
+        spans = divs[0].findall('span')
+        if spans:
+            return spans[0].text
+
+        divs = divs[0].findall('div')
+        if not divs:
+            return
+
+        spans = divs[0].findall('span')
+        if spans:
+            return spans[0].text
+
+        return spans[0].text
 
     def _parse_descr(self, descr):
         divs = descr.findall('div') or descr.findall('a')

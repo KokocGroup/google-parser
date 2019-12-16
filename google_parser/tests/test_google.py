@@ -2091,6 +2091,38 @@ class GoogleParserTestCase(GoogleParserTests):
         self.assertEqual(res['sn'][98]['d'], 'store-aliexpress.ru')
         self.assertEqual(res['sn'][98]['vu'], 'store-aliexpress.ru')
 
+    def test103(self):
+        u""""
+            Ошибка парсинга от 2019-12-16
+        """
+        html = self.get_data('mobile-2019-12-16-3.txt')
+        g = GoogleJsonParser(html, snippet_fields=('d', 'p', 'u', 't', 's', 'm'))
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+
+        # В мобильной выдаче похоже нет общего кол-ва результатов
+        self.assertEqual(res['pc'], 0)
+        self.assertEqual(len(res['sn']), 90)
+
+        self.assertEqual(res['sn'][0]['t'], u'Смартфоны Samsung Galaxy S10, S10+ и S10e цена в кредит, купить телефон Самсунг Галакси С10, С10 плюс и С10е в Москве недорого в интернет-магазине Связной')
+        self.assertEqual(res['sn'][0]['s'], u'128GB1TBСмартфон Samsung Galaxy ...')
+        self.assertEqual(res['sn'][0]['u'], 'https://www.svyaznoy.ru/catalog/phone/225/samsung/galaxy-s10-s10plus-s10e')
+        self.assertEqual(res['sn'][0]['d'], 'svyaznoy.ru')
+        self.assertEqual(res['sn'][0]['vu'], 'https://www.svyaznoy.ru')
+
+        self.assertEqual(res['sn'][2]['t'], u'Купить Samsung Galaxy S10e, S10 и S10+ цена | Samsung RU')
+        self.assertEqual(res['sn'][2]['s'], u'Онлайн Trade-In. Сдайте ваше старое устройство по программе Trade-In. Получите выгоду до 58 000Р в корзине до 9 декабря 2019 г. Программа действует в Москве, Московской области, Санкт-Петербурге, ...')
+        self.assertEqual(res['sn'][2]['u'], 'https://www.samsung.com/ru/smartphones/galaxy-s10/buy/')
+        self.assertEqual(res['sn'][2]['d'], 'samsung.com')
+        self.assertEqual(res['sn'][2]['vu'], 'https://www.samsung.com')
+
+        self.assertEqual(res['sn'][89]['t'], u'Samsung Galaxy S10 plus цена в москве')
+        self.assertEqual(res['sn'][89]['s'], u'Заказать Samsung Galaxy S10 plus цена в москве Samsung Galaxy S10 мтс.')
+        self.assertEqual(res['sn'][89]['u'], 'https://www.myanimalhousevets.com/userfiles/samsung-galaxy-s10-plus-tsena-v-moskve-2043.xml')
+        self.assertEqual(res['sn'][89]['d'], 'myanimalhousevets.com')
+        self.assertEqual(res['sn'][89]['vu'], 'https://www.myanimalhousevets.com')
+
     def print_sn(self, res):
         for i in res['sn']:
             print
