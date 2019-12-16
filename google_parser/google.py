@@ -719,8 +719,8 @@ class MobileSnippetsParser(SnippetsParserDefault):
             return
 
         spans = divs[0].findall('span')
-        if spans:
-            return spans[0].text
+        if not spans:
+            return
 
         return spans[0].text
 
