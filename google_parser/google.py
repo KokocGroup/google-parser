@@ -819,6 +819,10 @@ class MobileSnippetsParser(SnippetsParserDefault):
             if 'data-fz' in div.attrib:
                 continue
 
+            # картинки
+            if div.xpath('.//div[contains(@class,"rg_r")]'):
+                continue
+
             snippets = self._filter_mnr_c_dual_snippets(div)
             if snippets:
                 serp.extend(snippets)

@@ -2053,6 +2053,44 @@ class GoogleParserTestCase(GoogleParserTests):
         self.assertEqual(res['sn'][70]['d'], 'express-novosti.ru')
         self.assertEqual(res['sn'][70]['vu'], 'https://express-novosti.ru')
 
+    def test102(self):
+        u""""
+            Ошибка парсинга от 2019-12-16
+        """
+        html = self.get_data('mobile-2019-12-16-2.txt')
+        g = GoogleJsonParser(html, snippet_fields=('d', 'p', 'u', 't', 's', 'm'))
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+
+        # В мобильной выдаче похоже нет общего кол-ва результатов
+        self.assertEqual(res['pc'], 0)
+        self.assertEqual(len(res['sn']), 99)
+
+        self.assertEqual(res['sn'][0]['t'], u'Топперы круглые купить в магазине ULTRAPARTY.RU')
+        self.assertEqual(res['sn'][0]['s'], u'Топперы круглые в магазине праздников ☀ Детские праздники ☀ Аксессуары для вечеринок ☀ Доставка по РФ!')
+        self.assertEqual(res['sn'][0]['u'], 'https://ultraparty.ru/category/toppery-kruglye/')
+        self.assertEqual(res['sn'][0]['d'], 'ultraparty.ru')
+        self.assertEqual(res['sn'][0]['vu'], 'https://ultraparty.ru')
+
+        self.assertEqual(res['sn'][2]['t'], u'02__Топперы круглые__Кэнди бар Лунтик. На полянке(© Устроим Праздник).pdf | картинки | Праздник, Кэндо и Картинки - Pinterest')
+        self.assertEqual(res['sn'][2]['s'], u'02__Топперы круглые__Кэнди бар Лунтик. На полянке(© Устроим Праздник).pdf. Декоративные ... топперы для кексов "Лунтик" 4 Й День Рождения, Шаблоны Для Печати, Печенье. Подробнее..')
+        self.assertEqual(res['sn'][2]['u'], 'https://www.pinterest.com/amp/pin/760263980818064009/')
+        self.assertEqual(res['sn'][2]['d'], 'pinterest.com')
+        self.assertEqual(res['sn'][2]['vu'], 'https://www.pinterest.com')
+
+        self.assertEqual(res['sn'][5]['t'], u'Топперы круглые "Алиса" 6 шт. купить с доставкой')
+        self.assertEqual(res['sn'][5]['s'], u'Главная страница; •; Каталог товаров; •; Готовый декор; •; Топперы для тортов и капкейков; •; Картонные топперы для капкейков; •; Топперы круглые "Алиса" 6 шт.')
+        self.assertEqual(res['sn'][5]['u'], 'https://vkustvorchestva.com/catalog/gotovyy_dekor/toppery_dlya_tortov_i_kapkeykov/kartonnye_toppery_dlya_kapkeykov/toppery_kruglye_alisa_6_sht.html')
+        self.assertEqual(res['sn'][5]['d'], 'vkustvorchestva.com')
+        self.assertEqual(res['sn'][5]['vu'], 'https://vkustvorchestva.com')
+
+        self.assertEqual(res['sn'][98]['t'], u'Топпер для торта с днем рождения поставки для вечеринок украшения   для кексов украшения   для дня рождения детский душ с днем рождения топперы... купить товары ...')
+        self.assertEqual(res['sn'][98]['s'], u'Купить дешево Топпер для торта с днем рождения поставки для вечеринок ◤украшения◥ для кексов ... 1 пара шнурков Unsiex без галстука запирающиеся круглые шнурки эластичные шнурки Sneaks обувь ...')
+        self.assertEqual(res['sn'][98]['u'], 'http://store-aliexpress.ru/ali_good.php?id=32966792113.html')
+        self.assertEqual(res['sn'][98]['d'], 'store-aliexpress.ru')
+        self.assertEqual(res['sn'][98]['vu'], 'store-aliexpress.ru')
+
     def print_sn(self, res):
         for i in res['sn']:
             print
