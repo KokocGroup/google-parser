@@ -1977,6 +1977,44 @@ class GoogleParserTestCase(GoogleParserTests):
         self.assertEqual(res['sn'][8]['d'], 'tele2expert.ru')
         self.assertEqual(res['sn'][8]['vu'], 'https://www.tele2expert.ru')
 
+    def test100(self):
+        u""""
+            Ошибка парсинга от 2019-12-16
+        """
+        html = self.get_data('mobile-2019-12-16.txt')
+        g = GoogleJsonParser(html, snippet_fields=('d', 'p', 'u', 't', 's', 'm'))
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+
+        # В мобильной выдаче похоже нет общего кол-ва результатов
+        self.assertEqual(res['pc'], 0)
+        self.assertEqual(len(res['sn']), 98)
+
+        self.assertEqual(res['sn'][0]['t'], u'Бамбуковое постельное белье — Купить комплект белья из БАМБУКА недорого в Москве — Скидка 50% - Spim.ru')
+        self.assertEqual(res['sn'][0]['s'], u'Распродажа комплектов из бамбука. Arya - Asabella - US Polo - KingSilk - Issimo. Бесплатная доставка от 3000р. Тысячи пунктов выдачи по всей России.')
+        self.assertEqual(res['sn'][0]['u'], 'https://m.spim.ru/shop/postel/bamboo/')
+        self.assertEqual(res['sn'][0]['d'], 'm.spim.ru')
+        self.assertEqual(res['sn'][0]['vu'], 'https://m.spim.ru')
+
+        self.assertEqual(res['sn'][2]['t'], u'Постельное белье из бамбука, купить в интернет-магазине недорого - Эко Бамбук')
+        self.assertEqual(res['sn'][2]['s'], '')
+        self.assertEqual(res['sn'][2]['u'], 'https://ekobambuk.ru/products/category/bambukovoe-postelnoe-bele')
+        self.assertEqual(res['sn'][2]['d'], 'ekobambuk.ru')
+        self.assertEqual(res['sn'][2]['vu'], 'https://ekobambuk.ru')
+
+        self.assertEqual(res['sn'][5]['t'], u'Постельное белье из бамбука, цена, доставка в Москве | Togas')
+        self.assertEqual(res['sn'][5]['s'], '')
+        self.assertEqual(res['sn'][5]['u'], 'https://www.togas.com/ru/postelnoe-belyo/bambukovoe-volokno/')
+        self.assertEqual(res['sn'][5]['d'], 'togas.com')
+        self.assertEqual(res['sn'][5]['vu'], 'https://www.togas.com')
+
+        self.assertEqual(res['sn'][97]['t'], u'Элитное бамбуковое постельное белье, сатин бамбук, белое, Kingsilk (Кингсилк), арт. bc-4. Отделка вышивка, листья. Размеры, описание, х… | queenanna.ru | Посте…')
+        self.assertEqual(res['sn'][97]['s'], u'Элитное бамбуковое постельное белье, сатин бамбук, белое, Kingsilk (Кингсилк), арт. bc-4. Отделка вышивка, листья. Размеры, описание, характеристики, низкие цены, скидки, доставка.')
+        self.assertEqual(res['sn'][97]['u'], 'https://www.pinterest.ru/amp/pin/147352219037218265/')
+        self.assertEqual(res['sn'][97]['d'], 'pinterest.ru')
+        self.assertEqual(res['sn'][97]['vu'], 'https://www.pinterest.ru')
+
     def print_sn(self, res):
         for i in res['sn']:
             print

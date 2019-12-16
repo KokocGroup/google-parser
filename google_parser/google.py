@@ -732,6 +732,12 @@ class MobileSnippetsParser(SnippetsParserDefault):
         if div.findall('h2'):
             return
 
+        content = etree.tostring(div)
+
+        # поиск по фото
+        if '<g-tray-header' in content:
+            return
+
 
         mnr_c_divs = div.findall('div')
         if len(mnr_c_divs) == 0:
