@@ -675,7 +675,7 @@ class MobileSnippetsParser(SnippetsParserDefault):
         return a.attrib['href'], spans[0].text, divs[1].text
 
     def _parse_descr(self, descr):
-        divs = descr.findall('div')
+        divs = descr.findall('div') or descr.findall('a')
         if not divs:
             raise BadGoogleParserError(etree.tostring(descr))
 

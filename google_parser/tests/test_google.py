@@ -2015,6 +2015,44 @@ class GoogleParserTestCase(GoogleParserTests):
         self.assertEqual(res['sn'][97]['d'], 'pinterest.ru')
         self.assertEqual(res['sn'][97]['vu'], 'https://www.pinterest.ru')
 
+    def test101(self):
+        u""""
+            Ошибка парсинга от 2019-12-16
+        """
+        html = self.get_data('mobile-2019-12-16-1.txt')
+        g = GoogleJsonParser(html, snippet_fields=('d', 'p', 'u', 't', 's', 'm'))
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+
+        # В мобильной выдаче похоже нет общего кол-ва результатов
+        self.assertEqual(res['pc'], 0)
+        self.assertEqual(len(res['sn']), 71)
+
+        self.assertEqual(res['sn'][0]['t'], u'Работа в сфере Контент в Москве (мобильная версия) - HH.ru')
+        self.assertEqual(res['sn'][0]['s'], u'Огромное количество вакансий в сфере Контент в вашем мобильном устройстве! Поиск работы ... Менеджер по дистанционному обучению. Москва. Всероссийский Банк Развития Регионов (ВБРР). вчера.')
+        self.assertEqual(res['sn'][0]['u'], 'https://m.hh.ru/catalog/Informacionnye-tehnologii-Internet-Telekom/Kontent')
+        self.assertEqual(res['sn'][0]['d'], 'm.hh.ru')
+        self.assertEqual(res['sn'][0]['vu'], 'https://m.hh.ru')
+
+        self.assertEqual(res['sn'][2]['t'], u'Контент-менеджер, работа контент-менеджером, вакансии контент-менеджер в Москве - SuperJob')
+        self.assertEqual(res['sn'][2]['s'], u'Поиск работы контент-менеджером в Москве. 26 вакансий Контент-менеджера с зарплатой до 75000 рублей.')
+        self.assertEqual(res['sn'][2]['u'], 'https://www.superjob.ru/vakansii/kontent-menedzher.html')
+        self.assertEqual(res['sn'][2]['d'], 'superjob.ru')
+        self.assertEqual(res['sn'][2]['vu'], 'https://www.superjob.ru')
+
+        self.assertEqual(res['sn'][5]['t'], u'Работа — Удаленно Контент Менеджер, Москва | Indeed.com')
+        self.assertEqual(res['sn'][5]['s'], u'30 открытых вакансий по запросу Удаленно Контент Менеджер, Москва на Indeed.com. Один поиск. Все вакансии.')
+        self.assertEqual(res['sn'][5]['u'], 'https://ru.indeed.com/m/jobs?q=%D0%A3%D0%B4%D0%B0%D0%BB%D0%B5%D0%BD%D0%BD%D0%BE+%D0%9A%D0%BE%D0%BD%D1%82%D0%B5%D0%BD%D1%82+%D0%9C%D0%B5%D0%BD%D0%B5%D0%B4%D0%B6%D0%B5%D1%80&l=%D0%9C%D0%BE%D1%81%D0%BA%D0%B2%D0%B0')
+        self.assertEqual(res['sn'][5]['d'], 'ru.indeed.com')
+        self.assertEqual(res['sn'][5]['vu'], 'https://ru.indeed.com')
+
+        self.assertEqual(res['sn'][70]['t'], u'В Москве прошёл второй, завершающий день «Недели Российского интернета - Экспресс-Новости')
+        self.assertEqual(res['sn'][70]['s'], u'3 дня назад · В Москве прошёл второй, завершающий день «Недели Российского интернета» ... внутренних механиках распространения контента, какой контент снимать для привлечения подписчиков,  ...')
+        self.assertEqual(res['sn'][70]['u'], 'https://express-novosti.ru/technology/2147508187-v-moskve-proshel-vtoroj-zavershayushchij-den-nedeli-rossijskogo-interneta.html')
+        self.assertEqual(res['sn'][70]['d'], 'express-novosti.ru')
+        self.assertEqual(res['sn'][70]['vu'], 'https://express-novosti.ru')
+
     def print_sn(self, res):
         for i in res['sn']:
             print
