@@ -1,7 +1,7 @@
 from setuptools import setup
 
 
-VERSION = "0.0.109"
+VERSION = "0.0.110"
 
 setup(
     name='google-parser',
