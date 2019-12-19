@@ -2161,6 +2161,44 @@ class GoogleParserTestCase(GoogleParserTests):
         self.assertEqual(res['sn'][98]['d'], 'dkb63.ru')
         self.assertEqual(res['sn'][98]['vu'], 'https://dkb63.ru')
 
+    def test105(self):
+        u""""
+            Ошибка парсинга от 2019-12-19
+        """
+        html = self.get_data('mobile-2019-12-19-1.txt')
+        g = GoogleJsonParser(html, snippet_fields=('d', 'p', 'u', 't', 's', 'm'))
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+
+        # В мобильной выдаче похоже нет общего кол-ва результатов
+        self.assertEqual(res['pc'], 0)
+        self.assertEqual(len(res['sn']), 98)
+
+        self.assertEqual(res['sn'][0]['t'], u'EUR USD | Евро Доллар | Курс Евро Доллар - Investing.com')
+        self.assertEqual(res['sn'][0]['s'], u'Самые актуальные статистика, аналитика и экономические события, связанные с валютной парой Евро Доллар. Только у нас!')
+        self.assertEqual(res['sn'][0]['u'], 'https://m.ru.investing.com/currencies/eur-usd')
+        self.assertEqual(res['sn'][0]['d'], 'm.ru.investing.com')
+        self.assertEqual(res['sn'][0]['vu'], 'https://m.ru.investing.com')
+
+        self.assertEqual(res['sn'][1]['t'], u'График Евро Доллар | График EUR USD | График Евро Доллар в реальном времени - Investing.com')
+        self.assertEqual(res['sn'][1]['s'], u'Посмотрите график Евро Доллар , чтобы быть в курсе последних изменений пары.')
+        self.assertEqual(res['sn'][1]['u'], 'https://m.ru.investing.com/currencies/eur-usd-chart')
+        self.assertEqual(res['sn'][1]['d'], 'm.ru.investing.com')
+        self.assertEqual(res['sn'][1]['vu'], 'https://m.ru.investing.com')
+
+        self.assertEqual(res['sn'][4]['t'], u'График EUR/USD Forex - ProFinance.Ru')
+        self.assertEqual(res['sn'][4]['s'], u'Курс доллара растет, так как данные в США делают маловероятным снижение ставок ФРС. 15:27 ... Курсы валют ЦБ РФ: курс рубля к доллару, евро, гривне, лире, тенге, юаню. 12:42. Квантовые фонды не ...')
+        self.assertEqual(res['sn'][4]['u'], 'http://www.profinance.ru/chart/eurusd/')
+        self.assertEqual(res['sn'][4]['d'], 'profinance.ru')
+        self.assertEqual(res['sn'][4]['vu'], 'www.profinance.ru')
+
+        self.assertEqual(res['sn'][97]['t'], u'Доллар с евро подорожали | Экономика и Жизнь')
+        self.assertEqual(res['sn'][97]['s'], u'24 часа назад · 18.12.2019 - Центральный банк Российской Федерации на 19 декабря увеличил официальный курс доллара на 5,05 коп., евро – на 1,24 коп.')
+        self.assertEqual(res['sn'][97]['u'], 'https://www.eg-online.ru/news/413021/')
+        self.assertEqual(res['sn'][97]['d'], 'eg-online.ru')
+        self.assertEqual(res['sn'][97]['vu'], 'https://www.eg-online.ru')
+
     def print_sn(self, res):
         for i in res['sn']:
             print

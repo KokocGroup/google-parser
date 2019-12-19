@@ -801,6 +801,13 @@ class MobileSnippetsParser(SnippetsParserDefault):
             if 1 > len(div) or len(div) > 2:
                 return
 
+            if not div[0].attrib:
+                sub_div = div[0].findall('div')
+                if sub_div[0] and not sub_div[0].attrib:
+                    return [sub_div[0]]
+                else:
+                    return [div[0]]
+
             div = div[0].findall('div')
             if len(div) == 0:
                 return
@@ -901,12 +908,6 @@ class MobileSnippetsParser(SnippetsParserDefault):
             block_divs = snippet.findall('div')
             if not block_divs:
                 raise BadGoogleParserError(etree.tostring(snippet))
-
-            # if not block_divs[0].findall('a'):
-            #     block_divs = block_divs[0].findall('div')
-            #
-            # if not block_divs:
-            #     raise BadGoogleParserError(etree.tostring(snippet))
 
             position += 1
             u, vu, t = self._parse_title(block_divs[0], is_rc)
