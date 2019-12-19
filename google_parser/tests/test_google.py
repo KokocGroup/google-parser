@@ -2123,6 +2123,44 @@ class GoogleParserTestCase(GoogleParserTests):
         self.assertEqual(res['sn'][89]['d'], 'myanimalhousevets.com')
         self.assertEqual(res['sn'][89]['vu'], 'https://www.myanimalhousevets.com')
 
+    def test104(self):
+        u""""
+            Ошибка парсинга от 2019-12-19
+        """
+        html = self.get_data('mobile-2019-12-19.txt')
+        g = GoogleJsonParser(html, snippet_fields=('d', 'p', 'u', 't', 's', 'm'))
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+
+        # В мобильной выдаче похоже нет общего кол-ва результатов
+        self.assertEqual(res['pc'], 0)
+        self.assertEqual(len(res['sn']), 99)
+
+        self.assertEqual(res['sn'][0]['t'], u'Лазерная эпиляция -> EPILAS - Москва')
+        self.assertEqual(res['sn'][0]['s'], u'Самые низкие цены на лазерную эпиляцию: Подмышки - 1000 руб., Глубокое бикини - 1500 руб., Ноги полностью - 2500 руб., Руки полностью - 1300 руб. Тел.: 8 (800) 22-000-22.')
+        self.assertEqual(res['sn'][0]['u'], 'https://epilas.ru/')
+        self.assertEqual(res['sn'][0]['d'], 'epilas.ru')
+        self.assertEqual(res['sn'][0]['vu'], 'https://epilas.ru')
+
+        self.assertEqual(res['sn'][1]['t'], u'Лазерная эпиляция для женщин -> EPILAS')
+        self.assertEqual(res['sn'][1]['s'], u'Самые низкие цены на женскую лазерную эпиляцию! Подмышки - 1000 руб., Глубокое бикини - 1500 руб., Ноги полностью - 2500 руб., Руки полностью - 1300 руб.')
+        self.assertEqual(res['sn'][1]['u'], 'https://epilas.ru/services/epilation/lady')
+        self.assertEqual(res['sn'][1]['d'], 'epilas.ru')
+        self.assertEqual(res['sn'][1]['vu'], 'https://epilas.ru')
+
+        self.assertEqual(res['sn'][2]['t'], u'Приводит ли лазерная эпиляция к раку? - Афиша Daily')
+        self.assertEqual(res['sn'][2]['s'], u'17 янв. 2019 г. · Во время лазерной эпиляции свет от прибора поглощается меланином — пигментом волос. Пигмент нагревается и начинает разрушать соседние клетки, отвечающие за рост, или ...')
+        self.assertEqual(res['sn'][2]['u'], 'https://daily.afisha.ru/entry/amp/10503/')
+        self.assertEqual(res['sn'][2]['d'], 'daily.afisha.ru')
+        self.assertEqual(res['sn'][2]['vu'], 'https://daily.afisha.ru')
+
+        self.assertEqual(res['sn'][98]['t'], u'Лазерная эпиляция в Самаре цены - Дорожная клиническая больница')
+        self.assertEqual(res['sn'][98]['s'], u'Лазерная эпиляция лица, зоны бикини и других участков тела. Стоимость лазерной эпиляции в Самаре.')
+        self.assertEqual(res['sn'][98]['u'], 'https://dkb63.ru/services/beauty/')
+        self.assertEqual(res['sn'][98]['d'], 'dkb63.ru')
+        self.assertEqual(res['sn'][98]['vu'], 'https://dkb63.ru')
+
     def print_sn(self, res):
         for i in res['sn']:
             print

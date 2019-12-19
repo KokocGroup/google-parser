@@ -788,6 +788,10 @@ class MobileSnippetsParser(SnippetsParserDefault):
         if '<g-tray-header' in content:
             return
 
+        # исключаем места
+        if '<local-categorical-fixed-header' in content:
+            return
+
 
         mnr_c_divs = div.findall('div')
         if len(mnr_c_divs) == 0:
