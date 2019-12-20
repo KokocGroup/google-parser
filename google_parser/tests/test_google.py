@@ -1696,7 +1696,7 @@ class GoogleParserTestCase(GoogleParserTests):
         self.assertEqual(res['sn'][0]['vu'], u'https://www.mi.com › ...')
 
         self.assertEqual(res['sn'][95]['t'], 'Smartphone maker Xiaomi plans $1.5b buyback [Video] - Yahoo Finance')
-        self.assertEqual(res['sn'][95]['s'], u'Опубликовано:15 часов назад')
+        self.assertEqual(res['sn'][95]['s'], None)
         self.assertEqual(res['sn'][95]['u'], 'https://finance.yahoo.com/video/smartphone-maker-xiaomi-plans-1-150245874.html')
         self.assertEqual(res['sn'][95]['d'], 'finance.yahoo.com')
         self.assertEqual(res['sn'][95]['vu'], u'https://finance.yahoo.com › video')
@@ -1887,25 +1887,25 @@ class GoogleParserTestCase(GoogleParserTests):
         self.assertEqual(res['sn'][0]['s'], u'Продажа и изготовление глянцевых кухонь от ⭐ 5 977 руб ⭐ за комплект со скидкой до 30%. Онлайн- конструктор готовых кухонь на ... Белый глянец/Салатовый глянец. 17 420 р. Цена за всю кухню · -30%.')
         self.assertEqual(res['sn'][0]['u'], 'https://mebel169.ru/kukhni/glyancevye/')
         self.assertEqual(res['sn'][0]['d'], 'mebel169.ru')
-        self.assertEqual(res['sn'][0]['vu'], 'https://mebel169.ru')
+        self.assertEqual(res['sn'][0]['vu'], u'https://mebel169.ru › glyancevye')
 
         self.assertEqual(res['sn'][4]['t'], u'Купить глянцевую кухню недорого в Москве: каталог прямых и угловых кухонь с фото, цветами, ценами - Антарес Мебель')
         self.assertEqual(res['sn'][4]['s'], u'Кухня Валерия-М 2,4 метра. Длина 2392. Ширина 1692. Высота 2140. Глубина 480. 43930руб. 43930 45564Купить. Доставка бесплатно. 1 день. Цвета: Белый глянец (СуМ); Лайм глянец (СуМ); Венге (СуМ) ...')
         self.assertEqual(res['sn'][4]['u'], 'https://www.antarescompany.ru/shop/kuhni/glyancevye/')
         self.assertEqual(res['sn'][4]['d'], 'antarescompany.ru')
-        self.assertEqual(res['sn'][4]['vu'], 'https://www.antarescompany.ru')
+        self.assertEqual(res['sn'][4]['vu'], u'https://www.antarescompany.ru › gl...')
 
         self.assertEqual(res['sn'][5]['t'], u'Купить белую кухню - глянцевые и матовые кухонные гарнитуры белого цвета с фото и ценами - Антарес Мебель')
         self.assertEqual(res['sn'][5]['s'], u'Каталог кухонной мебели с белыми фасадами от российских производителей в интернет-магазине. Мы предлагаем онлайн расчет и бесплатную доставку кухонь белого цвета по Москве.')
         self.assertEqual(res['sn'][5]['u'], 'https://www.antarescompany.ru/shop/kuhni/belye/')
         self.assertEqual(res['sn'][5]['d'], 'antarescompany.ru')
-        self.assertEqual(res['sn'][5]['vu'], 'https://www.antarescompany.ru')
+        self.assertEqual(res['sn'][5]['vu'], u'https://www.antarescompany.ru › be...')
 
         self.assertEqual(res['sn'][8]['t'], u'Глянцевые кухни в стиле модерн купить недорого в Москве - San09')
         self.assertEqual(res['sn'][8]['s'], u'Недорогие кухни Модерн от производителя. Выбор цвета, конфигурации, размеров. ... Кухонный набор « Модерн», цвет «белый глянец», 2 предмета, общая длина 1м. Глубина: 600 мм; Длина: 1000 мм ...')
         self.assertEqual(res['sn'][8]['u'], 'https://san09.ru/mebel_dlya_kuhni/kuhni_komplekty_modern/')
         self.assertEqual(res['sn'][8]['d'], 'san09.ru')
-        self.assertEqual(res['sn'][8]['vu'], 'https://san09.ru')
+        self.assertEqual(res['sn'][8]['vu'], u'https://san09.ru › mebel_dlya_kuhni')
 
     def test98(self):
         u""""
@@ -1925,19 +1925,19 @@ class GoogleParserTestCase(GoogleParserTests):
         self.assertEqual(res['sn'][0]['s'], u'Купить Воздухоувлажнитель Electrolux EHU-3510D по доступной цене в интернет-магазине М.Видео или в розничной сети магазинов М.Видео города Москвы. Electrolux EHU-3510D - аксессуары, отзывы, ...')
         self.assertEqual(res['sn'][0]['u'], 'https://www.mvideo.ru/products/vozduhouvlazhnitel-electrolux-ehu-3510d-20026855')
         self.assertEqual(res['sn'][0]['d'], 'mvideo.ru')
-        self.assertEqual(res['sn'][0]['vu'], 'https://www.mvideo.ru')
+        self.assertEqual(res['sn'][0]['vu'], u'https://www.mvideo.ru › products')
 
         self.assertEqual(res['sn'][5]['t'], u'Отзывы о Увлажнитель воздуха Electrolux EHU 3510D - Отзовик')
         self.assertEqual(res['sn'][5]['s'], u'Увлажнитель воздуха Electrolux EHU 3510D - отзывы. Рекомендуют 70%. Отзыв о Увлажнитель воздуха Electrolux EHU 3510D. Качество. Надежность. Внешний вид. Удобство. Добавить отзыв Всего отзывов: ...')
         self.assertEqual(res['sn'][5]['u'], 'https://otzovik.com/reviews/uvlazhnitel_vozduha_electrolux_ehu_3510d/')
         self.assertEqual(res['sn'][5]['d'], 'otzovik.com')
-        self.assertEqual(res['sn'][5]['vu'], 'https://otzovik.com')
+        self.assertEqual(res['sn'][5]['vu'], u'https://otzovik.com › reviews › uvla...')
 
         self.assertEqual(res['sn'][8]['t'], u'Увлажнитель воздуха Electrolux EHU 3510D в Москве, цена по запросу - отзывы инструкции и схемы, официальная гарантия - купить очиститель воздуха Электролюкс ...')
-        self.assertEqual(res['sn'][8]['s'], u'Увлажнитель воздуха Electrolux EHU 3510D в Москве с официальной гарантией, цена по запросу - купить очиститель воздуха Электролюкс EHU 3510D в интернет-магазине - Доставка, сравните отзывы и ...Режимы работы увлажнителя: Теплый пар, Холодный пар, Детский режим, Био...Основной фильтр: Фильтр-картридж Ag Ionic Silver')
+        self.assertEqual(res['sn'][8]['s'], u'Увлажнитель воздуха Electrolux EHU 3510D в Москве с официальной гарантией, цена по запросу - купить очиститель воздуха Электролюкс EHU 3510D в интернет-магазине - Доставка, сравните отзывы и ...')
         self.assertEqual(res['sn'][8]['u'], 'https://elux-ru.ru/electrolux/ochistiteli-i-uvlajniteli-vozduha/Uvlazhnitel_vozduha_Electrolux_EHU_3510D.php')
         self.assertEqual(res['sn'][8]['d'], 'elux-ru.ru')
-        self.assertEqual(res['sn'][8]['vu'], 'https://elux-ru.ru')
+        self.assertEqual(res['sn'][8]['vu'], u'https://elux-ru.ru › electrolux › Uvla...')
 
     def test99(self):
         u""""
@@ -1957,25 +1957,25 @@ class GoogleParserTestCase(GoogleParserTests):
         self.assertEqual(res['sn'][0]['s'], u'Подробное описание и как воспользоваться услугой Делитесь гигабайтами Tele2. Стоимость подключения Делитесь гигабайтами.')
         self.assertEqual(res['sn'][0]['u'], 'https://msk.tele2.ru/option/share-gb')
         self.assertEqual(res['sn'][0]['d'], 'msk.tele2.ru')
-        self.assertEqual(res['sn'][0]['vu'], 'https://msk.tele2.ru')
+        self.assertEqual(res['sn'][0]['vu'], u'https://msk.tele2.ru › share-gb')
 
         self.assertEqual(res['sn'][1]['t'], u'Как делиться гигабайтами - Теле2')
         self.assertEqual(res['sn'][1]['s'], u'24 окт. 2018 г. · Рассказываем, как поделиться гигабайтами с другими абонентами Теле2. ... С новой услугой «Делитесь гигабайтами» вы можете легко делиться интернет-трафиком с другими абонентами ...')
         self.assertEqual(res['sn'][1]['u'], 'https://msk.tele2.ru/journal/article/gb-share')
         self.assertEqual(res['sn'][1]['d'], 'msk.tele2.ru')
-        self.assertEqual(res['sn'][1]['vu'], 'https://msk.tele2.ru')
+        self.assertEqual(res['sn'][1]['vu'], u'https://msk.tele2.ru › gb-share')
 
         self.assertEqual(res['sn'][5]['t'], u'«Как поделиться гигабайтами теле2 с тарифом классическим и мой разговор?» – Яндекс.Знатоки')
         self.assertEqual(res['sn'][5]['s'], u'8 ответов')
         self.assertEqual(res['sn'][5]['u'], 'https://yandex.ru/znatoki/question/computers/kak_podelitsia_gigabaitami_tele2_s_adb7db8a/')
         self.assertEqual(res['sn'][5]['d'], 'yandex.ru')
-        self.assertEqual(res['sn'][5]['vu'], 'https://yandex.ru')
+        self.assertEqual(res['sn'][5]['vu'], u'https://yandex.ru › computers › kak...')
 
         self.assertEqual(res['sn'][8]['t'], u'Как поделиться гигабайтами на Теле2 - Личный кабинет Теле2')
         self.assertEqual(res['sn'][8]['s'], u'25 дек. 2018 г. · Кому доступна услуга “Делись Гигабайтами” от Теле2? Как поделиться трафиком интернета на ... настроить необходимые пакеты – это легко сделать с помощью Личного кабинета Теле2 .')
         self.assertEqual(res['sn'][8]['u'], 'https://www.tele2expert.ru/novaya-usluga-tele2-delites-gigabajtami/')
         self.assertEqual(res['sn'][8]['d'], 'tele2expert.ru')
-        self.assertEqual(res['sn'][8]['vu'], 'https://www.tele2expert.ru')
+        self.assertEqual(res['sn'][8]['vu'], u'https://www.tele2expert.ru › novaya...')
 
     def test100(self):
         u""""
@@ -1995,25 +1995,25 @@ class GoogleParserTestCase(GoogleParserTests):
         self.assertEqual(res['sn'][0]['s'], u'Распродажа комплектов из бамбука. Arya - Asabella - US Polo - KingSilk - Issimo. Бесплатная доставка от 3000р. Тысячи пунктов выдачи по всей России.')
         self.assertEqual(res['sn'][0]['u'], 'https://m.spim.ru/shop/postel/bamboo/')
         self.assertEqual(res['sn'][0]['d'], 'm.spim.ru')
-        self.assertEqual(res['sn'][0]['vu'], 'https://m.spim.ru')
+        self.assertEqual(res['sn'][0]['vu'], u'https://m.spim.ru › postel › bamboo')
 
         self.assertEqual(res['sn'][2]['t'], u'Постельное белье из бамбука, купить в интернет-магазине недорого - Эко Бамбук')
-        self.assertEqual(res['sn'][2]['s'], '')
+        self.assertEqual(res['sn'][2]['s'], u'Купив постельное бамбуковое белье в интернет-магазине «Эко бамбук», вы можете быть уверены в его прочности, стойкости окраски и мягкости. Мы предлагаем постельные комплекты из бамбука турецкого ...')
         self.assertEqual(res['sn'][2]['u'], 'https://ekobambuk.ru/products/category/bambukovoe-postelnoe-bele')
         self.assertEqual(res['sn'][2]['d'], 'ekobambuk.ru')
-        self.assertEqual(res['sn'][2]['vu'], 'https://ekobambuk.ru')
+        self.assertEqual(res['sn'][2]['vu'], u'https://ekobambuk.ru › category › b...')
 
         self.assertEqual(res['sn'][5]['t'], u'Постельное белье из бамбука, цена, доставка в Москве | Togas')
-        self.assertEqual(res['sn'][5]['s'], '')
+        self.assertEqual(res['sn'][5]['s'], u'Полезные свойства бамбука можно оценить, купив постельное белье из этого прекрасного материала от Togas. Заказав комплект эксклюзивного белья из бамбукового волокна в нашем интернет-магазине, ...')
         self.assertEqual(res['sn'][5]['u'], 'https://www.togas.com/ru/postelnoe-belyo/bambukovoe-volokno/')
         self.assertEqual(res['sn'][5]['d'], 'togas.com')
-        self.assertEqual(res['sn'][5]['vu'], 'https://www.togas.com')
+        self.assertEqual(res['sn'][5]['vu'], u'https://www.togas.com › bambukov...')
 
         self.assertEqual(res['sn'][97]['t'], u'Элитное бамбуковое постельное белье, сатин бамбук, белое, Kingsilk (Кингсилк), арт. bc-4. Отделка вышивка, листья. Размеры, описание, х… | queenanna.ru | Посте…')
         self.assertEqual(res['sn'][97]['s'], u'Элитное бамбуковое постельное белье, сатин бамбук, белое, Kingsilk (Кингсилк), арт. bc-4. Отделка вышивка, листья. Размеры, описание, характеристики, низкие цены, скидки, доставка.')
         self.assertEqual(res['sn'][97]['u'], 'https://www.pinterest.ru/amp/pin/147352219037218265/')
         self.assertEqual(res['sn'][97]['d'], 'pinterest.ru')
-        self.assertEqual(res['sn'][97]['vu'], 'https://www.pinterest.ru')
+        self.assertEqual(res['sn'][97]['vu'], u'https://www.pinterest.ru › pin')
 
     def test101(self):
         u""""
@@ -2033,25 +2033,25 @@ class GoogleParserTestCase(GoogleParserTests):
         self.assertEqual(res['sn'][0]['s'], u'Огромное количество вакансий в сфере Контент в вашем мобильном устройстве! Поиск работы ... Менеджер по дистанционному обучению. Москва. Всероссийский Банк Развития Регионов (ВБРР). вчера.')
         self.assertEqual(res['sn'][0]['u'], 'https://m.hh.ru/catalog/Informacionnye-tehnologii-Internet-Telekom/Kontent')
         self.assertEqual(res['sn'][0]['d'], 'm.hh.ru')
-        self.assertEqual(res['sn'][0]['vu'], 'https://m.hh.ru')
+        self.assertEqual(res['sn'][0]['vu'], u'https://m.hh.ru › catalog › Kontent')
 
         self.assertEqual(res['sn'][2]['t'], u'Контент-менеджер, работа контент-менеджером, вакансии контент-менеджер в Москве - SuperJob')
         self.assertEqual(res['sn'][2]['s'], u'Поиск работы контент-менеджером в Москве. 26 вакансий Контент-менеджера с зарплатой до 75000 рублей.')
         self.assertEqual(res['sn'][2]['u'], 'https://www.superjob.ru/vakansii/kontent-menedzher.html')
         self.assertEqual(res['sn'][2]['d'], 'superjob.ru')
-        self.assertEqual(res['sn'][2]['vu'], 'https://www.superjob.ru')
+        self.assertEqual(res['sn'][2]['vu'], u'https://www.superjob.ru › vakansii')
 
         self.assertEqual(res['sn'][5]['t'], u'Работа — Удаленно Контент Менеджер, Москва | Indeed.com')
         self.assertEqual(res['sn'][5]['s'], u'30 открытых вакансий по запросу Удаленно Контент Менеджер, Москва на Indeed.com. Один поиск. Все вакансии.')
         self.assertEqual(res['sn'][5]['u'], 'https://ru.indeed.com/m/jobs?q=%D0%A3%D0%B4%D0%B0%D0%BB%D0%B5%D0%BD%D0%BD%D0%BE+%D0%9A%D0%BE%D0%BD%D1%82%D0%B5%D0%BD%D1%82+%D0%9C%D0%B5%D0%BD%D0%B5%D0%B4%D0%B6%D0%B5%D1%80&l=%D0%9C%D0%BE%D1%81%D0%BA%D0%B2%D0%B0')
         self.assertEqual(res['sn'][5]['d'], 'ru.indeed.com')
-        self.assertEqual(res['sn'][5]['vu'], 'https://ru.indeed.com')
+        self.assertEqual(res['sn'][5]['vu'], u'https://ru.indeed.com › jobs › l=Мо...')
 
         self.assertEqual(res['sn'][70]['t'], u'В Москве прошёл второй, завершающий день «Недели Российского интернета - Экспресс-Новости')
         self.assertEqual(res['sn'][70]['s'], u'3 дня назад · В Москве прошёл второй, завершающий день «Недели Российского интернета» ... внутренних механиках распространения контента, какой контент снимать для привлечения подписчиков,  ...')
         self.assertEqual(res['sn'][70]['u'], 'https://express-novosti.ru/technology/2147508187-v-moskve-proshel-vtoroj-zavershayushchij-den-nedeli-rossijskogo-interneta.html')
         self.assertEqual(res['sn'][70]['d'], 'express-novosti.ru')
-        self.assertEqual(res['sn'][70]['vu'], 'https://express-novosti.ru')
+        self.assertEqual(res['sn'][70]['vu'], u'https://express-novosti.ru › 2147508...')
 
     def test102(self):
         u""""
@@ -2071,25 +2071,25 @@ class GoogleParserTestCase(GoogleParserTests):
         self.assertEqual(res['sn'][0]['s'], u'Топперы круглые в магазине праздников ☀ Детские праздники ☀ Аксессуары для вечеринок ☀ Доставка по РФ!')
         self.assertEqual(res['sn'][0]['u'], 'https://ultraparty.ru/category/toppery-kruglye/')
         self.assertEqual(res['sn'][0]['d'], 'ultraparty.ru')
-        self.assertEqual(res['sn'][0]['vu'], 'https://ultraparty.ru')
+        self.assertEqual(res['sn'][0]['vu'], u'https://ultraparty.ru › toppery-kruglye')
 
         self.assertEqual(res['sn'][2]['t'], u'02__Топперы круглые__Кэнди бар Лунтик. На полянке(© Устроим Праздник).pdf | картинки | Праздник, Кэндо и Картинки - Pinterest')
         self.assertEqual(res['sn'][2]['s'], u'02__Топперы круглые__Кэнди бар Лунтик. На полянке(© Устроим Праздник).pdf. Декоративные ... топперы для кексов "Лунтик" 4 Й День Рождения, Шаблоны Для Печати, Печенье. Подробнее..')
         self.assertEqual(res['sn'][2]['u'], 'https://www.pinterest.com/amp/pin/760263980818064009/')
         self.assertEqual(res['sn'][2]['d'], 'pinterest.com')
-        self.assertEqual(res['sn'][2]['vu'], 'https://www.pinterest.com')
+        self.assertEqual(res['sn'][2]['vu'], u'https://www.pinterest.com › pin')
 
         self.assertEqual(res['sn'][5]['t'], u'Топперы круглые "Алиса" 6 шт. купить с доставкой')
         self.assertEqual(res['sn'][5]['s'], u'Главная страница; •; Каталог товаров; •; Готовый декор; •; Топперы для тортов и капкейков; •; Картонные топперы для капкейков; •; Топперы круглые "Алиса" 6 шт.')
         self.assertEqual(res['sn'][5]['u'], 'https://vkustvorchestva.com/catalog/gotovyy_dekor/toppery_dlya_tortov_i_kapkeykov/kartonnye_toppery_dlya_kapkeykov/toppery_kruglye_alisa_6_sht.html')
         self.assertEqual(res['sn'][5]['d'], 'vkustvorchestva.com')
-        self.assertEqual(res['sn'][5]['vu'], 'https://vkustvorchestva.com')
+        self.assertEqual(res['sn'][5]['vu'], u'https://vkustvorchestva.com › catalog')
 
         self.assertEqual(res['sn'][98]['t'], u'Топпер для торта с днем рождения поставки для вечеринок украшения   для кексов украшения   для дня рождения детский душ с днем рождения топперы... купить товары ...')
         self.assertEqual(res['sn'][98]['s'], u'Купить дешево Топпер для торта с днем рождения поставки для вечеринок ◤украшения◥ для кексов ... 1 пара шнурков Unsiex без галстука запирающиеся круглые шнурки эластичные шнурки Sneaks обувь ...')
         self.assertEqual(res['sn'][98]['u'], 'http://store-aliexpress.ru/ali_good.php?id=32966792113.html')
         self.assertEqual(res['sn'][98]['d'], 'store-aliexpress.ru')
-        self.assertEqual(res['sn'][98]['vu'], 'store-aliexpress.ru')
+        self.assertEqual(res['sn'][98]['vu'], u'store-aliexpress.ru › ali_good')
 
     def test103(self):
         u""""
@@ -2106,22 +2106,22 @@ class GoogleParserTestCase(GoogleParserTests):
         self.assertEqual(len(res['sn']), 90)
 
         self.assertEqual(res['sn'][0]['t'], u'Смартфоны Samsung Galaxy S10, S10+ и S10e цена в кредит, купить телефон Самсунг Галакси С10, С10 плюс и С10е в Москве недорого в интернет-магазине Связной')
-        self.assertEqual(res['sn'][0]['s'], u'128GB1TBСмартфон Samsung Galaxy ...')
+        self.assertEqual(res['sn'][0]['s'], u'Смартфоны Samsung Galaxy S10, S10+ и S10e в Москве: выгодные цены, кредит, рассрочка, гарантия! Купить Самсунг Галакси С10, С10 плюс и С10е по тел.: 8 (800) 700-43-43. Быстрая доставка по всей ...')
         self.assertEqual(res['sn'][0]['u'], 'https://www.svyaznoy.ru/catalog/phone/225/samsung/galaxy-s10-s10plus-s10e')
         self.assertEqual(res['sn'][0]['d'], 'svyaznoy.ru')
-        self.assertEqual(res['sn'][0]['vu'], 'https://www.svyaznoy.ru')
+        self.assertEqual(res['sn'][0]['vu'], u'https://www.svyaznoy.ru › samsung')
 
         self.assertEqual(res['sn'][2]['t'], u'Купить Samsung Galaxy S10e, S10 и S10+ цена | Samsung RU')
         self.assertEqual(res['sn'][2]['s'], u'Онлайн Trade-In. Сдайте ваше старое устройство по программе Trade-In. Получите выгоду до 58 000Р в корзине до 9 декабря 2019 г. Программа действует в Москве, Московской области, Санкт-Петербурге, ...')
         self.assertEqual(res['sn'][2]['u'], 'https://www.samsung.com/ru/smartphones/galaxy-s10/buy/')
         self.assertEqual(res['sn'][2]['d'], 'samsung.com')
-        self.assertEqual(res['sn'][2]['vu'], 'https://www.samsung.com')
+        self.assertEqual(res['sn'][2]['vu'], u'https://www.samsung.com › buy')
 
         self.assertEqual(res['sn'][89]['t'], u'Samsung Galaxy S10 plus цена в москве')
         self.assertEqual(res['sn'][89]['s'], u'Заказать Samsung Galaxy S10 plus цена в москве Samsung Galaxy S10 мтс.')
         self.assertEqual(res['sn'][89]['u'], 'https://www.myanimalhousevets.com/userfiles/samsung-galaxy-s10-plus-tsena-v-moskve-2043.xml')
         self.assertEqual(res['sn'][89]['d'], 'myanimalhousevets.com')
-        self.assertEqual(res['sn'][89]['vu'], 'https://www.myanimalhousevets.com')
+        self.assertEqual(res['sn'][89]['vu'], u'https://www.myanimalhousevets.com › ...')
 
     def test104(self):
         u""""
@@ -2147,19 +2147,19 @@ class GoogleParserTestCase(GoogleParserTests):
         self.assertEqual(res['sn'][1]['s'], u'Самые низкие цены на женскую лазерную эпиляцию! Подмышки - 1000 руб., Глубокое бикини - 1500 руб., Ноги полностью - 2500 руб., Руки полностью - 1300 руб.')
         self.assertEqual(res['sn'][1]['u'], 'https://epilas.ru/services/epilation/lady')
         self.assertEqual(res['sn'][1]['d'], 'epilas.ru')
-        self.assertEqual(res['sn'][1]['vu'], 'https://epilas.ru')
+        self.assertEqual(res['sn'][1]['vu'], u'https://epilas.ru › Услуги')
 
         self.assertEqual(res['sn'][2]['t'], u'Приводит ли лазерная эпиляция к раку? - Афиша Daily')
         self.assertEqual(res['sn'][2]['s'], u'17 янв. 2019 г. · Во время лазерной эпиляции свет от прибора поглощается меланином — пигментом волос. Пигмент нагревается и начинает разрушать соседние клетки, отвечающие за рост, или ...')
         self.assertEqual(res['sn'][2]['u'], 'https://daily.afisha.ru/entry/amp/10503/')
         self.assertEqual(res['sn'][2]['d'], 'daily.afisha.ru')
-        self.assertEqual(res['sn'][2]['vu'], 'https://daily.afisha.ru')
+        self.assertEqual(res['sn'][2]['vu'], u'https://daily.afisha.ru › beauty')
 
         self.assertEqual(res['sn'][98]['t'], u'Лазерная эпиляция в Самаре цены - Дорожная клиническая больница')
         self.assertEqual(res['sn'][98]['s'], u'Лазерная эпиляция лица, зоны бикини и других участков тела. Стоимость лазерной эпиляции в Самаре.')
         self.assertEqual(res['sn'][98]['u'], 'https://dkb63.ru/services/beauty/')
         self.assertEqual(res['sn'][98]['d'], 'dkb63.ru')
-        self.assertEqual(res['sn'][98]['vu'], 'https://dkb63.ru')
+        self.assertEqual(res['sn'][98]['vu'], u'https://dkb63.ru › services › beauty')
 
     def test105(self):
         u""""
@@ -2179,25 +2179,63 @@ class GoogleParserTestCase(GoogleParserTests):
         self.assertEqual(res['sn'][0]['s'], u'Самые актуальные статистика, аналитика и экономические события, связанные с валютной парой Евро Доллар. Только у нас!')
         self.assertEqual(res['sn'][0]['u'], 'https://m.ru.investing.com/currencies/eur-usd')
         self.assertEqual(res['sn'][0]['d'], 'm.ru.investing.com')
-        self.assertEqual(res['sn'][0]['vu'], 'https://m.ru.investing.com')
+        self.assertEqual(res['sn'][0]['vu'], u'https://m.ru.investing.com › eur-usd')
 
         self.assertEqual(res['sn'][1]['t'], u'График Евро Доллар | График EUR USD | График Евро Доллар в реальном времени - Investing.com')
         self.assertEqual(res['sn'][1]['s'], u'Посмотрите график Евро Доллар , чтобы быть в курсе последних изменений пары.')
         self.assertEqual(res['sn'][1]['u'], 'https://m.ru.investing.com/currencies/eur-usd-chart')
         self.assertEqual(res['sn'][1]['d'], 'm.ru.investing.com')
-        self.assertEqual(res['sn'][1]['vu'], 'https://m.ru.investing.com')
+        self.assertEqual(res['sn'][1]['vu'], u'https://m.ru.investing.com › eur-usd...')
 
         self.assertEqual(res['sn'][4]['t'], u'График EUR/USD Forex - ProFinance.Ru')
         self.assertEqual(res['sn'][4]['s'], u'Курс доллара растет, так как данные в США делают маловероятным снижение ставок ФРС. 15:27 ... Курсы валют ЦБ РФ: курс рубля к доллару, евро, гривне, лире, тенге, юаню. 12:42. Квантовые фонды не ...')
         self.assertEqual(res['sn'][4]['u'], 'http://www.profinance.ru/chart/eurusd/')
         self.assertEqual(res['sn'][4]['d'], 'profinance.ru')
-        self.assertEqual(res['sn'][4]['vu'], 'www.profinance.ru')
+        self.assertEqual(res['sn'][4]['vu'], u'www.profinance.ru › chart › eurusd')
 
         self.assertEqual(res['sn'][97]['t'], u'Доллар с евро подорожали | Экономика и Жизнь')
         self.assertEqual(res['sn'][97]['s'], u'24 часа назад · 18.12.2019 - Центральный банк Российской Федерации на 19 декабря увеличил официальный курс доллара на 5,05 коп., евро – на 1,24 коп.')
         self.assertEqual(res['sn'][97]['u'], 'https://www.eg-online.ru/news/413021/')
         self.assertEqual(res['sn'][97]['d'], 'eg-online.ru')
-        self.assertEqual(res['sn'][97]['vu'], 'https://www.eg-online.ru')
+        self.assertEqual(res['sn'][97]['vu'], u'https://www.eg-online.ru › news')
+
+    def test106(self):
+        u""""
+            Ошибка парсинга от 2019-12-20
+        """
+        html = self.get_data('mobile-2019-12-20.txt')
+        g = GoogleJsonParser(html, snippet_fields=('d', 'p', 'u', 't', 's', 'm'))
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+
+        # В мобильной выдаче похоже нет общего кол-ва результатов
+        self.assertEqual(res['pc'], 0)
+        self.assertEqual(len(res['sn']), 98)
+
+        self.assertEqual(res['sn'][0]['t'], u'Пластиковые окна: цены в Москве, стоимость по типу дома, цена за м2 - от 3 714 руб. - ОКНА СТРИТ г. Москва')
+        self.assertEqual(res['sn'][0]['s'], u'Предлагаем пластиковые окна, цены от производителя! Самая низкая стоимость на окна ПВХ в Москве и в Московской области!')
+        self.assertEqual(res['sn'][0]['u'], 'https://www.oknastreet.ru/stoimost-new/plastikovye-okna-ceny.html')
+        self.assertEqual(res['sn'][0]['d'], 'oknastreet.ru')
+        self.assertEqual(res['sn'][0]['vu'], u'https://www.oknastreet.ru › plastiko...')
+
+        self.assertEqual(res['sn'][1]['t'], u'Пластиковые окна: цены с установкой в Москве, стоимость окон ПВХ - Фабрика Окон')
+        self.assertEqual(res['sn'][1]['s'], u'Цены на пластиковые окна от производителя. Стоимость окон ПВХ с установкой в Москве и МО. ✔️Под ключ от 4760 руб. ✔️БЕСПРОЦЕНТНАЯ рассрочка ✔️Гарантия до 30лет ☎️+7(499)112-19-93.')
+        self.assertEqual(res['sn'][1]['u'], 'https://www.fabrikaokon.ru/price-b.html')
+        self.assertEqual(res['sn'][1]['d'], 'fabrikaokon.ru')
+        self.assertEqual(res['sn'][1]['vu'], u'https://www.fabrikaokon.ru › price-b')
+
+        self.assertEqual(res['sn'][4]['t'], u'Цены на пластиковые окна: сколько стоят окна ПВХ в Москве и от чего зависит стоимость? - Комсомольская правда')
+        self.assertEqual(res['sn'][4]['s'], u'Около 30 000 руб. можно отдать за пластиковые окна и их установку в однокомнатной квартире с балконом. Это не самая высокая цена за уют в доме, ведь ПВХ окна не нуждаются в покраске и ...')
+        self.assertEqual(res['sn'][4]['u'], 'https://www.kp.ru/guide/tseny-na-plastikovye-okna.html')
+        self.assertEqual(res['sn'][4]['d'], 'kp.ru')
+        self.assertEqual(res['sn'][4]['vu'], u'https://www.kp.ru › guide › tseny-n...')
+
+        self.assertEqual(res['sn'][97]['t'], u'виды, размеры и цены. Оконный калькулятор. - Пластиковые окна')
+        self.assertEqual(res['sn'][97]['s'], u'Узнайте стоимость окон удобным способом: 1) посмотреть стандартные размеры окон и цены на них 2) online расчет цен оконным калькулятором 3) посмотреть стоимость окон пластиковых по сериям ...')
+        self.assertEqual(res['sn'][97]['u'], 'https://m.okna-trust.ru/ceny')
+        self.assertEqual(res['sn'][97]['d'], 'm.okna-trust.ru')
+        self.assertEqual(res['sn'][97]['vu'], u'https://m.okna-trust.ru › ceny')
 
     def print_sn(self, res):
         for i in res['sn']:

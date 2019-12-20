@@ -567,288 +567,53 @@ class SnippetsParserDefault(object):
 class MobileSnippetsParser(SnippetsParserDefault):
     snippets_regexp = re.compile(ur'(<div data-hveid="[^"]+?">.*?</div>\s*</div>\s*</div>\s*</div>)', re.I | re.M | re.S)
 
-    def _ignore_block(self, snippet):
-        if self._is_context_snippet(snippet):
-            return True
+    def _parse_title(self, snippet):
+        match = re.search(
+            ur'<a class="C8nzq\s+[^"]*BmP5tf[^"]*"[^>]*href="([^"]+)".*?<div[^>]+class="MUxGbd v0nnCb"[^>]*>(.*?)</div>',
+            snippet
+        )
+        if not match:
+            raise BadGoogleParserError(snippet)
 
-    def _is_context_snippet(self, snippet):
-        # Рекламный блок
-        if snippet.xpath('.//div[contains(@class,"label_color_yellow")]'):
-            return True
-
-        if snippet.xpath('.//div[contains(@class,"label_theme_direct")]'):
-            return True
-
-        return 'serp-adv' in snippet.attrib['class'] or 't-construct-adapter__adv' in snippet.attrib['class']
-
-    def _parse_adv_logo(self, logo):
-        logo_div = logo.findall('div')
-        if not logo_div:
-            raise BadGoogleParserError(etree.tostring(logo))
-
-        spans = logo_div[0].findall('span')
-        if len(spans) != 2:
-            raise BadGoogleParserError(etree.tostring(logo))
-
-        return spans[0].text, spans[1].text
-
-    def _parse_logo(self, logo):
-        imgs = logo.findall('img')
-        if len(imgs) != 1:
-            raise BadGoogleParserError(etree.tostring(logo))
-
-        spans = logo.findall('span')
-        if len(spans) != 1:
-            raise BadGoogleParserError(etree.tostring(logo))
-
-        return imgs[0].attrib['src'], spans[0].text
-
-    def _parse_header(self, header):
-        aa = header.findall('a')
-        if aa:
-            if len(aa) != 1:
-                raise BadGoogleParserError(etree.tostring(header))
-
-            a = aa[0]
-            elements = a.findall('div')
-            if len(elements) < 2:
-                raise BadGoogleParserError(etree.tostring(header))
-
-            url = a.attrib['href']
-            logo, vu = self._parse_adv_logo(elements[0])
-            title = elements[1].text
-            return logo, vu, url, title
-
-    def _parse_rc_title(self, header):
-        divs = header.findall('div')
-        if len(divs) < 2:
-            raise BadGoogleParserError(etree.tostring(header))
-
-        vu_divs = divs[0].findall('div')
-        if not vu_divs:
-            raise BadGoogleParserError(etree.tostring(header))
-
-        vu_cite = vu_divs[0].findall('cite')
-        if not vu_cite:
-            raise BadGoogleParserError(etree.tostring(header))
-
-        vu = vu_cite[0].text
-
-        h3 = divs[1].findall('h3')
-        if not h3:
-            raise BadGoogleParserError(etree.tostring(header))
-
-        a = h3[0].findall('a')
-        if not a:
-            raise BadGoogleParserError(etree.tostring(header))
-
-        return a[0].attrib['href'], vu, a[0].text
-
-
-    def _parse_title(self, header, is_rc):
-        if is_rc:
-            return self._parse_rc_title(header)
-
-        aa = header.findall('a')
-        if not aa:
-            divs = header.findall('div')
-            if not divs:
-                raise BadGoogleParserError(etree.tostring(header))
-
-            aa = divs[0].findall('a')
-            if not aa:
-                raise BadGoogleParserError(etree.tostring(header))
-            a = aa[0]
-        elif len(aa) == 1:
-            a = aa[0]
-        else:
-            raise BadGoogleParserError(etree.tostring(header))
-
-        vu = self._get_vu_from_header(header)
-        t = self._get_text_title(a)
-        return a.attrib['href'], vu, t
-
-    def _get_text_title(self, a):
-        divs = a.findall('div')
-
-        if len(divs) >= 2:
-            return divs[1].text
-        elif len(divs) == 1:
-            return divs[0].text
-        else:
-            raise BadGoogleParserError(etree.tostring(a))
-
-    def _get_vu_from_header(self, header):
-        vu = self._get_vu1(header)
-        if not vu:
-            vu = self._get_vu2(header)
-        return vu
-
-    def _get_vu2(self, header):
-        aa = header.findall('a')
-        if not aa:
-            divs = header.findall('div')
-            if not divs:
-                raise BadGoogleParserError(etree.tostring(header))
-
-            aa = divs[0].findall('a')
-
-        divs = aa[0].findall('div')
-        if not divs:
-            return
-        spans = divs[0].findall('span')
-        if not spans:
-            return
-        return spans[0].text
-
-    def _get_vu1(self, header):
-        divs = header.findall('div')
-        if not divs:
-            return
-
-        divs = divs[0].findall('div')
-        if not divs:
-            return
-
-        spans = divs[0].findall('span')
-        if spans:
-            return spans[0].text
-
-        divs = divs[0].findall('div')
-        if not divs:
-            return
-
-        spans = divs[0].findall('span')
-        if not spans:
-            return
-
-        return spans[0].text
-
-    def _parse_descr(self, descr):
-        divs = descr.findall('div') or descr.findall('a')
-        if not divs:
-            raise BadGoogleParserError(etree.tostring(descr))
-
-        sub_divs = divs[0].findall('div')
-        if not sub_divs:
-            return self.strip_element_tags(divs[0])
-
-        return self.strip_element_tags(sub_divs[0])
+        url = HTMLParser().unescape(match.group(1))
+        title = HTMLParser().unescape(match.group(2) or '')
+        return url, title
 
     @classmethod
     def strip_element_tags(cls, element):
         html = etree.tostring(element)
         return HTMLParser().unescape(SnippetsParserDefault.strip_tags(html))
 
-    def _get_descr(self, descr):
+    def _get_descr(self, snippet):
         if 's' not in self.snippet_fields:
             return
-        return descr
+
+        match = re.search(ur'<div class="MUxGbd[^"]*"[^>]*>(.*?)</div>', snippet, flags=re.I | re.M | re.S)
+        if not match:
+            return None
+
+        return SnippetsParserDefault.strip_tags(
+            HTMLParser().unescape(match.group(1) or '')
+        )
 
     def _get_html(self, snippet):
         if 'h' in self.snippet_fields:
             return etree.tostring(snippet)
 
-    def _get_vu(self, vu):
-        return vu
+    def _get_vu(self, snippet):
+        return self._parse_vu(snippet)
 
-    def _filter_mnr_c_dual_snippets(self, div):
-        result = []
-        attrib_class = div.attrib.get('class', '')
-
-        if 'mnr-c' not in attrib_class:
+    def _parse_vu(self, snippet):
+        match = re.search(ur'<span class="dTe0Ie qzEoUe">(.*?)</span>', snippet)
+        if not match:
             return
 
-        hveid_divs = div.findall('div')
-        if len(hveid_divs) < 2:
-            return
-
-        for hveid_div in hveid_divs:
-            if 'data-hveid' in hveid_div.attrib:
-                result.append(hveid_div)
-
-        if len(result) != 2:
-            return
-
-        return result
-
-    def _filter_hveid_dual_snippets(self, div):
-        result = []
-
-        if 'data-hveid' not in div.attrib:
-            return
-
-        # результаты поиска на карте
-        if div.findall('h2'):
-            return
-
-        content = etree.tostring(div)
-
-        # поиск по фото
-        if '<g-tray-header' in content:
-            return
-
-        # исключаем места
-        if '<local-categorical-fixed-header' in content:
-            return
-
-
-        mnr_c_divs = div.findall('div')
-        if len(mnr_c_divs) == 0:
-            return
-        elif len(mnr_c_divs) == 1:
-            div = mnr_c_divs[0].findall('div')
-            if 1 > len(div) or len(div) > 2:
-                return
-
-            if not div[0].attrib:
-                sub_div = div[0].findall('div')
-                if sub_div[0] and not sub_div[0].attrib:
-                    return [sub_div[0]]
-                else:
-                    return [div[0]]
-
-            div = div[0].findall('div')
-            if len(div) == 0:
-                return
-            else:
-                return [div[0]]
-
-        for mnr_c_div in mnr_c_divs:
-            if 'mnr-c' not in mnr_c_div.attrib.get('class', ''):
-                continue
-
-            for div in mnr_c_div.findall('div'):
-                result.append(div)
-
-        return result
-
-    def _filter_srg_snippets(self, div):
-        result = []
-
-        attrib_class = div.attrib.get('class', '')
-        if attrib_class != 'srg':
-            return
-
-        hveid_divs = div.findall('div')
-        for hveid_div in hveid_divs:
-            if 'data-hveid' not in hveid_div.attrib:
-                continue
-
-            mnr_c_divs = hveid_div.findall('div')
-            if len(mnr_c_divs) != 1:
-                continue
-
-            snippets = mnr_c_divs[0].findall('div')
-            if len(snippets) == 1:
-                if mnr_c_divs[0].xpath('./div/a'):
-                    result.append(mnr_c_divs[0])
-                else:
-                    result.append(snippets[0])
-            else:
-                result.append(mnr_c_divs[0])
-
-        return result
+        res = match.group(1) or ''
+        res = res.strip()
+        res = re.sub(ur'<span[^>]+>', '', res)
+        res = re.sub(ur'</span>', '', res)
+        res = HTMLParser().unescape(res)
+        return res
 
     def get_snippets(self, body):
         dom = PyQuery(body)
@@ -856,75 +621,43 @@ class MobileSnippetsParser(SnippetsParserDefault):
         if not rso_div:
             raise BadGoogleParserError()
 
-        divs = rso_div[0].findall('div')
+        divs = rso_div.find('div.mnr-c')
         serp = []
         for div in divs:
             attrib_class = div.attrib.get('class', '')
 
-            if 'card-section' in attrib_class:
+            if 'mnr-c xpd O9g5cc uUPGi' != attrib_class:
                 continue
 
-            # рейсы авиакомпаний
-            if 'app-container' in attrib_class:
-                continue
+            is_dual = False
+            for hveid_div in div.findall('div'):
+                if 'data-hveid' in hveid_div.attrib:
+                    serp.append(hveid_div)
+                    is_dual = True
 
-            # описание товара, ответ на вопрос
-            if 'wholepage' in attrib_class:
-                continue
-
-            # оставить отзыв
-            if 'kno-result' in attrib_class:
-                continue
-
-            # видео
-            if 'data-fz' in div.attrib:
-                continue
-
-            # картинки
-            if div.xpath('.//div[contains(@class,"rg_r")]'):
-                continue
-
-            snippets = self._filter_mnr_c_dual_snippets(div)
-            if snippets:
-                serp.extend(snippets)
-                continue
-
-            snippets = self._filter_hveid_dual_snippets(div)
-            if snippets:
-                serp.extend(snippets)
-                continue
-
-            snippets = self._filter_srg_snippets(div)
-            if snippets:
-                serp.extend(snippets)
-                continue
+            if not is_dual:
+                serp.append(div)
 
         result = []
         position = 0
         for snippet in serp:
-            # сниппет с немного иной структурой
-            is_rc = 'rc' == snippet.attrib.get('class')
+            snippet_content = etree.tostring(snippet)
 
-            block_divs = snippet.findall('div')
-            if not block_divs:
-                raise BadGoogleParserError(etree.tostring(snippet))
+            if 'class="TvV1fe"' in snippet_content:
+                continue
 
             position += 1
-            u, vu, t = self._parse_title(block_divs[0], is_rc)
-            if len(block_divs) > 1:
-                s = self._parse_descr(block_divs[1])
-            else:
-                s = None
 
+            u, t = self._parse_title(snippet_content)
             result.append({
                     'p': position,
                     'u': u,
                     'd': self._get_domain(u),
                     'm': self._is_map_snippet(u),
                     't': self._get_title(t),
-                    's': self._get_descr(s),
-                    'h': self._get_html(snippet),
-                    'vu': self._get_vu(vu),
+                    's': self._get_descr(snippet_content),
+                    'h': self._get_html(snippet_content),
+                    'vu': self._get_vu(snippet_content),
             })
 
         return result
