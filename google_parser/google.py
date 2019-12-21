@@ -569,14 +569,17 @@ class MobileSnippetsParser(SnippetsParserDefault):
 
     def _parse_title(self, snippet):
         match = re.search(
-            ur'<a class="C8nzq\s+[^"]*BmP5tf[^"]*"[^>]*href="([^"]+)".*?<div[^>]+class="MUxGbd v0nnCb"[^>]*>(.*?)</div>',
+            ur'<a class="C8nzq\s+[^"]*BmP5tf[^"]*"[^>]*href="([^"]+)".*?<div[^>]+class="[^"]*MUxGbd v0nnCb[^"]*"[^>]*>(.*?)</div>',
             snippet
         )
         if not match:
             raise BadGoogleParserError(snippet)
 
         url = HTMLParser().unescape(match.group(1))
-        title = HTMLParser().unescape(match.group(2) or '')
+        title = HTMLParser().unescape(
+            SnippetsParserDefault.strip_tags(
+                match.group(2) or '')
+        )
         return url, title
 
     @classmethod
@@ -592,8 +595,10 @@ class MobileSnippetsParser(SnippetsParserDefault):
         if not match:
             return None
 
-        return SnippetsParserDefault.strip_tags(
-            HTMLParser().unescape(match.group(1) or '')
+        return HTMLParser().unescape(
+            SnippetsParserDefault.strip_tags(
+                match.group(1) or ''
+            )
         )
 
     def _get_html(self, snippet):

@@ -2085,7 +2085,7 @@ class GoogleParserTestCase(GoogleParserTests):
         self.assertEqual(res['sn'][5]['d'], 'vkustvorchestva.com')
         self.assertEqual(res['sn'][5]['vu'], u'https://vkustvorchestva.com › catalog')
 
-        self.assertEqual(res['sn'][98]['t'], u'Топпер для торта с днем рождения поставки для вечеринок украшения   для кексов украшения   для дня рождения детский душ с днем рождения топперы... купить товары ...')
+        self.assertEqual(res['sn'][98]['t'], u'Топпер для торта с днем рождения поставки для вечеринок украшения для кексов украшения для дня рождения детский душ с днем рождения топперы... купить товары ...')
         self.assertEqual(res['sn'][98]['s'], u'Купить дешево Топпер для торта с днем рождения поставки для вечеринок ◤украшения◥ для кексов ... 1 пара шнурков Unsiex без галстука запирающиеся круглые шнурки эластичные шнурки Sneaks обувь ...')
         self.assertEqual(res['sn'][98]['u'], 'http://store-aliexpress.ru/ali_good.php?id=32966792113.html')
         self.assertEqual(res['sn'][98]['d'], 'store-aliexpress.ru')
@@ -2236,6 +2236,44 @@ class GoogleParserTestCase(GoogleParserTests):
         self.assertEqual(res['sn'][97]['u'], 'https://m.okna-trust.ru/ceny')
         self.assertEqual(res['sn'][97]['d'], 'm.okna-trust.ru')
         self.assertEqual(res['sn'][97]['vu'], u'https://m.okna-trust.ru › ceny')
+
+    def test107(self):
+        u""""
+            Ошибка парсинга от 2019-12-21
+        """
+        html = self.get_data('mobile-2019-12-21.txt')
+        g = GoogleJsonParser(html, snippet_fields=('d', 'p', 'u', 't', 's', 'm'))
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+
+        # В мобильной выдаче похоже нет общего кол-ва результатов
+        self.assertEqual(res['pc'], 0)
+        self.assertEqual(len(res['sn']), 98)
+
+        self.assertEqual(res['sn'][0]['t'], u'Угловые кожаные диваны | Купить мягкую мебель в Москве в интернет-магазине Heggi - Хегги')
+        self.assertEqual(res['sn'][0]['s'], u'В интернет-магазине Heggi вы можете купить угловые кожаные диваны с доставкой по Москве. Выгодные цены благодаря собственному производству и отсутствию посредников, огромный ассортимент ...')
+        self.assertEqual(res['sn'][0]['u'], 'https://www.divano.ru/catalog/kozhanaya-mebel/divany-uglovye-kozha/')
+        self.assertEqual(res['sn'][0]['d'], 'divano.ru')
+        self.assertEqual(res['sn'][0]['vu'], u'https://www.divano.ru › catalog › di...')
+
+        self.assertEqual(res['sn'][1]['t'], u'Угловые диваны из натуральной кожи - купить недорогой кожаный диван в Москве по цене распродажи от производителя - HomeMe')
+        self.assertEqual(res['sn'][1]['s'], u'Купить недорогие Угловые кожаные диваны в Москве, дешевые цены от 52990 руб на Угловые кожаные диваны, сезонные распродажи и акции. Мы производитель, поэтому в каталоге сотни моделей и ...')
+        self.assertEqual(res['sn'][1]['u'], 'https://www.homeme.ru/cat/uglovye-divany/kozhanye/')
+        self.assertEqual(res['sn'][1]['d'], 'homeme.ru')
+        self.assertEqual(res['sn'][1]['vu'], u'https://www.homeme.ru › kozhanye')
+
+        self.assertEqual(res['sn'][4]['t'], u'Угловые кожаные диваны - купить в Москве недорого, низкие цены на угловой кожаный диван от производителя в интернет-магазине MnogoMeb.Ru')
+        self.assertEqual(res['sn'][4]['s'], u'Каталог угловых кожаных диванов в интернет-магазине мебели MnogoMeb.ru: большой выбор самых разных моделей, огромное разнообразие тканей и расцветок и все это по доступной стоимости. Купить  ...')
+        self.assertEqual(res['sn'][4]['u'], 'https://mnogomeb.ru/divany/uglovye/kojanye/')
+        self.assertEqual(res['sn'][4]['d'], 'mnogomeb.ru')
+        self.assertEqual(res['sn'][4]['vu'], u'https://mnogomeb.ru › kojanye')
+
+        self.assertEqual(res['sn'][97]['t'], u'BoConcept: Современная мебель – Актуальный дизайн')
+        self.assertEqual(res['sn'][97]['s'], u'Наши мебельные магазины предлагают любую мебель современного дизайна, начиная от дизайнерских ... Анилиновая кожа, фетр, бархат, дуб, орех, хром и сталь – мы сочетаем материалы и ...')
+        self.assertEqual(res['sn'][97]['u'], 'https://www.boconcept.com/ru-ru/')
+        self.assertEqual(res['sn'][97]['d'], 'boconcept.com')
+        self.assertEqual(res['sn'][97]['vu'], u'https://www.boconcept.com › ru-ru')
 
     def print_sn(self, res):
         for i in res['sn']:
