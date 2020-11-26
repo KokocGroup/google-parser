@@ -2307,6 +2307,20 @@ class GoogleParserTestCase(GoogleParserTests):
         self.assertEqual(res['sn'][34]['d'], 'velodrive.ru')
         self.assertEqual(res['sn'][34]['vu'], None)
 
+    def test109(self):
+        u""""
+            Ошибка парсинга от 2020-11-26
+        """
+        html = self.get_data('2020-11-26-1.txt')
+        g = GoogleJsonParser(html, snippet_fields=('d', 'p', 'u', 't', 's', 'm'))
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+
+        # В мобильной выдаче похоже нет общего кол-ва результатов
+        self.assertEqual(res['pc'], 0)
+        self.assertEqual(len(res['sn']), 0)
+
     def print_sn(self, res):
         for i in res['sn']:
             print
