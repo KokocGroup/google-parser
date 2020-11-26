@@ -383,7 +383,7 @@ class GoogleParser(object):
         # with open('go.html', 'w') as f:
         #     f.write(self.content)
 
-        if '<div class="med" id="res" role="main">' in self.content:
+        if re.search('<div class="med[^"]*?" id="res" role="main">', self.content):
             return SnippetsParserAfter_2016_03_10(self.snippet_fields).get_snippets(self.content)
         elif '<body jsmodel="' in self.content:
             return MobileSnippetsParser(self.snippet_fields).get_snippets(self.content)
@@ -550,7 +550,7 @@ class SnippetsParserDefault(object):
         raise BadGoogleParserError(u'не удалось найти описание сниппета: {}'.format(snippet))
 
     def _parse_description_snippet(self, snippet):
-        res = re.compile(ur'<span class="st">(.*?)</span>\s*(?:<br>|</div>|<div|</a>)', re.I | re.M | re.S).search(snippet)
+        res = re.compile(ur'<span class="(?:st|aCOpRe)">(.*?)</span>\s*(?:<br>|</div>|<div|</a>)', re.I | re.M | re.S).search(snippet)
         if res:
             return SnippetsParserDefault.strip_tags(res.group(1))
 
@@ -675,7 +675,7 @@ class SnippetsParserUnil_2015_07_23(SnippetsParserDefault):
 
 class SnippetsParserAfter_2016_03_10(SnippetsParserDefault):
     snippets_regexp = re.compile(ur'(<div class=(?:"g\s*(?:card-section)?"(?: data-hveid="[^"]+?")?(?: data-ved="[^"]+?")?>|"g\s+[^_"]*"[^>]*>)\s*(?:<h2[^>]+?>[^<]+?</h2>)?\s*(?:<div data-hveid="[^"]+?">|<div>)?<!--m-->\s*.*?</div><!--n-->\s*(?:</div>))', re.I | re.M | re.S)
-    result_regexp = re.compile(ur'(<div class="med" id="res" role="main">.*?<!--z-->)', re.I | re.M | re.S)
+    result_regexp = re.compile(ur'(<div class="med[^"]*?" id="res" role="main">.*?<!--z-->)', re.I | re.M | re.S)
 
     def get_snippets(self, body):
         res = self.result_regexp.findall(body)

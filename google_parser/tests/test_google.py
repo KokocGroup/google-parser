@@ -2275,6 +2275,38 @@ class GoogleParserTestCase(GoogleParserTests):
         self.assertEqual(res['sn'][97]['d'], 'boconcept.com')
         self.assertEqual(res['sn'][97]['vu'], u'https://www.boconcept.com › ru-ru')
 
+    def test108(self):
+        u""""
+            Ошибка парсинга от 2020-11-26
+        """
+        html = self.get_data('2020-11-26.txt')
+        g = GoogleJsonParser(html, snippet_fields=('d', 'p', 'u', 't', 's', 'm'))
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+
+        # В мобильной выдаче похоже нет общего кол-ва результатов
+        self.assertEqual(res['pc'], 1680000)
+        self.assertEqual(len(res['sn']), 99)
+
+        self.assertEqual(res['sn'][0]['t'], u'Велоодежда для мужчин купить в Москве - цена в интернет ...')
+        self.assertEqual(res['sn'][0]['s'], u'Предлагаем качественную велоодежду от знаменитых итальянских брендов: ALE, Biemme, Castelli, Giordana, Marcello Bergamo, MOA Sport, Nalini, Santini, ...')
+        self.assertEqual(res['sn'][0]['u'], u'http://velo-forma.ru/veloodezhda-muzhskaya')
+        self.assertEqual(res['sn'][0]['d'], 'velo-forma.ru')
+        self.assertEqual(res['sn'][0]['vu'], None)
+
+        self.assertEqual(res['sn'][6]['t'], u'Велоодежда купить в Москве - Цены на велосипедную ...')
+        self.assertEqual(res['sn'][6]['s'], u'Купить одежду для велоспорта в интернет-магазине Provelo. Описание ... Велоодежда. Веломайки (124) ... Мужской гидрокостюм Sailfish Vibrant Men ...')
+        self.assertEqual(res['sn'][6]['u'], u'https://www.provelo.ru/models-odezhda/')
+        self.assertEqual(res['sn'][6]['d'], 'provelo.ru')
+        self.assertEqual(res['sn'][6]['vu'], None)
+
+        self.assertEqual(res['sn'][34]['t'], u'Мужскую велоодежду купить в Санкт-Петербурге, цены ...')
+        self.assertEqual(res['sn'][34]['s'], u'Купить мужскую велоодежду в интернет-магазине ВелоДрайв. Каталог велоодежды для мужчин. Доставка! Гарантия на всю продукцию. Каталог ...')
+        self.assertEqual(res['sn'][34]['u'], u'https://www.velodrive.ru/accessories/type/veloodezhda_muzhskaya/')
+        self.assertEqual(res['sn'][34]['d'], 'velodrive.ru')
+        self.assertEqual(res['sn'][34]['vu'], None)
+
     def print_sn(self, res):
         for i in res['sn']:
             print
