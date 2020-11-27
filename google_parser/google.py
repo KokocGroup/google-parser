@@ -687,7 +687,7 @@ class SnippetsParserAfter_2016_03_10(SnippetsParserDefault):
         for body in res:
             snippets = self.snippets_regexp.findall(body)
             for snippet in snippets:
-                if re.search(ur'class="g[^"]+\s+obcontainer\s*', snippet):
+                if re.search(ur'class="g[^"]+obcontainer\s*', snippet):
                     continue
 
                 position += 1

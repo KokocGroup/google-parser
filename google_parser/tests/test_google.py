@@ -2321,6 +2321,38 @@ class GoogleParserTestCase(GoogleParserTests):
         self.assertEqual(res['pc'], 0)
         self.assertEqual(len(res['sn']), 0)
 
+    def test110(self):
+        u""""
+            Ошибка парсинга от 2020-11-26
+        """
+        html = self.get_data('2020-11-27.txt')
+        g = GoogleJsonParser(html, snippet_fields=('d', 'p', 'u', 't', 's', 'm'))
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+
+        # В мобильной выдаче похоже нет общего кол-ва результатов
+        self.assertEqual(res['pc'], 1340000000)
+        self.assertEqual(len(res['sn']), 99)
+
+        self.assertEqual(res['sn'][0]['t'], u'CST - точное время')
+        self.assertEqual(res['sn'][0]['s'], u'Точное время, часовой пояс, смещение от UTC/GMT и основные факты для Северноамериканское Центральное Стандартное Время (CST).')
+        self.assertEqual(res['sn'][0]['u'], u'https://24timezones.com/chasovoy-poyas/cst')
+        self.assertEqual(res['sn'][0]['d'], '24timezones.com')
+        self.assertEqual(res['sn'][0]['vu'], None)
+
+        self.assertEqual(res['sn'][6]['t'], u'CST STUDIO SUITE 2020 - моделирование трехмерных ...')
+        self.assertEqual(res['sn'][6]['s'], u'Ранее вычислительные модули были сгруппированы в программы, которые имели оригинальные названия: CST MICROWAVE STUDIO (CST MWS), CST ...')
+        self.assertEqual(res['sn'][6]['u'], u'http://eurointech.ru/eda/microwave_design/cst/CST-STUDIO-SUITE.phtml')
+        self.assertEqual(res['sn'][6]['d'], 'eurointech.ru')
+        self.assertEqual(res['sn'][6]['vu'], None)
+
+        self.assertEqual(res['sn'][34]['t'], u'CST - СпортЭк')
+        self.assertEqual(res['sn'][34]['s'], u'Обратный звонок. 8 (922) 207-63-37 &middot; 8 (343) 254-58-93 &middot; Избранное. Ваша корзина пуста. Корзина. Каталог товаров. Велотовары &middot; Велосипеды.')
+        self.assertEqual(res['sn'][34]['u'], u'https://www.sportek.su/brands/cst.html')
+        self.assertEqual(res['sn'][34]['d'], 'sportek.su')
+        self.assertEqual(res['sn'][34]['vu'], None)
+
     def print_sn(self, res):
         for i in res['sn']:
             print
