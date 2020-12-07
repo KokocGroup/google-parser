@@ -2286,7 +2286,7 @@ class GoogleParserTestCase(GoogleParserTests):
         res = g.get_serp()
 
         # В мобильной выдаче похоже нет общего кол-ва результатов
-        self.assertEqual(res['pc'], 1680000)
+        self.assertEqual(res['pc'], 168000)
         self.assertEqual(len(res['sn']), 99)
 
         self.assertEqual(res['sn'][0]['t'], u'Велоодежда для мужчин купить в Москве - цена в интернет ...')
@@ -2332,7 +2332,7 @@ class GoogleParserTestCase(GoogleParserTests):
         res = g.get_serp()
 
         # В мобильной выдаче похоже нет общего кол-ва результатов
-        self.assertEqual(res['pc'], 1340000000)
+        self.assertEqual(res['pc'], 134000000)
         self.assertEqual(len(res['sn']), 99)
 
         self.assertEqual(res['sn'][0]['t'], u'CST - точное время')
@@ -2352,6 +2352,39 @@ class GoogleParserTestCase(GoogleParserTests):
         self.assertEqual(res['sn'][34]['u'], u'https://www.sportek.su/brands/cst.html')
         self.assertEqual(res['sn'][34]['d'], 'sportek.su')
         self.assertEqual(res['sn'][34]['vu'], None)
+
+
+    def test111(self):
+        u""""
+            Ошибка парсинга от 2020-12-07
+        """
+        html = self.get_data('2020-12-07.txt')
+        g = GoogleJsonParser(html, snippet_fields=('d', 'p', 'u', 't', 's', 'm'))
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+
+        # В мобильной выдаче похоже нет общего кол-ва результатов
+        self.assertEqual(res['pc'], 11700)
+        self.assertEqual(len(res['sn']), 100)
+
+        self.assertEqual(res['sn'][0]['t'], u'testo 815 - Шумомер - Тэсто Рус')
+        self.assertEqual(res['sn'][0]['s'], u'testo 815 - Шумомер. Номер заказа. 0563 8155. testo 815 Product. testo 815. Класс точности 2 в соответствие с IEC 60651. Легкая настройка (отвертка ...')
+        self.assertEqual(res['sn'][0]['u'], u'https://www.testo.ru/ru-RU/testo-815/p/0563-8155')
+        self.assertEqual(res['sn'][0]['d'], 'testo.ru')
+        self.assertEqual(res['sn'][0]['vu'], None)
+
+        self.assertEqual(res['sn'][6]['t'], u'Руководство пользователя рус Шумомер testo 815')
+        self.assertEqual(res['sn'][6]['s'], u'testo 815 - это шумомер с поддержкой диапазонов 32-80 дБ, 50-100 дБ и. 80-130 дБ, двух типов временной коррекции, двух типов частотной коррек-.')
+        self.assertEqual(res['sn'][6]['u'], u'https://plutongeo.ru/assets/files/manual/testo-815-ru.pdf')
+        self.assertEqual(res['sn'][6]['d'], 'plutongeo.ru')
+        self.assertEqual(res['sn'][6]['vu'], None)
+
+        self.assertEqual(res['sn'][99]['t'], u'Заказать шумомер testo 815 - Шумомеры TESTO')
+        self.assertEqual(res['sn'][99]['s'], u'Главная » Заказать шумомер testo 815. Заказать ... Шумомер, Принадлежности. 3 класс: testo 815, Калибратор для регулярной калибровки шумомера ...')
+        self.assertEqual(res['sn'][99]['u'], u'http://soundlevel.ru/order-4.html')
+        self.assertEqual(res['sn'][99]['d'], 'soundlevel.ru')
+        self.assertEqual(res['sn'][99]['vu'], None)
 
     def print_sn(self, res):
         for i in res['sn']:

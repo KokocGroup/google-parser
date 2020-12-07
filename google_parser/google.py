@@ -357,6 +357,7 @@ class GoogleParser(object):
         pagecount = 0
         patterns = (ur'<div[^>]+resultStats(?:[^>]+)?>Результатов: примерно (.*?)<',
         ur'<div[^>]+resultStats(?:[^>]+)?>(.*?)<nobr>',
+        ur'<div[^>]+result-stats(?:[^>]+)?>(.*?)<nobr>',
         ur'<div[^>]+resultStats(?:[^>]+)?>Результатов:(.*?)</div>',
         ur'<div>Результатов:\s*(.*?)</div>',
         ur'Результатов:\s*(.*?),.*?</div>',
@@ -383,7 +384,7 @@ class GoogleParser(object):
         # with open('go.html', 'w') as f:
         #     f.write(self.content)
 
-        if re.search('<div class="med[^"]*?" id="res" role="main">', self.content):
+        if re.search('<div class="[^"]*?" id="res" role="main">', self.content):
             return SnippetsParserAfter_2016_03_10(self.snippet_fields).get_snippets(self.content)
         elif '<body jsmodel="' in self.content:
             return MobileSnippetsParser(self.snippet_fields).get_snippets(self.content)
@@ -675,7 +676,7 @@ class SnippetsParserUnil_2015_07_23(SnippetsParserDefault):
 
 class SnippetsParserAfter_2016_03_10(SnippetsParserDefault):
     snippets_regexp = re.compile(ur'(<div class=(?:"g\s*(?:card-section)?"(?: data-hveid="[^"]+?")?(?: data-ved="[^"]+?")?>|"g\s+[^_"]*"[^>]*>)\s*(?:<h2[^>]+?>[^<]+?</h2>)?\s*(?:<div data-hveid="[^"]+?">|<div>)?<!--m-->\s*.*?</div><!--n-->\s*(?:</div>))', re.I | re.M | re.S)
-    result_regexp = re.compile(ur'(<div class="med[^"]*?" id="res" role="main">.*?<!--z-->)', re.I | re.M | re.S)
+    result_regexp = re.compile(ur'(<div class="[^"]*?" id="res" role="main">.*?<!--z-->)', re.I | re.M | re.S)
 
     def get_snippets(self, body):
         res = self.result_regexp.findall(body)
