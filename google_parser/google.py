@@ -384,7 +384,9 @@ class GoogleParser(object):
         # with open('go.html', 'w') as f:
         #     f.write(self.content)
 
-        if re.search('<div class="[^"]*?" id="res" role="main">', self.content):
+        if re.search('<div class="[^"]*?" id="res" role="main">.*?<div id="bottomads"', self.content, flags=re.S):
+            return SnippetsParserAfter_2021_01_29(self.snippet_fields).get_snippets(self.content)
+        elif re.search('<div class="[^"]*?" id="res" role="main">', self.content):
             return SnippetsParserAfter_2016_03_10(self.snippet_fields).get_snippets(self.content)
         elif '<body jsmodel="' in self.content:
             return MobileSnippetsParser(self.snippet_fields).get_snippets(self.content)
@@ -702,6 +704,67 @@ class SnippetsParserAfter_2016_03_10(SnippetsParserDefault):
                         raise
 
                 # игнорим сниппет с картинками
+                if self._is_map_snippet(item['u']) or item['u'].startswith('/search'):
+                    position -= 1
+                    continue
+
+                result.append(item)
+
+        if len(result) >= 2 and result[0]['u'] == result[1]['u']:
+            result = result[1:]
+
+        return result
+
+
+class SnippetsParserAfter_2021_01_29(SnippetsParserAfter_2016_03_10):
+    snippets_regexp = None
+    result_regexp = re.compile(ur'(<div class="[^"]*?" id="res" role="main">.*?<div id="bottomads")', re.I | re.M | re.S)
+
+    def get_snippet(self, position, snippet):
+        title, url = self._parse_title_snippet(snippet, position)
+        return {
+            'p': position,
+            'u': url,
+            'd': self._get_domain(url),
+            'm': self._is_map_snippet(url),
+            't': self._get_title(title),
+            's': self._get_descr(snippet, url),
+            'h': self._get_html(snippet),
+            'vu': self._get_vu(snippet),
+        }
+
+    def get_snippets(self, body):
+        res = self.result_regexp.findall(body)
+        if not res:
+            raise BadGoogleParserError()
+
+        result = []
+        position = 0
+        for body in res:
+            dom = PyQuery(body)
+            snippets = dom('div.g')
+            for snippet in snippets:
+                html = HTMLParser().unescape(
+                    etree.tostring(snippet)
+                )
+
+                if re.search(ur'class="g[^"]+(?:obcontainer|g-blk)\s*', html):
+                    continue
+
+                if re.search(ur'id="imagebox_bigimages"', html):
+                    continue
+
+                position += 1
+                try:
+                    item = self.get_snippet(position, html)
+                except SnippetsParserException:
+                    if self._is_empty_snippet(snippet):
+                        position -= 1
+                        continue
+                    else:
+                        raise
+
+                # игнорим сниппет с картинками и карты
                 if self._is_map_snippet(item['u']) or item['u'].startswith('/search'):
                     position -= 1
                     continue

@@ -1233,13 +1233,13 @@ class GoogleParserTestCase(GoogleParserTests):
         self.assertEqual(len(res['sn']), 48)
 
         self.assertEqual(res['sn'][0]['t'], u'Посуда Fissler – купить посуду Фисслер в Москве, цены в ...')
-        self.assertEqual(res['sn'][0]['s'], u'В интернет-магазине компании Сандер в Москве представлен ассортимент немецкой посуды для индукционных плит Fissler. Она удовлетворит вкусы ...')
+        self.assertEqual(res['sn'][0]['s'], u'В интернет-магазине компании Сандер в Москве представлен ассортимент немецкой посуды для индукционных плит Fissler. Она удовлетворит вкусы ...')
         self.assertEqual(res['sn'][0]['u'], u'http://www.fissler-shop.ru/')
         self.assertEqual(res['sn'][0]['d'], 'fissler-shop.ru')
         self.assertEqual(res['sn'][0]['vu'], u'www.fissler-shop.ru/')
 
         self.assertEqual(res['sn'][47]['t'], u'Наборы посуды для готовки — купить на Яндекс.Маркете')
-        self.assertEqual(res['sn'][47]['s'], u'FISSLER Набор посуды из 5-ти предметов: три кастрюли, сотейник и ковшик без ... наборы посуды и кастрюль Fissler Набор кастрюль, 5 предметов, ...')
+        self.assertEqual(res['sn'][47]['s'], u'FISSLER Набор посуды из 5-ти предметов: три кастрюли, сотейник и ковшик без ... наборы посуды и кастрюль Fissler Набор кастрюль, 5 предметов, ...')
         self.assertEqual(res['sn'][47]['u'], u'https://market.yandex.ru/catalog--nabory-posudy-dlia-gotovki/61640/list?glfilter=7893318%3A10713559')
         self.assertEqual(res['sn'][47]['d'], 'market.yandex.ru')
         self.assertEqual(res['sn'][47]['vu'], u'https://market.yandex.ru/catalog--nabory-posudy-dlia-gotovki/61640/list?glfilter...')
@@ -1278,19 +1278,25 @@ class GoogleParserTestCase(GoogleParserTests):
 
         res = g.get_serp()
         self.assertEqual(res['pc'], 606000)
-        self.assertEqual(len(res['sn']), 96)
+        self.assertEqual(len(res['sn']), 97)
 
         self.assertEqual(res['sn'][0]['t'], u'ВТБ Капитал Управление активами. Искусство инвестиций ...')
-        self.assertEqual(res['sn'][0]['s'], u'Управление активами, паевые инвестиционные фонды, индивидуальное доверительное управление, портфельные инвестиции -управляющая ...')
+        self.assertEqual(res['sn'][0]['s'], u'Управление активами, паевые инвестиционные фонды, индивидуальное доверительное управление, портфельные инвестиции -управляющая ...')
         self.assertEqual(res['sn'][0]['u'], u'https://www.vtbcapital-am.ru/')
         self.assertEqual(res['sn'][0]['d'], 'vtbcapital-am.ru')
         self.assertEqual(res['sn'][0]['vu'], u'https://www.vtbcapital-am.ru/')
 
-        self.assertEqual(res['sn'][95]['t'], u'Отставки и назначения — Bankir.Ru - Банкир.ру')
-        self.assertEqual(res['sn'][95]['s'], u'24, 25, 26, 27, 28, 29, 30. 31, 1, 2, 3, 4, 5, 6 ... В компании «Сбербанк Управление активами» произошли новые назначения ... Лариса Жигирева назначена управляющим розничного бизнеса ВТБ в Псковской области ... Геннадий Ходарин занял пост гендиректора Группы «КапиталЪ Управление активами».')
-        self.assertEqual(res['sn'][95]['u'], u'https://bankir.ru/novosti/otstavki-i-naznacheniya/?p=96')
-        self.assertEqual(res['sn'][95]['d'], 'bankir.ru')
-        self.assertEqual(res['sn'][95]['vu'], u'https://bankir.ru/novosti/otstavki-i-naznacheniya/?p=96')
+        self.assertEqual(res['sn'][95]['t'], u'КоммерсантЪ 18 - Страница 8 - Результат из Google Книги')
+        self.assertEqual(res['sn'][95]['s'], u'6% 24 2,36% 10,5 20,5 Процентное изменение за торговый день Диапазон ... с фиксированной доходностью «Ренессанс управление активами» Елены ... капитала «ВТБ Капитал» Андрей Соловьев. Как отмечает руководитель ...')
+        self.assertEqual(res['sn'][95]['u'], u'https://books.google.ru/books?id=oPeyCQAAQBAJ&pg=PA8&lpg=PA8&dq=%D0%B2%D1%82%D0%B1-24+%D0%BA%D0%B0%D0%BF%D0%B8%D1%82%D0%B0%D0%BB+%D1%83%D0%BF%D1%80%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5+%D0%B0%D0%BA%D1%82%D0%B8%D0%B2%D0%B0%D0%BC%D0%B8&source=bl&ots=08cc8Bm0T-&sig=H2tYDs_jv7Oycye-SNmhptY4eS8&hl=ru&sa=X&sqi=2&ved=2ahUKEwj16OX8jYvfAhV-AxAIHc-NBO4Q6AEwaHoECGsQAQ')
+        self.assertEqual(res['sn'][95]['d'], 'books.google.ru')
+        self.assertEqual(res['sn'][95]['vu'], u'https://books.google.ru/books?isbn=5457804208')
+
+        self.assertEqual(res['sn'][96]['t'], u'Отставки и назначения — Bankir.Ru - Банкир.ру')
+        self.assertEqual(res['sn'][96]['s'], u'24, 25, 26, 27, 28, 29, 30. 31, 1, 2, 3, 4, 5, 6 ... В компании «Сбербанк Управление активами» произошли новые назначения ... Лариса Жигирева назначена управляющим розничного бизнеса ВТБ в Псковской области ... Геннадий Ходарин занял пост гендиректора Группы «КапиталЪ Управление активами».')
+        self.assertEqual(res['sn'][96]['u'], u'https://bankir.ru/novosti/otstavki-i-naznacheniya/?p=96')
+        self.assertEqual(res['sn'][96]['d'], 'bankir.ru')
+        self.assertEqual(res['sn'][96]['vu'], u'https://bankir.ru/novosti/otstavki-i-naznacheniya/?p=96')
 
     def test74(self):
         u""""
@@ -1311,7 +1317,7 @@ class GoogleParserTestCase(GoogleParserTests):
         self.assertEqual(res['sn'][0]['vu'], u'https://mebelvia.ru/katalog/myagkaya_mebel/divany/')
 
         self.assertEqual(res['sn'][49]['t'], u'Угловой диван Сиэтл 8 Марта | Купить угловой диван Сиэтл с ...')
-        self.assertEqual(res['sn'][49]['s'], u'Продажа угловой диван Сиэтл - цена от производителя 8 Марта. Интернет-магазин мебели: угловые диваны на заказ и большой выбор готовых ...')
+        self.assertEqual(res['sn'][49]['s'], u'Продажа угловой диван Сиэтл - цена от производителя 8 Марта. Интернет-магазин мебели: угловые диваны на заказ и большой выбор готовых ...')
         self.assertEqual(res['sn'][49]['u'], u'https://www.8marta.ru/catalog/8marta/divany-uglovye/sietl.htm')
         self.assertEqual(res['sn'][49]['d'], '8marta.ru')
         self.assertEqual(res['sn'][49]['vu'], u'https://www.8marta.ru › Основная коллекция › Угловые диваны')
@@ -1748,7 +1754,7 @@ class GoogleParserTestCase(GoogleParserTests):
         self.assertEqual(res['sn'][0]['vu'], u'https://www.roomklimat.ru › Каталог › Вентиляция › Вентиляторы')
 
         self.assertEqual(res['sn'][18]['t'], u'Вентиляционные каналы в Перми от 74 рублей')
-        self.assertEqual(res['sn'][18]['s'], u'Где недорого купить вентиляционные каналы в Перми. Самые выгодные предложения, цены, магазины. ... Канальный вентилятор VENTS ТТ 100 &middot; 4.5.')
+        self.assertEqual(res['sn'][18]['s'], u'Где недорого купить вентиляционные каналы в Перми. Самые выгодные предложения, цены, магазины. ... Канальный вентилятор VENTS ТТ 100 · 4.5.')
         self.assertEqual(res['sn'][18]['u'], u'https://perm.bestprice.su/promyshlennost/ventiljacionnye-kanaly/')
         self.assertEqual(res['sn'][18]['d'], 'perm.bestprice.su')
         self.assertEqual(res['sn'][18]['vu'], u'https://perm.bestprice.su › promyshlennost › ventiljacionnye-kanaly')
@@ -1768,7 +1774,7 @@ class GoogleParserTestCase(GoogleParserTests):
         self.assertEqual(len(res['sn']), 98)
 
         self.assertEqual(res['sn'][0]['t'], u'Купить кварцевые обогреватели в Москве – доступная ...')
-        self.assertEqual(res['sn'][0]['s'], u'В магазине БУРАН Вы можете купить кварцевые обогреватели недорого с удобной доставкой по Москве. Характеристики, отзывы, описание, ...')
+        self.assertEqual(res['sn'][0]['s'], u'В магазине БУРАН Вы можете купить кварцевые обогреватели недорого с удобной доставкой по Москве. Характеристики, отзывы, описание, ...')
         self.assertEqual(res['sn'][0]['u'], u'https://buranrussia.ru/catalog/infrakrasnye-obogrevateli/kvarcevye/')
         self.assertEqual(res['sn'][0]['d'], 'buranrussia.ru')
         self.assertEqual(res['sn'][0]['vu'], u'https://buranrussia.ru › catalog › infrakrasnye-obogrevateli › kvarcevye')
@@ -1799,14 +1805,14 @@ class GoogleParserTestCase(GoogleParserTests):
         self.assertEqual(res['pc'], 297000000)
         self.assertEqual(len(res['sn']), 100)
 
-        self.assertEqual(res['sn'][0]['t'], u'Планшет на Windows 10 - купить на E-katalog.ru &gt; цены ...')
+        self.assertEqual(res['sn'][0]['t'], u'Планшет на Windows 10 - купить на E-katalog.ru > цены ...')
         self.assertEqual(res['sn'][0]['s'], None)
         self.assertEqual(res['sn'][0]['u'], u'https://www.e-katalog.ru/list/30/pr-19371/')
         self.assertEqual(res['sn'][0]['d'], 'e-katalog.ru')
         self.assertEqual(res['sn'][0]['vu'], u'https://www.e-katalog.ru › list')
 
         self.assertEqual(res['sn'][99]['t'], u'Планшеты на Windows 10 с клавиатурой')
-        self.assertEqual(res['sn'][99]['s'], u'В последнее время популярностью стали пользоваться планшеты на базе ОС Windows 10 с клавиатурой. Это неудивительно, ведь пользователям они ...')
+        self.assertEqual(res['sn'][99]['s'], u'В последнее время популярностью стали пользоваться планшеты на базе ОС Windows 10 с клавиатурой. Это неудивительно, ведь пользователям они ...')
         self.assertEqual(res['sn'][99]['u'], u'https://androidnik.ru/planshet-s-klaviaturoj-windows-10-kupit/')
         self.assertEqual(res['sn'][99]['d'], 'androidnik.ru')
         self.assertEqual(res['sn'][99]['vu'], u'https://androidnik.ru › planshet-s-klaviaturoj-windows-10-kupit')
@@ -1826,13 +1832,13 @@ class GoogleParserTestCase(GoogleParserTests):
         self.assertEqual(len(res['sn']), 98)
 
         self.assertEqual(res['sn'][0]['t'], u'Гарнитур — Википедия')
-        self.assertEqual(res['sn'][0]['s'], u'Гарнитур — комплект каких-либо предметов, выполненный в едином стиле (обычно о мебели или одежде). Гарнитура женская, гарнитур мужской (от ...')
+        self.assertEqual(res['sn'][0]['s'], u'Гарнитур — комплект каких-либо предметов, выполненный в едином стиле (обычно о мебели или одежде). Гарнитура женская, гарнитур мужской (от ...')
         self.assertEqual(res['sn'][0]['u'], u'https://ru.wikipedia.org/wiki/%D0%93%D0%B0%D1%80%D0%BD%D0%B8%D1%82%D1%83%D1%80')
         self.assertEqual(res['sn'][0]['d'], 'ru.wikipedia.org')
         self.assertEqual(res['sn'][0]['vu'], u'https://ru.wikipedia.org › wiki › Гарнитур')
 
         self.assertEqual(res['sn'][97]['t'], u'Кухонные гарнитуры: каталог, фото, цены | Скидка + ...')
-        self.assertEqual(res['sn'][97]['s'], u'Кухонные гарнитуры - купить кухонный гарнитур в Москве с бесплатной доставкой | Рассрочка без % | Льготная доставка в Северные и отдалённые ...')
+        self.assertEqual(res['sn'][97]['s'], u'Кухонные гарнитуры - купить кухонный гарнитур в Москве с бесплатной доставкой | Рассрочка без % | Льготная доставка в Северные и отдалённые ...')
         self.assertEqual(res['sn'][97]['u'], u'https://davita-mebel.ru/category/kukhni/kukhonnye-garnitury/')
         self.assertEqual(res['sn'][97]['d'], 'davita-mebel.ru')
         self.assertEqual(res['sn'][97]['vu'], u'https://davita-mebel.ru › category › kukhni › kukhonnye-garnitury')
@@ -1858,13 +1864,13 @@ class GoogleParserTestCase(GoogleParserTests):
         self.assertEqual(res['sn'][0]['vu'], u'https://dentalab.ru')
 
         self.assertEqual(res['sn'][6]['t'], u'“ МедСоюз ”')
-        self.assertEqual(res['sn'][6]['s'], u'Новочеркасский пр.д.33 к.3, лит А, пом 21-Н. 16. &quot;Дента Лаб&quot;. ст. м. «Новочеркасская». Большеохтинский пр. 10, пом. 1-Н. 17. «Семейная Стоматология».')
+        self.assertEqual(res['sn'][6]['s'], u'Новочеркасский пр.д.33 к.3, лит А, пом 21-Н. 16. "Дента Лаб". ст. м. «Новочеркасская». Большеохтинский пр. 10, пом. 1-Н. 17. «Семейная Стоматология».')
         self.assertEqual(res['sn'][6]['u'], u'https://guideh.com/wp-content/uploads/2017/11/%D0%A1%D0%BF%D0%B8%D1%81%D0%BE%D0%BA%20%D0%BA%D0%BB%D0%B8%D0%BD%D0%B8%D0%BA%20%D0%9C%D0%B5%D0%B4%D0%A1%D0%BE%D1%8E%D0%B7.doc')
         self.assertEqual(res['sn'][6]['d'], 'guideh.com')
         self.assertEqual(res['sn'][6]['vu'], u'https://guideh.com › wp-content › uploads › 2017/11')
 
         self.assertEqual(res['sn'][34]['t'], u'челюстно-лицевая хирургия в Санкт-Петербурге ...')
-        self.assertEqual(res['sn'][34]['s'], u'м; медицинская лаборатория &middot; медицинский центр ..... Большеохтинский проспект, 37, 1 этаж; вход с торца. пн.-вс. ... Медицинский центр Дента L.')
+        self.assertEqual(res['sn'][34]['s'], u'м; медицинская лаборатория · медицинский центр ..... Большеохтинский проспект, 37, 1 этаж; вход с торца. пн.-вс. ... Медицинский центр Дента L.')
         self.assertEqual(res['sn'][34]['u'], u'https://spb.kliniki.ru/med-chelyustno-litsevaya-hirurgiya')
         self.assertEqual(res['sn'][34]['d'], 'spb.kliniki.ru')
         self.assertEqual(res['sn'][34]['vu'], u'https://spb.kliniki.ru › med-chelyustno-litsevaya-hirurgiya')
@@ -2290,19 +2296,19 @@ class GoogleParserTestCase(GoogleParserTests):
         self.assertEqual(len(res['sn']), 99)
 
         self.assertEqual(res['sn'][0]['t'], u'Велоодежда для мужчин купить в Москве - цена в интернет ...')
-        self.assertEqual(res['sn'][0]['s'], u'Предлагаем качественную велоодежду от знаменитых итальянских брендов: ALE, Biemme, Castelli, Giordana, Marcello Bergamo, MOA Sport, Nalini, Santini, ...')
+        self.assertEqual(res['sn'][0]['s'], u'Предлагаем качественную велоодежду от знаменитых итальянских брендов: ALE, Biemme, Castelli, Giordana, Marcello Bergamo, MOA Sport, Nalini, Santini, ...')
         self.assertEqual(res['sn'][0]['u'], u'http://velo-forma.ru/veloodezhda-muzhskaya')
         self.assertEqual(res['sn'][0]['d'], 'velo-forma.ru')
         self.assertEqual(res['sn'][0]['vu'], None)
 
         self.assertEqual(res['sn'][6]['t'], u'Велоодежда купить в Москве - Цены на велосипедную ...')
-        self.assertEqual(res['sn'][6]['s'], u'Купить одежду для велоспорта в интернет-магазине Provelo. Описание ... Велоодежда. Веломайки (124) ... Мужской гидрокостюм Sailfish Vibrant Men ...')
+        self.assertEqual(res['sn'][6]['s'], u'Купить одежду для велоспорта в интернет-магазине Provelo. Описание ... Велоодежда. Веломайки (124) ... Мужской гидрокостюм Sailfish Vibrant Men ...')
         self.assertEqual(res['sn'][6]['u'], u'https://www.provelo.ru/models-odezhda/')
         self.assertEqual(res['sn'][6]['d'], 'provelo.ru')
         self.assertEqual(res['sn'][6]['vu'], None)
 
         self.assertEqual(res['sn'][34]['t'], u'Мужскую велоодежду купить в Санкт-Петербурге, цены ...')
-        self.assertEqual(res['sn'][34]['s'], u'Купить мужскую велоодежду в интернет-магазине ВелоДрайв. Каталог велоодежды для мужчин. Доставка! Гарантия на всю продукцию. Каталог ...')
+        self.assertEqual(res['sn'][34]['s'], u'Купить мужскую велоодежду в интернет-магазине ВелоДрайв. Каталог велоодежды для мужчин. Доставка! Гарантия на всю продукцию. Каталог ...')
         self.assertEqual(res['sn'][34]['u'], u'https://www.velodrive.ru/accessories/type/veloodezhda_muzhskaya/')
         self.assertEqual(res['sn'][34]['d'], 'velodrive.ru')
         self.assertEqual(res['sn'][34]['vu'], None)
@@ -2342,17 +2348,16 @@ class GoogleParserTestCase(GoogleParserTests):
         self.assertEqual(res['sn'][0]['vu'], None)
 
         self.assertEqual(res['sn'][6]['t'], u'CST STUDIO SUITE 2020 - моделирование трехмерных ...')
-        self.assertEqual(res['sn'][6]['s'], u'Ранее вычислительные модули были сгруппированы в программы, которые имели оригинальные названия: CST MICROWAVE STUDIO (CST MWS), CST ...')
+        self.assertEqual(res['sn'][6]['s'], u'Ранее вычислительные модули были сгруппированы в программы, которые имели оригинальные названия: CST MICROWAVE STUDIO (CST MWS), CST ...')
         self.assertEqual(res['sn'][6]['u'], u'http://eurointech.ru/eda/microwave_design/cst/CST-STUDIO-SUITE.phtml')
         self.assertEqual(res['sn'][6]['d'], 'eurointech.ru')
         self.assertEqual(res['sn'][6]['vu'], None)
 
         self.assertEqual(res['sn'][34]['t'], u'CST - СпортЭк')
-        self.assertEqual(res['sn'][34]['s'], u'Обратный звонок. 8 (922) 207-63-37 &middot; 8 (343) 254-58-93 &middot; Избранное. Ваша корзина пуста. Корзина. Каталог товаров. Велотовары &middot; Велосипеды.')
+        self.assertEqual(res['sn'][34]['s'], u'Обратный звонок. 8 (922) 207-63-37 · 8 (343) 254-58-93 · Избранное. Ваша корзина пуста. Корзина. Каталог товаров. Велотовары · Велосипеды.')
         self.assertEqual(res['sn'][34]['u'], u'https://www.sportek.su/brands/cst.html')
         self.assertEqual(res['sn'][34]['d'], 'sportek.su')
         self.assertEqual(res['sn'][34]['vu'], None)
-
 
     def test111(self):
         u""""
@@ -2369,7 +2374,7 @@ class GoogleParserTestCase(GoogleParserTests):
         self.assertEqual(len(res['sn']), 100)
 
         self.assertEqual(res['sn'][0]['t'], u'testo 815 - Шумомер - Тэсто Рус')
-        self.assertEqual(res['sn'][0]['s'], u'testo 815 - Шумомер. Номер заказа. 0563 8155. testo 815 Product. testo 815. Класс точности 2 в соответствие с IEC 60651. Легкая настройка (отвертка ...')
+        self.assertEqual(res['sn'][0]['s'], u'testo 815 - Шумомер. Номер заказа. 0563 8155. testo 815 Product. testo 815. Класс точности 2 в соответствие с IEC 60651. Легкая настройка (отвертка ...')
         self.assertEqual(res['sn'][0]['u'], u'https://www.testo.ru/ru-RU/testo-815/p/0563-8155')
         self.assertEqual(res['sn'][0]['d'], 'testo.ru')
         self.assertEqual(res['sn'][0]['vu'], None)
@@ -2381,10 +2386,42 @@ class GoogleParserTestCase(GoogleParserTests):
         self.assertEqual(res['sn'][6]['vu'], None)
 
         self.assertEqual(res['sn'][99]['t'], u'Заказать шумомер testo 815 - Шумомеры TESTO')
-        self.assertEqual(res['sn'][99]['s'], u'Главная » Заказать шумомер testo 815. Заказать ... Шумомер, Принадлежности. 3 класс: testo 815, Калибратор для регулярной калибровки шумомера ...')
+        self.assertEqual(res['sn'][99]['s'], u'Главная » Заказать шумомер testo 815. Заказать ... Шумомер, Принадлежности. 3 класс: testo 815, Калибратор для регулярной калибровки шумомера ...')
         self.assertEqual(res['sn'][99]['u'], u'http://soundlevel.ru/order-4.html')
         self.assertEqual(res['sn'][99]['d'], 'soundlevel.ru')
         self.assertEqual(res['sn'][99]['vu'], None)
+
+    def test112(self):
+        u""""
+            Ошибка парсинга от 2021-01-29
+        """
+        html = self.get_data('2021-01-29.txt')
+        g = GoogleJsonParser(html, snippet_fields=('d', 'p', 'u', 't', 's', 'm'))
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+
+        # В мобильной выдаче похоже нет общего кол-ва результатов
+        self.assertEqual(res['pc'], 1670000)
+        self.assertEqual(len(res['sn']), 99)
+
+        self.assertEqual(res['sn'][0]['t'], u'Угловые навесные настенные полки от 700 руб. — купить ...')
+        self.assertEqual(res['sn'][0]['s'], u'В каталоге нашего интернет-магазина вы сможете подобрать, заказать и недорого купить угловую навесную настенную полку в Москве различных ...')
+        self.assertEqual(res['sn'][0]['u'], u'https://pm.ru/category/mebel-dlya-doma/nastennie_polki/uglovye/')
+        self.assertEqual(res['sn'][0]['d'], 'pm.ru')
+        self.assertEqual(res['sn'][0]['vu'], None)
+
+        self.assertEqual(res['sn'][6]['t'], u'Настенные полки в прихожую - купить в Москве недорого ...')
+        self.assertEqual(res['sn'][6]['s'], u'Полки для прихожей по низким ценам - от 520 рублей, купить недорого в интернет-магазине ... Полка угловая одинарная с эффектом старения.')
+        self.assertEqual(res['sn'][6]['u'], u'https://bestmebelik.ru/polki-dlya-prihozhey.html')
+        self.assertEqual(res['sn'][6]['d'], 'bestmebelik.ru')
+        self.assertEqual(res['sn'][6]['vu'], None)
+
+        self.assertEqual(res['sn'][98]['t'], u'Прихожая Машенька: полка угловая ПУ-201. Купить мебель ...')
+        self.assertEqual(res['sn'][98]['s'], u'Прихожая Машенька: полка угловая ПУ-201. Купить мебель для прихожих в Екатеринбурге. Информация, цена и условия поставки. Тел. +7 950 191 1415 ...')
+        self.assertEqual(res['sn'][98]['u'], u'https://nikaekb.com/p339458867-prihozhaya-mashenka-polka.html')
+        self.assertEqual(res['sn'][98]['d'], 'nikaekb.com')
+        self.assertEqual(res['sn'][98]['vu'], None)
 
     def print_sn(self, res):
         for i in res['sn']:
