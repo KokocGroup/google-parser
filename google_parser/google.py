@@ -12,9 +12,7 @@ from pyquery import PyQuery
 from lxml import etree
 
 
-from google_parser.exceptions import EmptySerp, NoBodyInResponseError, BadGoogleParserError, \
-    SnippetsParserException, BadUrlError
-
+from google_parser.exceptions import SnippetsParserException, GoogleParserError
 
 __all__ = ['GoogleParser']
 
@@ -221,6 +219,9 @@ class GoogleParser(object):
 
     def __init__(self, content, xhtml_snippet=False, snippet_fields=('d', 'p', 'u', 't', 's', 'm')):
         self.content = to_unicode(content)
+        with open('go.html', 'w') as f:
+            f.write(self.content)
+
         self.xhtml_snippet = xhtml_snippet
         self.snippet_fields = snippet_fields
 
@@ -294,7 +295,7 @@ class GoogleParser(object):
     def get_context_snippet_title(self, content):
         res = re.search(ur'<h3>\s*<a[^>]+?></a>\s*<a[^>]*?href="([^"]+?)"[^>]*?>\s*(.*?)\s*</a>\s*</h3>', content, re.I | re.M | re.S)
         if not res:
-            raise BadGoogleParserError(u'Не удалось распарсить тайтл в сниппете: {0}'.format(content))
+            raise GoogleParserError(u'Не удалось распарсить тайтл в сниппете: {0}'.format(content))
         return {'u': SnippetsParserDefault.format_context_link(res.group(1)), 't': res.group(2)}
 
     def get_context_visible_url(self, content):
@@ -325,7 +326,7 @@ class GoogleParser(object):
         snippets = self.get_snippets()
 
         if not snippets:
-            raise EmptySerp()
+            raise GoogleParserError('not found snippets')
 
         return {'pc': pagecount, 'sn': snippets}
 
@@ -379,10 +380,7 @@ class GoogleParser(object):
     def get_snippets(self):
         res = re.compile('<body.*?</body>', re.DOTALL).search(self.content)
         if not res:
-            raise NoBodyInResponseError()
-
-        # with open('go.html', 'w') as f:
-        #     f.write(self.content)
+            raise GoogleParserError('no body in response')
 
         if re.search('<div class="[^"]*?" id="res" role="main">.*?<div id="bottomads"', self.content, flags=re.S):
             return SnippetsParserAfter_2021_01_29(self.snippet_fields).get_snippets(self.content)
@@ -394,7 +392,7 @@ class GoogleParser(object):
             return SnippetsParserDefault(self.snippet_fields).get_snippets(self.content)
         elif '<div id="search"><div id="ires">' in self.content:
             return SnippetsParserUnil_2015_07_23(self.snippet_fields).get_snippets(self.content)
-        raise BadGoogleParserError()
+        raise GoogleParserError('not found parser version')
 
     def is_not_found(self):
         patterns = [
@@ -419,7 +417,7 @@ class SnippetsParserDefault(object):
     def get_snippets(self, body):
         res = self.result_regexp.findall(body)
         if not res:
-            raise BadGoogleParserError()
+            raise GoogleParserError('no body in response')
 
         result = []
         position = 0
@@ -494,7 +492,7 @@ class SnippetsParserDefault(object):
         try:
             return get_full_domain_without_scheme(url)
         except UnicodeError as e:
-            raise BadUrlError(u'некорректный урл: {0}'.format(url))
+            raise GoogleParserError(u'некорректный урл: {0}'.format(url))
 
     def _is_empty_snippet(self, snippet):
         return '<h3 class="r"></h3>' in snippet
@@ -550,7 +548,7 @@ class SnippetsParserDefault(object):
         res = re.compile(ur'<div>(.*?)</div>', re.I | re.M | re.S).search(snippet)
         if res:
             return SnippetsParserDefault.strip_tags(res.group(1))
-        raise BadGoogleParserError(u'не удалось найти описание сниппета: {}'.format(snippet))
+        raise GoogleParserError(u'не удалось найти описание сниппета: {}'.format(snippet))
 
     def _parse_description_snippet(self, snippet):
         res = re.compile(ur'<span class="(?:st|aCOpRe)">(.*?)</span>\s*(?:<br>|</div>|<div|</a>)', re.I | re.M | re.S).search(snippet)
@@ -576,7 +574,7 @@ class MobileSnippetsParser(SnippetsParserDefault):
             snippet
         )
         if not match:
-            raise BadGoogleParserError(snippet)
+            raise GoogleParserError(snippet)
 
         url = HTMLParser().unescape(match.group(1))
         title = HTMLParser().unescape(
@@ -627,7 +625,7 @@ class MobileSnippetsParser(SnippetsParserDefault):
         dom = PyQuery(body)
         rso_div = dom('#rso')
         if not rso_div:
-            raise BadGoogleParserError()
+            raise GoogleParserError()
 
         divs = rso_div.find('div.mnr-c')
         serp = []
@@ -683,7 +681,7 @@ class SnippetsParserAfter_2016_03_10(SnippetsParserDefault):
     def get_snippets(self, body):
         res = self.result_regexp.findall(body)
         if not res:
-            raise BadGoogleParserError()
+            raise GoogleParserError('no body in response')
 
         result = []
         position = 0
@@ -736,7 +734,7 @@ class SnippetsParserAfter_2021_01_29(SnippetsParserAfter_2016_03_10):
     def get_snippets(self, body):
         res = self.result_regexp.findall(body)
         if not res:
-            raise BadGoogleParserError()
+            raise GoogleParserError('no body in response')
 
         result = []
         position = 0
@@ -830,11 +828,11 @@ class GoogleMobileParser(GoogleParser):
     def get_snippets(self):
         res = re.compile('<body.*?</body>', re.DOTALL).search(self.content)
         if not res:
-            raise NoBodyInResponseError()
+            raise GoogleParserError('no body in response')
 
         if '<div class="srg"' in self.content:
             return SnippetsMobileParserDefault(self.snippet_fields).get_snippets(self.content)
-        raise BadGoogleParserError()
+        raise GoogleParserError()
 
 
     @classmethod
