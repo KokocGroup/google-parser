@@ -754,6 +754,9 @@ class SnippetsParserAfter_2021_01_29(SnippetsParserAfter_2016_03_10):
                 if re.search(ur'id="imagebox_bigimages"', html):
                     continue
 
+                if re.search(ur'<div\s*class="[^"]*rrec[^"]*"', html):
+                    continue
+
                 position += 1
                 try:
                     item = self.get_snippet(position, html)

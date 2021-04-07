@@ -2423,6 +2423,38 @@ class GoogleParserTestCase(GoogleParserTests):
         self.assertEqual(res['sn'][98]['d'], 'nikaekb.com')
         self.assertEqual(res['sn'][98]['vu'], None)
 
+    def test113(self):
+        u""""
+            Ошибка парсинга от 2021-01-29
+        """
+        html = self.get_data('2021-04-07.txt')
+        g = GoogleJsonParser(html, snippet_fields=('d', 'p', 'u', 't', 's', 'm'))
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+
+        # В мобильной выдаче похоже нет общего кол-ва результатов
+        self.assertEqual(res['pc'], 25000000)
+        self.assertEqual(len(res['sn']), 100)
+
+        self.assertEqual(res['sn'][0]['t'], u'Аренда и заказ автобуса в Москве')
+        self.assertEqual(res['sn'][0]['s'], u'Аренда автобусов в Москве. Свой автопарк из 26 автобусов и 28 микроавтобусов. Опытные водители. Транспорт 2020-2021 года выпуска от 8 до 74 ...')
+        self.assertEqual(res['sn'][0]['u'], u'https://www.vash-perevozchik.ru/')
+        self.assertEqual(res['sn'][0]['d'], 'vash-perevozchik.ru')
+        self.assertEqual(res['sn'][0]['vu'], u'https://www.vash-perevozchik.ru')
+
+        self.assertEqual(res['sn'][6]['t'], u'Заказ автобуса в Москве с водителем')
+        self.assertEqual(res['sn'][6]['s'], u'Заказ автобуса в компании BusStar (Бас Стар): услуги проката автобусов и микроавтобусов в Москве с водителем. Мы имеем широкий парк ...')
+        self.assertEqual(res['sn'][6]['u'], u'https://www.busstar.ru/')
+        self.assertEqual(res['sn'][6]['d'], 'busstar.ru')
+        self.assertEqual(res['sn'][6]['vu'], u'https://www.busstar.ru')
+
+        self.assertEqual(res['sn'][99]['t'], u'Аренда автобуса | ТулаТранс')
+        self.assertEqual(res['sn'][99]['s'], u'Аренда автобуса для различных мероприятий. Большой ... Оформление заказов онлайн. ... У нас вы можете заказать автобусдля любых случаев.')
+        self.assertEqual(res['sn'][99]['u'], u'http://tulatransport.ru/')
+        self.assertEqual(res['sn'][99]['d'], 'tulatransport.ru')
+        self.assertEqual(res['sn'][99]['vu'], u'http://tulatransport.ru')
+
     def print_sn(self, res):
         for i in res['sn']:
             print
