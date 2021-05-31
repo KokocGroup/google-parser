@@ -2455,6 +2455,38 @@ class GoogleParserTestCase(GoogleParserTests):
         self.assertEqual(res['sn'][99]['d'], 'tulatransport.ru')
         self.assertEqual(res['sn'][99]['vu'], u'http://tulatransport.ru')
 
+    def test115(self):
+        u""""
+            Ошибка парсинга
+        """
+        html = self.get_data('2021-05-31.txt')
+        g = GoogleJsonParser(html, snippet_fields=('d', 'p', 'u', 't', 's', 'm'))
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+
+        # В мобильной выдаче похоже нет общего кол-ва результатов
+        self.assertEqual(res['pc'], 337000000)
+        self.assertEqual(len(res['sn']), 96)
+
+        self.assertEqual(res['sn'][0]['t'], u'Coral Travel - туроператор по Турции, России, Греции ...')
+        self.assertEqual(res['sn'][0]['s'], u'Coral Travel - ведущий туроператор по Турции, России, Греции, Испании, Тунису! Поиск туров и бронирование туров онлайн прямо на сайте. Полная ...')
+        self.assertEqual(res['sn'][0]['u'], u'https://www.coral.ru/')
+        self.assertEqual(res['sn'][0]['d'], 'coral.ru')
+        self.assertEqual(res['sn'][0]['vu'], u'https://www.coral.ru')
+
+        self.assertEqual(res['sn'][6]['t'], u'CORAL TRAVEL (@coraltravel) • Instagram photos and videos')
+        self.assertEqual(res['sn'][6]['s'], u'422k Followers, 9 Following, 5177 Posts - See Instagram photos and videos from CORAL TRAVEL (@coraltravel)')
+        self.assertEqual(res['sn'][6]['u'], u'https://www.instagram.com/coraltravel/?hl=ru')
+        self.assertEqual(res['sn'][6]['d'], 'instagram.com')
+        self.assertEqual(res['sn'][6]['vu'], None)
+
+        self.assertEqual(res['sn'][95]['t'], u'"CoralTravel" - официальный сайт в Ростове-на-Дону')
+        self.assertEqual(res['sn'][95]['s'], u'Официальный сайт турагентства "CoralTravel" в Ростове-на-Дону. Поиск горящих туров на сайте Anex во все страны мира. Онлайн бронирование!')
+        self.assertEqual(res['sn'][95]['u'], u'https://poisk-travel.com/')
+        self.assertEqual(res['sn'][95]['d'], 'poisk-travel.com')
+        self.assertEqual(res['sn'][95]['vu'], u'https://poisk-travel.com')
+
     def test114(self):
         u""""
             Ошибка парсинга от 2021-01-29

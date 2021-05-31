@@ -219,8 +219,8 @@ class GoogleParser(object):
 
     def __init__(self, content, xhtml_snippet=False, snippet_fields=('d', 'p', 'u', 't', 's', 'm')):
         self.content = to_unicode(content)
-        with open('go.html', 'w') as f:
-            f.write(self.content)
+        # with open('go.html', 'w') as f:
+        #     f.write(self.content)
 
         self.xhtml_snippet = xhtml_snippet
         self.snippet_fields = snippet_fields
@@ -327,6 +327,10 @@ class GoogleParser(object):
 
         if not snippets:
             raise GoogleParserError('not found snippets')
+
+        for pos, snippet in enumerate(snippets, start=1):
+            if snippet['p'] != pos:
+                raise GoogleParserError('bad position')
 
         return {'pc': pagecount, 'sn': snippets}
 
@@ -711,6 +715,8 @@ class SnippetsParserAfter_2016_03_10(SnippetsParserDefault):
 
         if len(result) >= 2 and result[0]['u'] == result[1]['u']:
             result = result[1:]
+            for pos, snippet in enumerate(result, start=1):
+                snippet['p'] = pos
 
         return result
 
@@ -746,6 +752,9 @@ class SnippetsParserAfter_2021_01_29(SnippetsParserAfter_2016_03_10):
                 html = HTMLParser().unescape(
                     etree.tostring(snippet)
                 )
+
+                if len(snippet.cssselect('div.g')) > 1:
+                    continue
 
                 if re.search(ur'class="g[^"]+(?:obcontainer|g-blk)\s*', html):
                     continue
