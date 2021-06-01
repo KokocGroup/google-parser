@@ -152,7 +152,7 @@ class GoogleParserTestCase(GoogleParserTests):
 
         #на самом деле тут 150000, но из-за того что кэш битый 0
         self.assertEqual(res['pc'], 0)
-        self.assertEqual(len(res['sn']), 100)
+        self.assertEqual(len(res['sn']), 99)
 
     def test12(self):
         u""""

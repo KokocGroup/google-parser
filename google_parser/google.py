@@ -332,6 +332,13 @@ class GoogleParser(object):
             if snippet['p'] != pos:
                 raise GoogleParserError('bad position')
 
+            if not snippet['u']:
+                raise GoogleParserError('bad url')
+
+            if not snippet['d']:
+                print(snippet)
+                raise GoogleParserError('bad domain')
+
         return {'pc': pagecount, 'sn': snippets}
 
     @classmethod
@@ -446,7 +453,7 @@ class SnippetsParserDefault(object):
                         raise
 
                 # игнорим сниппет с картинками
-                if self._is_map_snippet(item['u']) or item['u'].startswith('/search'):
+                if self._is_map_snippet(item['u']) or item['u'].startswith('/search') or item['u'].startswith('/images'):
                     position -= 1
                     continue
 
