@@ -2532,6 +2532,38 @@ class GoogleParserTestCase(GoogleParserTests):
         self.assertEqual(res['sn'][99]['d'], 'smolnarod.ru')
         self.assertEqual(res['sn'][99]['vu'], None)
 
+    def test117(self):
+        u""""
+            Ошибка парсинга от 2021-06-02
+        """
+        html = self.get_data('2021-06-02-1.txt')
+        g = GoogleJsonParser(html, snippet_fields=('d', 'p', 'u', 't', 's', 'm'))
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+
+        # В мобильной выдаче похоже нет общего кол-ва результатов
+        self.assertEqual(res['pc'], 99)
+        self.assertEqual(len(res['sn']), 99)
+
+        self.assertEqual(res['sn'][0]['t'], u'Что такое десима? Что такое десима - Ответы Mail.ru')
+        self.assertEqual(res['sn'][0]['s'], u'Десима - это 10 побед в кубке/лиге чемпионов. У команды Реал Мадрид десима. Нравится.')
+        self.assertEqual(res['sn'][0]['u'], u'https://otvet.mail.ru/question/180584498')
+        self.assertEqual(res['sn'][0]['d'], 'otvet.mail.ru')
+        self.assertEqual(res['sn'][0]['vu'], None)
+
+        self.assertEqual(res['sn'][6]['t'], u'Desima.com')
+        self.assertEqual(res['sn'][6]['s'], u'Welcome to Desima,the German manufacturer of high-quality textile wallpapers established in 1984.We are very glad in your interest and in your good tastes!')
+        self.assertEqual(res['sn'][6]['u'], u'https://www.desima.com/')
+        self.assertEqual(res['sn'][6]['d'], 'desima.com')
+        self.assertEqual(res['sn'][6]['vu'], u'https://www.desima.com')
+
+        self.assertEqual(res['sn'][98]['t'], u'Soal-soal latihan pemrograman dasar - pemrograman web')
+        self.assertEqual(res['sn'][98]['s'], u'20 окт. 2016 г. — Diketahui bahwa kantong P kosong. Kantong Q berisi 10 buah kelereng dan kantong R berisi 15 kelereng. Apabila yang terbawa hanya ...')
+        self.assertEqual(res['sn'][98]['u'], u'http://astrikotaxtkj2menia.blogspot.com/2016/10/soal-dan-jawaban.html')
+        self.assertEqual(res['sn'][98]['d'], 'astrikotaxtkj2menia.blogspot.com')
+        self.assertEqual(res['sn'][98]['vu'], None)
+
     def print_sn(self, res):
         for i in res['sn']:
             print

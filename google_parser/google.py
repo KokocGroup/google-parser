@@ -336,7 +336,6 @@ class GoogleParser(object):
                 raise GoogleParserError('bad url')
 
             if not snippet['d']:
-                print(snippet)
                 raise GoogleParserError('bad domain')
 
         return {'pc': pagecount, 'sn': snippets}
@@ -768,6 +767,10 @@ class SnippetsParserAfter_2021_01_29(SnippetsParserAfter_2016_03_10):
 
                 # дополнительные элементы
                 if re.search(ur'class="[^"]+?__outer-card', html):
+                    continue
+
+                # дополнительные элементы
+                if re.search(ur'class="[^"]*?lu_map_section', html):
                     continue
 
                 if re.search(ur'id="imagebox_bigimages"', html):
