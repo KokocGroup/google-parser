@@ -766,7 +766,7 @@ class SnippetsParserAfter_2021_01_29(SnippetsParserAfter_2016_03_10):
                     continue
 
                 # дополнительные элементы
-                if re.search(ur'class="[^"]+?__outer-card', html):
+                if re.search(ur'class="[^"]+?(?:__outer-card|-wholepage)', html):
                     continue
 
                 # дополнительные элементы

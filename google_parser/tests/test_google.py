@@ -2564,6 +2564,38 @@ class GoogleParserTestCase(GoogleParserTests):
         self.assertEqual(res['sn'][98]['d'], 'astrikotaxtkj2menia.blogspot.com')
         self.assertEqual(res['sn'][98]['vu'], None)
 
+    def test118(self):
+        u""""
+            Ошибка парсинга от 2021-06-02
+        """
+        html = self.get_data('2021-06-02-3.txt')
+        g = GoogleJsonParser(html, snippet_fields=('d', 'p', 'u', 't', 's', 'm'))
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+
+        # В мобильной выдаче похоже нет общего кол-ва результатов
+        self.assertEqual(res['pc'], 1890000)
+        self.assertEqual(len(res['sn']), 98)
+
+        self.assertEqual(res['sn'][0]['t'], u'Стадион Шахтёр | Центр спорта в Кемерово')
+        self.assertEqual(res['sn'][0]['s'], u'г. Кемрово, ул. Рутгерса, 32; (384-2) 64-32-60, (384-2) 64-06-63; Напишите нам. Версия для слабовидящих. Стадион Шахтёр. Центр спорта в Кемерово.')
+        self.assertEqual(res['sn'][0]['u'], u'http://stadium-shahter.ru/')
+        self.assertEqual(res['sn'][0]['d'], 'stadium-shahter.ru')
+        self.assertEqual(res['sn'][0]['vu'], u'http://stadium-shahter.ru')
+
+        self.assertEqual(res['sn'][6]['t'], u'Информация о стадионе «Шахтёр», Кемерово - Реестр ...')
+        self.assertEqual(res['sn'][6]['s'], u'Стадион Шахтёр. город: Кемерово, Россия адрес: 650040, Кемерово, ул. Рутгерса, 32 телефон: (3842) 64–06–63 год постройки: 1935 вместимость: 4 ...')
+        self.assertEqual(res['sn'][6]['u'], u'http://www.rusbandy.ru/stadium/52/')
+        self.assertEqual(res['sn'][6]['d'], 'rusbandy.ru')
+        self.assertEqual(res['sn'][6]['vu'], None)
+
+        self.assertEqual(res['sn'][97]['t'], u'Посмотрите, как выглядит стадион «Шахтёр» в ... - Kurjer.info')
+        self.assertEqual(res['sn'][97]['s'], u'27 нояб. 2019 г. — В Солигорске продолжается реконструкция стадиона «Шахтёр». Планировалось, что уже осенью этого года спортивная арена ...')
+        self.assertEqual(res['sn'][97]['u'], u'https://kurjer.info/2019/11/27/stadium-shakhter/')
+        self.assertEqual(res['sn'][97]['d'], 'kurjer.info')
+        self.assertEqual(res['sn'][97]['vu'], None)
+
     def print_sn(self, res):
         for i in res['sn']:
             print
