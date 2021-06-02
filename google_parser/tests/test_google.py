@@ -2500,6 +2500,38 @@ class GoogleParserTestCase(GoogleParserTests):
         # В мобильной выдаче похоже нет общего кол-ва результатов
         self.assertEqual(res['pc'], 0)
 
+    def test116(self):
+        u""""
+            Ошибка парсинга от 2021-06-02
+        """
+        html = self.get_data('2021-06-02.txt')
+        g = GoogleJsonParser(html, snippet_fields=('d', 'p', 'u', 't', 's', 'm'))
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+
+        # В мобильной выдаче похоже нет общего кол-ва результатов
+        self.assertEqual(res['pc'], 19500000)
+        self.assertEqual(len(res['sn']), 100)
+
+        self.assertEqual(res['sn'][0]['t'], u'Базы отдыха в Смоленской области - турбазы, цены 2021 ...')
+        self.assertEqual(res['sn'][0]['s'], u'Базы отдыха и турбазы в Смоленской области: фото территории, домиков, подробным описанием услуг, отзывами, координатами на карте, ценами, ...')
+        self.assertEqual(res['sn'][0]['u'], u'https://101hotels.com/russia/region/smolenskaya_oblast/recreation_base')
+        self.assertEqual(res['sn'][0]['d'], '101hotels.com')
+        self.assertEqual(res['sn'][0]['vu'], None)
+
+        self.assertEqual(res['sn'][6]['t'], u'Турбазы и базы отдыха Смоленской области')
+        self.assertEqual(res['sn'][6]['s'], u'База отдыха в деревне Бодровка Рославльского района Смоленской области. На территории базы есть своя ферма с животными, милой собакой- ...')
+        self.assertEqual(res['sn'][6]['u'], u'https://katalogturbaz.ru/russia/smolenskaja-oblast')
+        self.assertEqual(res['sn'][6]['d'], 'katalogturbaz.ru')
+        self.assertEqual(res['sn'][6]['vu'], None)
+
+        self.assertEqual(res['sn'][99]['t'], u'На каких пляжах в Смоленской области можно безопасно ...')
+        self.assertEqual(res['sn'][99]['s'], u'13 ч. назад — Контроль за выполнением требований по охране жизни и безопасности людей на пляжах и других местах массового отдыха на водоемах ...')
+        self.assertEqual(res['sn'][99]['u'], u'https://smolnarod.ru/sn/society/na-kakix-plyazhax-v-smolenskoj-oblasti-mozhno-bezopasno-otdyxat/')
+        self.assertEqual(res['sn'][99]['d'], 'smolnarod.ru')
+        self.assertEqual(res['sn'][99]['vu'], None)
+
     def print_sn(self, res):
         for i in res['sn']:
             print

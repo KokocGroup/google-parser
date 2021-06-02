@@ -766,6 +766,10 @@ class SnippetsParserAfter_2021_01_29(SnippetsParserAfter_2016_03_10):
                 if re.search(ur'class="g[^"]+(?:obcontainer|g-blk)\s*', html):
                     continue
 
+                # дополнительные элементы
+                if re.search(ur'class="[^"]+?__outer-card', html):
+                    continue
+
                 if re.search(ur'id="imagebox_bigimages"', html):
                     continue
 
