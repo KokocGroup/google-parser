@@ -2,6 +2,8 @@
 import json
 
 import unittest
+
+from google_parser.exceptions import GoogleParserError
 from google_parser.tests import GoogleParserTests
 from google_parser.google import GoogleParser, SnippetsParserDefault, GoogleJsonParser, GoogleMobileParser
 from google_parser.google_query import GoogleQuery
@@ -2627,6 +2629,24 @@ class GoogleParserTestCase(GoogleParserTests):
         self.assertEqual(res['sn'][98]['u'], u'https://www.drivearabia.com/carprices/uae/kia/kia-rio/2021/')
         self.assertEqual(res['sn'][98]['d'], 'drivearabia.com')
         self.assertEqual(res['sn'][98]['vu'], None)
+
+    def test120(self):
+        u""""
+            Некорректный html
+        """
+        html = 'asdfasdfa'
+        with self.assertRaises(GoogleParserError) as e:
+            g = GoogleJsonParser(html, snippet_fields=('d', 'p', 'u', 't', 's', 'm'))
+            g.get_serp()
+
+    def test121(self):
+        u""""
+            Некорректный html
+        """
+        html = ''
+        with self.assertRaises(GoogleParserError) as e:
+            g = GoogleJsonParser(html, snippet_fields=('d', 'p', 'u', 't', 's', 'm'))
+            g.get_serp()
 
     def print_sn(self, res):
         for i in res['sn']:

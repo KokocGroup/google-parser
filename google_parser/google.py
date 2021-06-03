@@ -807,6 +807,7 @@ class GoogleJsonParser(GoogleParser):
         content = self._prepare_content(content)
         super(GoogleJsonParser, self).__init__(content, xhtml_snippet=False, snippet_fields=snippet_fields)
 
+
     def _get_need_blocks(self, content):
         ret = ''
 
@@ -826,26 +827,29 @@ class GoogleJsonParser(GoogleParser):
         return u'<script>je.api' in content
 
     def _prepare_content(self, content):
-        need_blocks = self._get_need_blocks(content)
+        try:
+            need_blocks = self._get_need_blocks(content)
 
-        # second and other pages
-        if not self._is_je_api(need_blocks):
-            return need_blocks
+            # second and other pages
+            if not self._is_je_api(need_blocks):
+                return need_blocks
 
-        je_apis = re.findall(ur'<script>je.api\((.*?)\);</script>', need_blocks, re.I | re.M | re.S)
+            je_apis = re.findall(ur'<script>je.api\((.*?)\);</script>', need_blocks, re.I | re.M | re.S)
 
-        ret = '<body><div class="med" id="res" role="main"><div class="srg">'
-        for je_api in je_apis:
-            if '"i":"search"' not in je_api and '"i":"appbar"' not in je_api and '"i":"xjs"' not in je_api and '"i":"topstuff"' not in je_api:
-                continue
+            ret = '<body><div class="med" id="res" role="main"><div class="srg">'
+            for je_api in je_apis:
+                if '"i":"search"' not in je_api and '"i":"appbar"' not in je_api and '"i":"xjs"' not in je_api and '"i":"topstuff"' not in je_api:
+                    continue
 
-            match = re.search(ur'"h":"(.*?)"', je_api, re.I | re.M | re.S)
-            if not match:
-                continue
+                match = re.search(ur'"h":"(.*?)"', je_api, re.I | re.M | re.S)
+                if not match:
+                    continue
 
-            ret += match.group(1).decode('string_escape').decode('raw_unicode_escape', 'ignore')
-        ret += '<hr class=""></div></body>'
-        return ret
+                ret += match.group(1).decode('string_escape').decode('raw_unicode_escape', 'ignore')
+            ret += '<hr class=""></div></body>'
+            return ret
+        except Exception as e:
+            raise GoogleParserError('{}: {}'.format(type(e), str(e)))
 
 
 class GoogleMobileParser(GoogleParser):
