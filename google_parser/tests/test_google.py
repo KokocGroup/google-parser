@@ -2596,6 +2596,38 @@ class GoogleParserTestCase(GoogleParserTests):
         self.assertEqual(res['sn'][97]['d'], 'kurjer.info')
         self.assertEqual(res['sn'][97]['vu'], None)
 
+    def test119(self):
+        u""""
+            Ошибка парсинга от 2021-06-03
+        """
+        html = self.get_data('2021-06-03.txt')
+        g = GoogleJsonParser(html, snippet_fields=('d', 'p', 'u', 't', 's', 'm'))
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+
+        # В мобильной выдаче похоже нет общего кол-ва результатов
+        self.assertEqual(res['pc'], 37500000)
+        self.assertEqual(len(res['sn']), 99)
+
+        self.assertEqual(res['sn'][0]['t'], u'Kia Rio седан 2021 - Цены и комплектации')
+        self.assertEqual(res['sn'][0]['s'], u'Двигатели и трансмиссии, спроектированные с учетом российских условий, дадут Вам динамику, которую Вы ожидаете, и привнесут яркие эмоции в ...')
+        self.assertEqual(res['sn'][0]['u'], u'https://www.kia.ru/models/rio/options/')
+        self.assertEqual(res['sn'][0]['d'], 'kia.ru')
+        self.assertEqual(res['sn'][0]['vu'], None)
+
+        self.assertEqual(res['sn'][6]['t'], u'KIA Rio 2021, купить новый КИА Рио в Москве ...')
+        self.assertEqual(res['sn'][6]['s'], u'Автомобили KIA Rio седан от официального дилера АвтоГЕРМЕС, большое количество в наличии. Специальные цены, выгодные предложения на KIA ...')
+        self.assertEqual(res['sn'][6]['u'], u'https://www.avtogermes.ru/sale/kia/rio/')
+        self.assertEqual(res['sn'][6]['d'], 'avtogermes.ru')
+        self.assertEqual(res['sn'][6]['vu'], None)
+
+        self.assertEqual(res['sn'][98]['t'], u'Kia Rio 2021 Prices in UAE, Specs & Reviews for Dubai, Abu ...')
+        self.assertEqual(res['sn'][98]['s'], u'Kia Rio 2021 prices in UAE starting at AED 49900, specs and reviews for Dubai, Abu Dhabi, ... Price When New In UAE ... 2018 Kia Rio Hatchback first drive ...')
+        self.assertEqual(res['sn'][98]['u'], u'https://www.drivearabia.com/carprices/uae/kia/kia-rio/2021/')
+        self.assertEqual(res['sn'][98]['d'], 'drivearabia.com')
+        self.assertEqual(res['sn'][98]['vu'], None)
+
     def print_sn(self, res):
         for i in res['sn']:
             print
