@@ -2648,6 +2648,38 @@ class GoogleParserTestCase(GoogleParserTests):
             g = GoogleJsonParser(html, snippet_fields=('d', 'p', 'u', 't', 's', 'm'))
             g.get_serp()
 
+    def test122(self):
+        u""""
+            Ошибка парсинга от 2021-06-07
+        """
+        html = self.get_data('2021-06-07.txt')
+        g = GoogleJsonParser(html, snippet_fields=('d', 'p', 'u', 't', 's', 'm'))
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+
+        # В мобильной выдаче похоже нет общего кол-ва результатов
+        self.assertEqual(res['pc'], 4400000)
+        self.assertEqual(len(res['sn']), 100)
+
+        self.assertEqual(res['sn'][0]['t'], u'Погода в Греции в январе 2021 года, температура воздуха ...')
+        self.assertEqual(res['sn'][0]['s'], u'Прогноз погоды в Греции в январе по российским меркам теплый, в среднем воздух прогревается до +8-10 градусов. В горах погода, конечно, намного ...')
+        self.assertEqual(res['sn'][0]['u'], u'https://tonkosti.ru/%D0%9F%D0%BE%D0%B3%D0%BE%D0%B4%D0%B0_%D0%B2_%D0%93%D1%80%D0%B5%D1%86%D0%B8%D0%B8_%D0%B2_%D1%8F%D0%BD%D0%B2%D0%B0%D1%80%D0%B5')
+        self.assertEqual(res['sn'][0]['d'], 'tonkosti.ru')
+        self.assertEqual(res['sn'][0]['vu'], None)
+
+        self.assertEqual(res['sn'][6]['t'], u'Отдых в Греции в январе - отзывы туристов на отели ...')
+        self.assertEqual(res['sn'][6]['s'], u'52272 отзыва туристов об отдыхе в Греции в январе, отзывы ... Отдыхали в этом отеле в августе 2020 года, отель отличный, еда не плохая, номера ...')
+        self.assertEqual(res['sn'][6]['u'], u'https://saletur.ru/%D0%93%D1%80%D0%B5%D1%86%D0%B8%D1%8F/otzyv/%D1%8F%D0%BD%D0%B2%D0%B0%D1%80%D1%8C/')
+        self.assertEqual(res['sn'][6]['d'], 'saletur.ru')
+        self.assertEqual(res['sn'][6]['vu'], None)
+
+        self.assertEqual(res['sn'][99]['t'], u'Представитель МИД России рассказал об отдыхе за ...')
+        self.assertEqual(res['sn'][99]['s'], u'5 дней назад — ... момент курортов можно включить Болгарию, Грецию, Хорватию и ... срок действия которой истек в период с 1 января 2020 года, могут ...')
+        self.assertEqual(res['sn'][99]['u'], u'https://pravda-nn.ru/interview/sergej-malov-prezhde-chem-kupit-putevku-i-otpravitsya-v-puteshestvie-neobhodimo-vzvesit-vse-za-i-protiv-i-tolko-zatem-prinimat-reshenie/')
+        self.assertEqual(res['sn'][99]['d'], 'pravda-nn.ru')
+        self.assertEqual(res['sn'][99]['vu'], None)
+
     def print_sn(self, res):
         for i in res['sn']:
             print

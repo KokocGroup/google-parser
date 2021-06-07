@@ -562,9 +562,14 @@ class SnippetsParserDefault(object):
         raise GoogleParserError(u'не удалось найти описание сниппета: {}'.format(snippet))
 
     def _parse_description_snippet(self, snippet):
-        res = re.compile(ur'<span class="(?:st|aCOpRe)">(.*?)</span>\s*(?:<br>|</div>|<div|</a>)', re.I | re.M | re.S).search(snippet)
-        if res:
-            return SnippetsParserDefault.strip_tags(res.group(1))
+        patterns = [
+            ur'<span class="(?:st|aCOpRe)">(.*?)</span>\s*(?:<br>|</div>|<div|</a>)',
+            ur'<div\s+class="[^"]+?">\s*<div\s+class="[^"]+?">\s*<span(?:\s+class="[^"]+?")?>\s*(.*?)</span>\s*</div>\s*</div>',
+        ]
+        for pattern in patterns:
+            res = re.search(pattern, snippet, flags=re.I | re.M | re.S)
+            if res:
+                return SnippetsParserDefault.strip_tags(res.group(1))
 
     @classmethod
     def strip_tags(self, html):
@@ -766,7 +771,7 @@ class SnippetsParserAfter_2021_01_29(SnippetsParserAfter_2016_03_10):
                     continue
 
                 # дополнительные элементы
-                if re.search(ur'class="[^"]+?(?:__outer-card|-wholepage|g-blk)', html):
+                if re.search(ur'class="[^"]+?(?:__outer-card|-wholepage|g-blk|vk_c)', html):
                     continue
 
                 # дополнительные элементы
