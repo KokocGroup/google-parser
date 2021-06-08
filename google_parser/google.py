@@ -268,11 +268,16 @@ class GoogleParser(object):
             ),
             re.compile(
                 ur'<a href="//support\.google\.com/websearch/answer/86640">Подробнее\.\.\.</a>', re.I | re.M | re.S
-            )
+            ),
+            re.compile(
+                ur'<p>Your client does not have permission to get URL', re.I | re.M | re.S
+            ),
         ]
-        result = True
+        result = False
         for pattern in patterns:
-            result &= bool(pattern.search(self.content))
+            result |= bool(pattern.search(self.content))
+            if result:
+                break
         return result
 
     def is_recaptcha_suspicious_traffic(self):
@@ -833,6 +838,10 @@ class GoogleJsonParser(GoogleParser):
 
     def _prepare_content(self, content):
         try:
+            self.content = content
+            if self.is_suspicious_traffic():
+                return content
+
             need_blocks = self._get_need_blocks(content)
 
             # second and other pages

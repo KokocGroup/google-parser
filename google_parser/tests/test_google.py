@@ -2680,6 +2680,16 @@ class GoogleParserTestCase(GoogleParserTests):
         self.assertEqual(res['sn'][99]['d'], 'pravda-nn.ru')
         self.assertEqual(res['sn'][99]['vu'], None)
 
+    def test123(self):
+        u""""
+            Ошибка парсинга от 2021-06-08
+        """
+        html = self.get_data('2021-06-08.html')
+        g = GoogleJsonParser(html, snippet_fields=('d', 'p', 'u', 't', 's', 'm'))
+        self.assertTrue(g.is_suspicious_traffic())
+
+
+
     def print_sn(self, res):
         for i in res['sn']:
             print
