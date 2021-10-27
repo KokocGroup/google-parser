@@ -569,12 +569,19 @@ class SnippetsParserDefault(object):
     def _parse_description_snippet(self, snippet):
         patterns = [
             ur'<span class="(?:st|aCOpRe)">(.*?)</span>\s*(?:<br>|</div>|<div|</a>)',
-            ur'<div\s+class="[^"]+?">\s*<div\s+class="[^"]+?">\s*<span(?:\s+class="[^"]+?")?>\s*(.*?)</span>\s*</div>\s*</div>',
+            ur'<div\s+class="[^"]+?">\s*<div\s+class="[^"]+?">\s*<span(?:\s+class="[^"]+?")?>\s*(.*?)</span>\s*</div>',
+            ur'<div\s+class="IsZvec">\s*<div\s+[^>]+?>\s*<span(?:\s+class="[^"]+?")?>\s*(.*?)</span>\s*</div>',
+            ur'<div\s+class="IsZvec">\s*(.*?)</div>',
+            ur'<div\s+class="IsZvec">\s*<span\s+[^>]+?/>\s*(.*?)</div>',
+            ur'<div\s+class="s">(.*?)</div>',
+            ur'<span\s+class="f">(.*?)<cite>',
         ]
         for pattern in patterns:
             res = re.search(pattern, snippet, flags=re.I | re.M | re.S)
             if res:
                 return SnippetsParserDefault.strip_tags(res.group(1))
+
+        raise GoogleParserError()
 
     @classmethod
     def strip_tags(self, html):
@@ -694,6 +701,20 @@ class SnippetsParserUnil_2015_07_23(SnippetsParserDefault):
     snippets_regexp = re.compile(ur'(<(?:li|div) class="g">(?:<span|<h3|<table).*?(?:(?:<br>|</a>)\s*</div>|</table>)\s*</(?:li|div)>)', re.I | re.M | re.S)
     result_regexp = re.compile(ur'(<div id="ires">.*?</ol>\s*</div>)', re.I | re.M | re.S)
 
+    def _parse_description_snippet(self, snippet):
+        patterns = [
+            ur'<span class="(?:st|aCOpRe)">(.*?)</span>\s*(?:<br>|</div>|<div|</a>)',
+            ur'<div\s+class="[^"]+?">\s*<div\s+class="[^"]+?">\s*<span(?:\s+class="[^"]+?")?>\s*(.*?)</span>\s*</div>',
+            ur'<div\s+class="IsZvec">\s*<div\s+[^>]+?>\s*<span(?:\s+class="[^"]+?")?>\s*(.*?)</span>\s*</div>',
+            ur'<div\s+class="IsZvec">\s*(.*?)</div>',
+            ur'<div\s+class="IsZvec">\s*<span\s+[^>]+?/>\s*(.*?)</div>',
+            ur'<div\s+class="s">(.*?)</div>',
+        ]
+        for pattern in patterns:
+            res = re.search(pattern, snippet, flags=re.I | re.M | re.S)
+            if res:
+                return SnippetsParserDefault.strip_tags(res.group(1))
+
 
 class SnippetsParserAfter_2016_03_10(SnippetsParserDefault):
     snippets_regexp = re.compile(ur'(<div class=(?:"g\s*(?:card-section)?"(?: data-hveid="[^"]+?")?(?: data-ved="[^"]+?")?>|"g\s+[^_"]*"[^>]*>)\s*(?:<h2[^>]+?>[^<]+?</h2>)?\s*(?:<div data-hveid="[^"]+?">|<div>)?<!--m-->\s*.*?</div><!--n-->\s*(?:</div>))', re.I | re.M | re.S)
@@ -808,6 +829,8 @@ class SnippetsParserAfter_2021_01_29(SnippetsParserAfter_2016_03_10):
 
         if len(result) >= 2 and result[0]['u'] == result[1]['u']:
             result = result[1:]
+            for i in range(len(result)):
+                result[i]['p'] = i + 1
 
         return result
 

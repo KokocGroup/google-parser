@@ -1808,7 +1808,7 @@ class GoogleParserTestCase(GoogleParserTests):
         self.assertEqual(len(res['sn']), 100)
 
         self.assertEqual(res['sn'][0]['t'], u'Планшет на Windows 10 - купить на E-katalog.ru > цены ...')
-        self.assertEqual(res['sn'][0]['s'], None)
+        self.assertEqual(res['sn'][0]['s'], '')
         self.assertEqual(res['sn'][0]['u'], u'https://www.e-katalog.ru/list/30/pr-19371/')
         self.assertEqual(res['sn'][0]['d'], 'e-katalog.ru')
         self.assertEqual(res['sn'][0]['vu'], u'https://www.e-katalog.ru › list')
@@ -2679,6 +2679,38 @@ class GoogleParserTestCase(GoogleParserTests):
         self.assertEqual(res['sn'][99]['u'], u'https://pravda-nn.ru/interview/sergej-malov-prezhde-chem-kupit-putevku-i-otpravitsya-v-puteshestvie-neobhodimo-vzvesit-vse-za-i-protiv-i-tolko-zatem-prinimat-reshenie/')
         self.assertEqual(res['sn'][99]['d'], 'pravda-nn.ru')
         self.assertEqual(res['sn'][99]['vu'], None)
+
+    def test126(self):
+        u""""
+            Ошибка парсинга от 2021-10-26
+        """
+        html = self.get_data('2021-10-26.txt')
+        g = GoogleJsonParser(html, snippet_fields=('d', 'p', 'u', 't', 's', 'm'))
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+
+        # В мобильной выдаче похоже нет общего кол-ва результатов
+        self.assertEqual(res['pc'], 94)
+        self.assertEqual(len(res['sn']), 96)
+
+        self.assertEqual(res['sn'][0]['t'], u'Tele2 TV — как бесплатно пользоваться - GSMWIKI ...')
+        self.assertEqual(res['sn'][0]['s'], u'Способы отключить подписку на Теле2 ТВ · в приложении в левом вертикальном меню кликнуть на номер телефона, выбрать раздел с нужной подпиской, нажать «Отключить» ...')
+        self.assertEqual(res['sn'][0]['u'], u'https://gsmwiki.ru/tele2/tv-tele2/')
+        self.assertEqual(res['sn'][0]['d'], 'gsmwiki.ru')
+        self.assertEqual(res['sn'][0]['vu'], None)
+
+        self.assertEqual(res['sn'][6]['t'], u'Как отключить «Теле2 ТВ», установить, список каналов и ...')
+        self.assertEqual(res['sn'][6]['s'], u'Как отключить Tele2 TV; Стоимость и условия пользования Теле2 ТВ ... Ведь из него можно выбрать программы, кино на любой вкус – от комедий и детских фильмов ...')
+        self.assertEqual(res['sn'][6]['u'], u'https://ontele2.ru/uslugi/tele2-tv')
+        self.assertEqual(res['sn'][6]['d'], 'ontele2.ru')
+        self.assertEqual(res['sn'][6]['vu'], None)
+
+        self.assertEqual(res['sn'][95]['t'], u'Отписка от платных услуг теле2. Платные подписки на Теле2')
+        self.assertEqual(res['sn'][95]['s'], u'С помощью меню можно переключать режимы, входить в «Кинозал» (фильмы, сериалы, ... В Личном кабинете на сайте Теле2 подключение и отключение доступно в ...')
+        self.assertEqual(res['sn'][95]['u'], u'https://mobilca.ru/an-extract-from-paid-tele2-services-paid-subscriptions-for-tele2.html')
+        self.assertEqual(res['sn'][95]['d'], 'mobilca.ru')
+        self.assertEqual(res['sn'][95]['vu'], None)
 
     def test123(self):
         u""""
