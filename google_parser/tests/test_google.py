@@ -2712,6 +2712,102 @@ class GoogleParserTestCase(GoogleParserTests):
         self.assertEqual(res['sn'][95]['d'], 'mobilca.ru')
         self.assertEqual(res['sn'][95]['vu'], None)
 
+    def test128(self):
+        u""""
+            Ошибка парсинга от 2021-10-28
+        """
+        html = self.get_data('2021-10-28.txt')
+        g = GoogleJsonParser(html, snippet_fields=('d', 'p', 'u', 't', 's', 'm'))
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+
+        # В мобильной выдаче похоже нет общего кол-ва результатов
+        self.assertEqual(res['pc'], 25800000)
+        self.assertEqual(len(res['sn']), 98)
+
+        self.assertEqual(res['sn'][0]['t'], u'COVID-19 Map - Johns Hopkins Coronavirus Resource Center')
+        self.assertEqual(res['sn'][0]['s'], u'Coronavirus COVID-19 Global Cases by the Center for Systems Science and Engineering (CSSE) at Johns Hopkins University (JHU)')
+        self.assertEqual(res['sn'][0]['u'], u'https://coronavirus.jhu.edu/map.html')
+        self.assertEqual(res['sn'][0]['d'], 'coronavirus.jhu.edu')
+        self.assertEqual(res['sn'][0]['vu'], None)
+
+        self.assertEqual(res['sn'][6]['t'], u'The Johns Hopkins University School of Medicine')
+        self.assertEqual(res['sn'][6]['s'], u'“Having people who looked like me as my doctors and as my mentors was a huge influence,” says Ubah Jimale Dimbil, a second year emergency medicine resident ...')
+        self.assertEqual(res['sn'][6]['u'], u'https://www.hopkinsmedicine.org/som/')
+        self.assertEqual(res['sn'][6]['d'], 'hopkinsmedicine.org')
+        self.assertEqual(res['sn'][6]['vu'], None)
+
+        self.assertEqual(res['sn'][97]['t'], u'Центр доктора Бубновского - официальный сайт')
+        self.assertEqual(res['sn'][97]['s'], u'Центр доктора Бубновского предоставляет услуги по реабилитации опорно-двигательного аппарата в соответствии с высокими международными стандартами.')
+        self.assertEqual(res['sn'][97]['u'], u'https://bubnovsky.org/')
+        self.assertEqual(res['sn'][97]['d'], 'bubnovsky.org')
+        self.assertEqual(res['sn'][97]['vu'], 'https://bubnovsky.org')
+
+    def test129(self):
+        u""""
+            Ошибка парсинга от 2021-10-28
+        """
+        html = self.get_data('2021-10-28-1.txt')
+        g = GoogleJsonParser(html, snippet_fields=('d', 'p', 'u', 't', 's', 'm'))
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+
+        # В мобильной выдаче похоже нет общего кол-ва результатов
+        self.assertEqual(res['pc'], 1920000000)
+        self.assertEqual(len(res['sn']), 97)
+
+        self.assertEqual(res['sn'][0]['t'], u'SA.RU')
+        self.assertEqual(res['sn'][0]['s'], u'Интернет-магазин SA.RU предлагает приобрести автомобильные шины и колесные диски с гарантией качества. В торгово-сервисных центрах SA.RU (г.')
+        self.assertEqual(res['sn'][0]['u'], u'https://sa.ru/')
+        self.assertEqual(res['sn'][0]['d'], u'sa.ru')
+        self.assertEqual(res['sn'][0]['vu'], 'https://sa.ru')
+
+        self.assertEqual(res['sn'][77]['t'], u'Instagram Ro-sa.ru - Япония Транзит')
+        self.assertEqual(res['sn'][77]['s'], '')
+        self.assertEqual(res['sn'][77]['u'], u'https://japantransit.ru/yapodbor/instwidget/index1.php')
+        self.assertEqual(res['sn'][77]['d'], 'japantransit.ru')
+        self.assertEqual(res['sn'][77]['vu'], None)
+
+        self.assertEqual(res['sn'][96]['t'], u'Ru Kim Sa Ru | Facebook')
+        self.assertEqual(res['sn'][96]['s'], u'Ru Kim Sa Ru is on Facebook. Join Facebook to connect with Ru Kim Sa Ru and others you may know. Facebook gives people the power to share and makes the...')
+        self.assertEqual(res['sn'][96]['u'], u'https://www.facebook.com/ru.kimsaru')
+        self.assertEqual(res['sn'][96]['d'], 'facebook.com')
+        self.assertEqual(res['sn'][96]['vu'], None)
+
+    def test130(self):
+        u""""
+            Ошибка парсинга от 2021-10-28
+        """
+        html = self.get_data('2021-10-28-2.txt')
+        g = GoogleJsonParser(html, snippet_fields=('d', 'p', 'u', 't', 's', 'm'))
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+
+        # В мобильной выдаче похоже нет общего кол-ва результатов
+        self.assertEqual(res['pc'], 139000)
+        self.assertEqual(len(res['sn']), 98)
+
+        self.assertEqual(res['sn'][0]['t'], u'Отзывы о препарате Ингавирин - Все аптеки')
+        self.assertEqual(res['sn'][0]['s'], u'Очень хорошее средство против вирусов различных простуд и прочих осенних и зимних неприятностей. Лично мной было перепробовано многовсего, ...')
+        self.assertEqual(res['sn'][0]['u'], u'https://vseapteki.ru/review/18282-ingavirin/')
+        self.assertEqual(res['sn'][0]['d'], 'vseapteki.ru')
+        self.assertEqual(res['sn'][0]['vu'], None)
+
+        self.assertEqual(res['sn'][67]['t'], u'Правда ли, что «Ингавирин» это запрещённое лекарство ...')
+        self.assertEqual(res['sn'][67]['s'], u'Заявление: «Ингавирин» это запрещённое лекарство, которое вызывает рак')
+        self.assertEqual(res['sn'][67]['u'], u'https://factcheck.kz/claim-checking/verdict/pravda-li-chto-ingavirin-eto-zapreshhyonnoe-lekarstvo-kotoroe-vyzyvaet-rak/')
+        self.assertEqual(res['sn'][67]['d'], 'factcheck.kz')
+        self.assertEqual(res['sn'][67]['vu'], None)
+
+        self.assertEqual(res['sn'][97]['t'], u'Ингавирин при гв: можно ли кормящим мамам - ПростоГВ')
+        self.assertEqual(res['sn'][97]['s'], u'Можно ли принимать Ингавирин при грудном вскармливании. Состав и показания к применению Ингавирина. Аналоги Ингавирина при гв.')
+        self.assertEqual(res['sn'][97]['u'], u'https://prostogv.ru/healthandbeauty/medicaments/ingavirin-pri-gv')
+        self.assertEqual(res['sn'][97]['d'], 'prostogv.ru')
+        self.assertEqual(res['sn'][97]['vu'], None)
+
     def test123(self):
         u""""
             Ошибка парсинга от 2021-06-08

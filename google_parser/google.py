@@ -573,6 +573,8 @@ class SnippetsParserDefault(object):
             ur'<div\s+class="IsZvec">\s*<div\s+[^>]+?>\s*<span(?:\s+class="[^"]+?")?>\s*(.*?)</span>\s*</div>',
             ur'<div\s+class="IsZvec">\s*(.*?)</div>',
             ur'<div\s+class="IsZvec">\s*<span\s+[^>]+?/>\s*(.*?)</div>',
+            ur'<div\s+class="IsZvec"/>(.*?)',
+            ur'<div class="FUUCsd CkcVWd RgAZAc"[^>]*?>(.*?)</div>',
             ur'<div\s+class="s">(.*?)</div>',
             ur'<span\s+class="f">(.*?)<cite>',
         ]
@@ -808,6 +810,9 @@ class SnippetsParserAfter_2021_01_29(SnippetsParserAfter_2016_03_10):
                     continue
 
                 if re.search(ur'<div\s*class="[^"]*rrec[^"]*"', html):
+                    continue
+
+                if re.search(ur'<g-section-with-header', html):
                     continue
 
                 position += 1
