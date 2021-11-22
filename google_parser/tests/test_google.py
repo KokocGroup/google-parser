@@ -2816,7 +2816,37 @@ class GoogleParserTestCase(GoogleParserTests):
         g = GoogleJsonParser(html, snippet_fields=('d', 'p', 'u', 't', 's', 'm'))
         self.assertTrue(g.is_suspicious_traffic())
 
+    def test131(self):
+        u""""
+            Ошибка парсинга от 2021-11-22
+        """
+        html = self.get_data('2021-11-22.txt')
+        g = GoogleJsonParser(html, snippet_fields=('d', 'p', 'u', 't', 's', 'm'))
+        self.assertFalse(g.is_suspicious_traffic())
 
+        res = g.get_serp()
+
+        # В мобильной выдаче похоже нет общего кол-ва результатов
+        self.assertEqual(res['pc'], 0)
+        self.assertEqual(len(res['sn']), 98)
+
+        self.assertEqual(res['sn'][0]['t'], u'Купить раскладной диван в классическом стиле в Москве - Цены от производителя в интернет-магазине MrDivanoff')
+        self.assertEqual(res['sn'][0]['s'], u'Большой выбор раскладных диванов в классическом стиле - в каталоге более 1455 моделей различных размеров, расцветок, материалов. ⭐ Доставка и сборка!')
+        self.assertEqual(res['sn'][0]['u'], 'https://mrdivanoff.ru/katalog/divany/raskladnye/klassicheskie-24')
+        self.assertEqual(res['sn'][0]['d'], 'mrdivanoff.ru')
+        self.assertEqual(res['sn'][0]['vu'], None)
+
+        self.assertEqual(res['sn'][67]['t'], u'Диваны в классическом стиле фото: угловые в гостиную, раскладные - VseMe.ru')
+        self.assertEqual(res['sn'][67]['s'], u'Классика вне моды. Таковы и диваны в классическом стиле: они сочетают в себе надежность, функциональность, комфорт и красоту.')
+        self.assertEqual(res['sn'][67]['u'], 'https://vseme.ru/gostinaya/divany-v-klassicheskom-stile')
+        self.assertEqual(res['sn'][67]['d'], 'vseme.ru')
+        self.assertEqual(res['sn'][67]['vu'], None)
+
+        self.assertEqual(res['sn'][97]['t'], u'Прямые диваны раскладные на каждый день [75+ Моделей 2019] - HappyModern')
+        self.assertEqual(res['sn'][97]['s'], u'26 сент. 2017 г. — Прямые раскладные диваны на каждый день производятся, как правило, в классическом стиле, однако, бывают и более оригинальные варианты.')
+        self.assertEqual(res['sn'][97]['u'], 'https://happymodern.ru/pryamye-divany-raskladnye-na-kazhdyj-den/')
+        self.assertEqual(res['sn'][97]['d'], 'happymodern.ru')
+        self.assertEqual(res['sn'][97]['vu'], None)
 
     def print_sn(self, res):
         for i in res['sn']:

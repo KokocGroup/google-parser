@@ -600,7 +600,7 @@ class MobileSnippetsParser(SnippetsParserDefault):
 
     def _parse_title(self, snippet):
         match = re.search(
-            ur'<a class="C8nzq\s+[^"]*BmP5tf[^"]*"[^>]*href="([^"]+)".*?<div[^>]+class="[^"]*MUxGbd v0nnCb[^"]*"[^>]*>(.*?)</div>',
+            ur'<a class="(?:C8nzq|cz3goc)\s+[^"]*BmP5tf[^"]*"[^>]*href="([^"]+)".*?<div[^>]+class="[^"]*MUxGbd v0nnCb[^"]*"[^>]*>(.*?)</div>',
             snippet
         )
         if not match:
@@ -622,7 +622,7 @@ class MobileSnippetsParser(SnippetsParserDefault):
         if 's' not in self.snippet_fields:
             return
 
-        match = re.search(ur'<div class="MUxGbd[^"]*"[^>]*>(.*?)</div>', snippet, flags=re.I | re.M | re.S)
+        match = re.search(ur'<div class="(?:VwiC3b )?MUxGbd[^"]*"[^>]*>(.*?)</div>', snippet, flags=re.I | re.M | re.S)
         if not match:
             return None
 
