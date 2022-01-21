@@ -2848,6 +2848,38 @@ class GoogleParserTestCase(GoogleParserTests):
         self.assertEqual(res['sn'][97]['d'], 'happymodern.ru')
         self.assertEqual(res['sn'][97]['vu'], None)
 
+    def test132(self):
+        u""""
+            Ошибка парсинга от 2022-01-13
+        """
+        html = self.get_data('2022-01-13.txt')
+        g = GoogleJsonParser(html, snippet_fields=('d', 'p', 'u', 't', 's', 'm'))
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+
+        # В мобильной выдаче похоже нет общего кол-ва результатов
+        self.assertEqual(res['pc'], 30)
+        self.assertEqual(len(res['sn']), 28)
+
+        self.assertEqual(res['sn'][0]['t'], u'Отзывы о магазине ComTermo - Яндекс.Маркет')
+        self.assertEqual(res['sn'][0]['s'], u'Интернет-магазин ComTermo: рейтинг — 5.0 из 5 на основании 6824 оценок. Отзывы покупателей, достоинства и недостатки. ... www.comtermo.ru.')
+        self.assertEqual(res['sn'][0]['u'], u'https://market.yandex.ru/shop--comtermo-msk/89404/reviews')
+        self.assertEqual(res['sn'][0]['d'], 'market.yandex.ru')
+        self.assertEqual(res['sn'][0]['vu'], None)
+
+        self.assertEqual(res['sn'][20]['t'], u'Котлы и котельное оборудование в Видном')
+        self.assertEqual(res['sn'][20]['s'], u'Интернет-магазин Bosch-online.ru. Москва, Дорожная улица, 60 ... http://pressclass.ru. ГК Теплогазоснабжение. открыто. 1 отзыв ... https://www.comtermo.ru.')
+        self.assertEqual(res['sn'][20]['u'], u'https://vidnoe.spravka.ru/stroitelstvo-i-remont/kotly-i-kotelnoe-oborudovanie')
+        self.assertEqual(res['sn'][20]['d'], 'vidnoe.spravka.ru')
+        self.assertEqual(res['sn'][20]['vu'], None)
+
+        self.assertEqual(res['sn'][27]['t'], u'Все отзывы о товарах магазина Santehmoll')
+        self.assertEqual(res['sn'][27]['s'], u'Отзывы о магазине сантехники SantehMoll. Купить аксессуары, сантехнику, мебель для ванной комнаты в Москве. Лучшие цены, скидки.')
+        self.assertEqual(res['sn'][27]['u'], u'https://santehmoll.ru/all_reviews/')
+        self.assertEqual(res['sn'][27]['d'], 'santehmoll.ru')
+        self.assertEqual(res['sn'][27]['vu'], None)
+
     def print_sn(self, res):
         for i in res['sn']:
             print

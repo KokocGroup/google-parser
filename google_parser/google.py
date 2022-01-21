@@ -571,7 +571,7 @@ class SnippetsParserDefault(object):
             ur'<span class="(?:st|aCOpRe)">(.*?)</span>\s*(?:<br>|</div>|<div|</a>)',
             ur'<div\s+class="[^"]+?">\s*<div\s+class="[^"]+?">\s*<span(?:\s+class="[^"]+?")?>\s*(.*?)</span>\s*</div>',
             ur'<div\s+class="IsZvec">\s*<div\s+[^>]+?>\s*<span(?:\s+class="[^"]+?")?>\s*(.*?)</span>\s*</div>',
-            ur'<div\s+class="IsZvec">\s*(.*?)</div>',
+            ur'<div\s+class="(?:IsZvec|VwiC3b\s+[^"]+)"[^>]*?>\s*(.*?)</div>',
             ur'<div\s+class="IsZvec">\s*<span\s+[^>]+?/>\s*(.*?)</div>',
             ur'<div\s+class="IsZvec"/>(.*?)',
             ur'<div class="FUUCsd CkcVWd RgAZAc"[^>]*?>(.*?)</div>',
