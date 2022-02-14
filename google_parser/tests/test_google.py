@@ -2880,6 +2880,70 @@ class GoogleParserTestCase(GoogleParserTests):
         self.assertEqual(res['sn'][27]['d'], 'santehmoll.ru')
         self.assertEqual(res['sn'][27]['vu'], None)
 
+    def test133(self):
+        u""""
+            Ошибка парсинга от 2022-02-14
+        """
+        html = self.get_data('2022-02-14-1.txt')
+        g = GoogleJsonParser(html, snippet_fields=('d', 'p', 'u', 't', 's', 'm'))
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+
+        # В мобильной выдаче похоже нет общего кол-ва результатов
+        self.assertEqual(res['pc'], 0)
+        self.assertEqual(len(res['sn']), 79)
+
+        self.assertEqual(res['sn'][0]['t'], u'Маленькие диваны со спальным местом - Столплит')
+        self.assertEqual(res['sn'][0]['s'], u'Малогабаритные диваны со спальным местом в гипермаркете мебели СТОЛПЛИТ. Низкие цены от производителя, гарантия 2 года, доставка за 1 день.')
+        self.assertEqual(res['sn'][0]['u'], u'https://www.stolplit.ru/internet-magazin/katalog-mebeli/malenkie-divany-so-spalnym-mestom/')
+        self.assertEqual(res['sn'][0]['d'], 'stolplit.ru')
+        self.assertEqual(res['sn'][0]['vu'], None)
+
+        self.assertEqual(res['sn'][20]['t'], u'Диваны для маленькой кухни в Санкт-Петербурге - Топ Мебель')
+        self.assertEqual(res['sn'][20]['s'], u'Кухонный угловой диван Эра со спальным местом - Недорогие кухонные уголки · Кухонный угловой диван Эра со спальным местом. Длина, мм: 2000. Ширина, мм: 1200.')
+        self.assertEqual(res['sn'][20]['u'], u'https://topmebel.su/catalog/kuhnya/kuhonnye-divany/kuhonnye-divany-malenkie/')
+        self.assertEqual(res['sn'][20]['d'], 'topmebel.su')
+        self.assertEqual(res['sn'][20]['vu'], None)
+
+        self.assertEqual(res['sn'][78]['t'], u'Есть маленькие квартиры с площадью от 20 квадратных метров ...')
+        self.assertEqual(res['sn'][78]['s'], u'6 дней назад · Вариантов малогабаритного, но уютного жилья хватает в разных районах Минска. ... перегородки удалось отделить спальное место от гостиной.')
+        self.assertEqual(res['sn'][78]['u'], u'https://www.belarus.kp.ru/daily/27360/4542422/')
+        self.assertEqual(res['sn'][78]['d'], 'belarus.kp.ru')
+        self.assertEqual(res['sn'][78]['vu'], None)
+
+    def test134(self):
+        u""""
+            Ошибка парсинга от 2022-02-14
+        """
+        html = self.get_data('2022-02-14.txt')
+        g = GoogleJsonParser(html, snippet_fields=('d', 'p', 'u', 't', 's', 'm'))
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+
+        # В мобильной выдаче похоже нет общего кол-ва результатов
+        self.assertEqual(res['pc'], 0)
+        self.assertEqual(len(res['sn']), 100)
+
+        self.assertEqual(res['sn'][0]['t'], u'Гистероскопия, РДВ (выскабливание): цена – Москва')
+        self.assertEqual(res['sn'][0]['s'], u'Врачи-гинекологи «Медика Менте» в Королеве осуществляют как диагностическую, так и оперативную (лечебную) гистероскопию. Клиника оснащена новейшими ...')
+        self.assertEqual(res['sn'][0]['u'], u'https://hirurgiya.medmente.ru/operativnaya-ginekologiya/gisteroskopiya')
+        self.assertEqual(res['sn'][0]['d'], 'hirurgiya.medmente.ru')
+        self.assertEqual(res['sn'][0]['vu'], None)
+
+        self.assertEqual(res['sn'][20]['t'], u'Гистероскопия - Нижний Новгород - Тонус')
+        self.assertEqual(res['sn'][20]['s'], u'Гистероскопия – это метод, позволяющий проводить исследование внутренней поверхности матки, а также осуществлять диагностические и оперативные манипуляции.')
+        self.assertEqual(res['sn'][20]['u'], u'https://www.tonus.nnov.ru/centr-akusherstva-i-ginekologii/gisteroskopiya/')
+        self.assertEqual(res['sn'][20]['d'], 'tonus.nnov.ru')
+        self.assertEqual(res['sn'][20]['vu'], None)
+
+        self.assertEqual(res['sn'][99]['t'], u'Гистероскопия — операции в гинекологии - Reprolife')
+        self.assertEqual(res['sn'][99]['s'], u'ВИДЫ ГИСТЕРОСКОПИЙ: Выделяют диагностическую гистероскопию и оперативную (полипэктомию, гистерорезекцию). Диагностическая гистероскопия проводится для ...')
+        self.assertEqual(res['sn'][99]['u'], u'https://reprolife.ua/direction-operativnaya-ginekologiya/gisteroskopiya/')
+        self.assertEqual(res['sn'][99]['d'], 'reprolife.ua')
+        self.assertEqual(res['sn'][99]['vu'], None)
+
     def print_sn(self, res):
         for i in res['sn']:
             print

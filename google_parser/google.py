@@ -397,7 +397,9 @@ class GoogleParser(object):
         if not res:
             raise GoogleParserError('no body in response')
 
-        if re.search('<div class="[^"]*?" id="res" role="main">.*?<div id="bottomads"', self.content, flags=re.S):
+        if '<div id="main">' in self.content and '<!-- cctlcm' in self.content and 'luh4tb' in self.content:
+            return SnippetsParserAfter_2022_02_14(self.snippet_fields).get_snippets(self.content)
+        elif re.search('<div class="[^"]*?" id="res" role="main">.*?<div id="bottomads"', self.content, flags=re.S):
             return SnippetsParserAfter_2021_01_29(self.snippet_fields).get_snippets(self.content)
         elif re.search('<div class="[^"]*?" id="res" role="main">', self.content):
             return SnippetsParserAfter_2016_03_10(self.snippet_fields).get_snippets(self.content)
@@ -813,6 +815,84 @@ class SnippetsParserAfter_2021_01_29(SnippetsParserAfter_2016_03_10):
                     continue
 
                 if re.search(ur'<g-section-with-header', html):
+                    continue
+
+                position += 1
+                try:
+                    item = self.get_snippet(position, html)
+                except SnippetsParserException:
+                    if self._is_empty_snippet(snippet):
+                        position -= 1
+                        continue
+                    else:
+                        raise
+
+                # игнорим сниппет с картинками и карты
+                if self._is_map_snippet(item['u']) or item['u'].startswith('/search'):
+                    position -= 1
+                    continue
+
+                result.append(item)
+
+        if len(result) >= 2 and result[0]['u'] == result[1]['u']:
+            result = result[1:]
+            for i in range(len(result)):
+                result[i]['p'] = i + 1
+
+        return result
+
+
+class SnippetsParserAfter_2022_02_14(SnippetsParserAfter_2021_01_29):
+    snippets_regexp = None
+    result_regexp = re.compile(ur'(<div id="main">.*?<!-- cctlcm)', re.I | re.M | re.S)
+
+    def _parse_title_snippet(self, snippet, position):
+        res = re.compile(ur'<div class="egMi0[^"]*">\s*<a href="([^"]+?)"[^>]*?>\s*<h3 class="[^"]*?">\s*<div class="BNeawe[^"]*?">\s*([^<]*?)\s*</div>\s*</h3>', re.I | re.M | re.S).search(snippet)
+        if res:
+            return SnippetsParserDefault.strip_tags(res.group(2)), SnippetsParserDefault.format_link(res.group(1)),
+        raise SnippetsParserException(u'Parsing error. Broken snippet at {0}: {1}'.format(position, snippet))
+
+    def _parse_description_snippet(self, snippet):
+        patterns = [
+            ur'<div class="MSiauf"><div class="BNeawe s3v9rd AP7Wnd">(.*?)</div></div>',
+            ur'<div class="BNeawe s3v9rd AP7Wnd">(.*?)</div></div></div>',
+        ]
+        for pattern in patterns:
+            res = re.search(pattern, snippet, flags=re.I | re.M | re.S)
+            if res:
+                return SnippetsParserDefault.strip_tags(res.group(1))
+
+        raise GoogleParserError('Description not found')
+
+    def get_snippet(self, position, snippet):
+        title, url = self._parse_title_snippet(snippet, position)
+        return {
+            'p': position,
+            'u': url,
+            'd': self._get_domain(url),
+            'm': self._is_map_snippet(url),
+            't': self._get_title(title),
+            's': self._get_descr(snippet, url),
+            'h': self._get_html(snippet),
+            'vu': self._get_vu(snippet),
+        }
+
+    def get_snippets(self, body):
+        res = self.result_regexp.findall(body)
+        if not res:
+            raise GoogleParserError('no body in response')
+
+        result = []
+        position = 0
+        for body in res:
+            dom = PyQuery(body)
+            snippets = dom('div.luh4tb')
+            for snippet in snippets:
+                html = HTMLParser().unescape(
+                    etree.tostring(snippet)
+                )
+
+                if re.search(ur'<span class="[^"]+?">Реклама</span>', html, flags=re.I):
                     continue
 
                 position += 1
