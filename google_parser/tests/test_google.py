@@ -2944,6 +2944,38 @@ class GoogleParserTestCase(GoogleParserTests):
         self.assertEqual(res['sn'][99]['d'], 'reprolife.ua')
         self.assertEqual(res['sn'][99]['vu'], None)
 
+    def test135(self):
+        u""""
+            Ошибка парсинга от 2022-03-05
+        """
+        html = self.get_data('2022-03-05.txt')
+        g = GoogleJsonParser(html, snippet_fields=('d', 'p', 'u', 't', 's', 'm'))
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+
+        # В мобильной выдаче похоже нет общего кол-ва результатов
+        self.assertEqual(res['pc'], 0)
+        self.assertEqual(len(res['sn']), 99)
+
+        self.assertEqual(res['sn'][0]['t'], u'Характеристики Honor 8 32GB black (черный) - Связной')
+        self.assertEqual(res['sn'][0]['s'], u'Интернет-магазин Связной предлагает ознакомиться с подробным описанием и техническими характеристиками Honor 8 32GB. На этой странице Вы найдете основные ...')
+        self.assertEqual(res['sn'][0]['u'], u'https://www.svyaznoy.ru/catalog/phone/224/3360851/specs')
+        self.assertEqual(res['sn'][0]['d'], 'svyaznoy.ru')
+        self.assertEqual(res['sn'][0]['vu'], None)
+
+        self.assertEqual(res['sn'][20]['t'], u'Купить Honor 8 Lite 64Gb 4Gb Black - Quke.ru')
+        self.assertEqual(res['sn'][20]['s'], u'Совсем недавно компанией Huawei был официально презентован смартфон Honor 8 Lite. Несмотря на то, что характеристики были известны еще до его презентации, ...')
+        self.assertEqual(res['sn'][20]['u'], u'https://quke.ru/shop/UID_51499_huawei_honor_8_lite_64gb_4gb_black.html')
+        self.assertEqual(res['sn'][20]['d'], 'quke.ru')
+        self.assertEqual(res['sn'][20]['vu'], None)
+
+        self.assertEqual(res['sn'][98]['t'], u'Telegram не работает. Текущие проблемы и состояние серверов.')
+        self.assertEqual(res['sn'][98]['s'], u'@downdetectorRU По отчетам пользователей на данный момент у Telegram проблемы с 8:17 ПП MSK. https://t.co/5h8J7IGi3d RT если вы тоже возникают проблемы # ...')
+        self.assertEqual(res['sn'][98]['u'], u'https://downdetector.ru/ne-rabotaet/telegram/')
+        self.assertEqual(res['sn'][98]['d'], 'downdetector.ru')
+        self.assertEqual(res['sn'][98]['vu'], None)
+
     def print_sn(self, res):
         for i in res['sn']:
             print

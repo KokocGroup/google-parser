@@ -544,7 +544,7 @@ class SnippetsParserDefault(object):
         patterns = [
             ur'/interstitial\?url=([^&]*)',
                 ur'/url\?q=([^&]*)',
-                ur'/url\?url=([^&]*)',
+                ur'/url\?.*?url=([^&]*)',
                 ur'/infected\?url=([^&]*)',
         ]
 
@@ -853,14 +853,22 @@ class SnippetsParserAfter_2022_02_14(SnippetsParserAfter_2021_01_29):
         raise SnippetsParserException(u'Parsing error. Broken snippet at {0}: {1}'.format(position, snippet))
 
     def _parse_description_snippet(self, snippet):
+
+        snippet = snippet.replace('<div><div class="BNeawe s3v9rd AP7Wnd"><div>', '')
+
         patterns = [
-            ur'<div class="MSiauf"><div class="BNeawe s3v9rd AP7Wnd">(.*?)</div></div>',
-            ur'<div class="BNeawe s3v9rd AP7Wnd">(.*?)</div></div></div>',
+            ur'<div class="BNeawe s3v9rd AP7Wnd">(.*?)</div></div>',
         ]
         for pattern in patterns:
-            res = re.search(pattern, snippet, flags=re.I | re.M | re.S)
-            if res:
-                return SnippetsParserDefault.strip_tags(res.group(1))
+            res = re.findall(pattern, snippet, flags=re.I | re.M | re.S)
+            if not res:
+                continue
+
+            result = res[0]
+            if len(res) > 1:
+                result = res[1]
+
+            return SnippetsParserDefault.strip_tags(result)
 
         raise GoogleParserError('Description not found')
 
