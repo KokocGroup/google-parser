@@ -3040,6 +3040,38 @@ class GoogleParserTestCase(GoogleParserTests):
         self.assertEqual(res['sn'][96]['d'], 'forum.mfd.ru')
         self.assertEqual(res['sn'][96]['vu'], None)
 
+    def test138(self):
+        u""""
+            Ошибка парсинга от 2022-03-29-2
+        """
+        html = self.get_data('2022-03-29-2.txt')
+        g = GoogleJsonParser(html, snippet_fields=('d', 'p', 'u', 't', 's', 'm'))
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+
+        # В мобильной выдаче похоже нет общего кол-ва результатов
+        self.assertEqual(res['pc'], 99)
+        self.assertEqual(len(res['sn']), 99)
+
+        self.assertEqual(res['sn'][0]['t'], u'Покупать в Германии просто с Cybermart!')
+        self.assertEqual(res['sn'][0]['s'], u'Электроника и бытовая техника из Германии с доставкой в Россию.')
+        self.assertEqual(res['sn'][0]['u'], u'https://cybermart.de/')
+        self.assertEqual(res['sn'][0]['d'], 'cybermart.de')
+        self.assertEqual(res['sn'][0]['vu'], None)
+
+        self.assertEqual(res['sn'][92]['t'], u'Cybermart.net')
+        self.assertEqual(res['sn'][92]['s'], u'')
+        self.assertEqual(res['sn'][92]['u'], u'http://cybermart.net/')
+        self.assertEqual(res['sn'][92]['d'], 'cybermart.net')
+        self.assertEqual(res['sn'][92]['vu'], None)
+
+        self.assertEqual(res['sn'][98]['t'], u'High-Performance Networks, Personal Communications and ...')
+        self.assertEqual(res['sn'][98]['s'], u'Dimitris N. Chorafas · 2016 · ‎Business & Economics')
+        self.assertEqual(res['sn'][98]['u'], u'https://books.google.ru/books?id=CJy-DAAAQBAJ&pg=PA218&lpg=PA218&dq=cybermart&source=bl&ots=JBYNQbaLgY&sig=ACfU3U0TFreYW1EQDs1DcbOGVKXKtd5CKw&hl=ru&sa=X&sqi=2&ved=2ahUKEwjc16y8s-v2AhWtAxAIHU3HAScQ6AF6BQjQAhAD')
+        self.assertEqual(res['sn'][98]['d'], 'books.google.ru')
+        self.assertEqual(res['sn'][98]['vu'], None)
+
     def print_sn(self, res):
         for i in res['sn']:
             print
