@@ -3008,6 +3008,38 @@ class GoogleParserTestCase(GoogleParserTests):
         self.assertEqual(res['sn'][23]['d'], 'gulliver2008.ru')
         self.assertEqual(res['sn'][23]['vu'], None)
 
+    def test137(self):
+        u""""
+            Ошибка парсинга от 2022-03-29-1
+        """
+        html = self.get_data('2022-03-29-1.txt')
+        g = GoogleJsonParser(html, snippet_fields=('d', 'p', 'u', 't', 's', 'm'))
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+
+        # В мобильной выдаче похоже нет общего кол-ва результатов
+        self.assertEqual(res['pc'], 142000)
+        self.assertEqual(len(res['sn']), 97)
+
+        self.assertEqual(res['sn'][0]['t'], u'Форум о компании Группа ЛСР - Отзывы - Novostroev.ru')
+        self.assertEqual(res['sn'][0]['s'], u'Отзывы реальных покупателей о застройщике Группа ЛСР. Узнайте все плюсы и минусы компании. Вся правда о Группа ЛСР.')
+        self.assertEqual(res['sn'][0]['u'], u'https://novostroev.ru/zastroyshchiki/gruppa-lsr/otzyvy/')
+        self.assertEqual(res['sn'][0]['d'], 'novostroev.ru')
+        self.assertEqual(res['sn'][0]['vu'], None)
+
+        self.assertEqual(res['sn'][12]['t'], u'Группа ЛСР: отзывы сотрудников о работе в компании ЛСР ...')
+        self.assertEqual(res['sn'][12]['s'], u'Интересует работа в компании Группа ЛСР? У нас есть отзывы сотрудников о работодателе ЛСР Недвижимость-М в 2020 году - узнай зарплаты в Москве и СПБ.')
+        self.assertEqual(res['sn'][12]['u'], u'http://rabota.kitabi.ru/otzyvy-sotrudnikov/ooo-lsr')
+        self.assertEqual(res['sn'][12]['d'], 'rabota.kitabi.ru')
+        self.assertEqual(res['sn'][12]['vu'], None)
+
+        self.assertEqual(res['sn'][96]['t'], u'Газпром – акции (GAZP) - Финансовый форум')
+        self.assertEqual(res['sn'][96]['s'], u'4 часа назад — ... Raven Property Group (RAVN), Газпром – фундаментальный анализ (без флуда), ЛСР Группа (LSRG), Тинькофф банк / TCS Group Holding (TCSG) ...')
+        self.assertEqual(res['sn'][96]['u'], u'http://forum.mfd.ru/forum/thread/?id=61478')
+        self.assertEqual(res['sn'][96]['d'], 'forum.mfd.ru')
+        self.assertEqual(res['sn'][96]['vu'], None)
+
     def print_sn(self, res):
         for i in res['sn']:
             print
