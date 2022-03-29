@@ -852,7 +852,7 @@ class SnippetsParserAfter_2022_02_14(SnippetsParserAfter_2021_01_29):
     def _parse_title_snippet(self, snippet, position):
         res = re.compile(ur'<div class="egMi0[^"]*">\s*<a href="([^"]+?)"[^>]*?>\s*<h3 class="[^"]*?">\s*<div class="BNeawe[^"]*?">\s*([^<]*?)\s*</div>\s*</h3>', re.I | re.M | re.S).search(snippet)
         if res:
-            return SnippetsParserDefault.strip_tags(res.group(2)), SnippetsParserDefault.format_link(res.group(1)),
+            return HTMLParser().unescape(SnippetsParserDefault.strip_tags(res.group(2))), SnippetsParserDefault.format_link(res.group(1)),
         raise SnippetsParserException(u'Parsing error. Broken snippet at {0}: {1}'.format(position, snippet))
 
     def _parse_description_snippet(self, snippet):
@@ -871,7 +871,7 @@ class SnippetsParserAfter_2022_02_14(SnippetsParserAfter_2021_01_29):
             if len(res) > 1:
                 result = res[1]
 
-            return SnippetsParserDefault.strip_tags(result)
+            return HTMLParser().unescape(SnippetsParserDefault.strip_tags(result))
 
         raise GoogleParserError('Description not found')
 
@@ -899,11 +899,10 @@ class SnippetsParserAfter_2022_02_14(SnippetsParserAfter_2021_01_29):
             dom = PyQuery(body)
             snippets = dom('div.luh4tb')
             for snippet in snippets:
-                html = HTMLParser().unescape(
-                    etree.tostring(snippet)
-                )
+                html = etree.tostring(snippet)
 
-                if re.search(ur'<span class="[^"]+?">Реклама</span>', html, flags=re.I):
+                html_unescaped = HTMLParser().unescape(html)
+                if re.search(ur'<span class="[^"]+?">Реклама</span>', html_unescaped, flags=re.I):
                     continue
 
                 position += 1

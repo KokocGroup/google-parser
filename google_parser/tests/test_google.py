@@ -3072,6 +3072,38 @@ class GoogleParserTestCase(GoogleParserTests):
         self.assertEqual(res['sn'][98]['d'], 'books.google.ru')
         self.assertEqual(res['sn'][98]['vu'], None)
 
+    def test139(self):
+        u""""
+            Ошибка парсинга от 2022-03-29-3
+        """
+        html = self.get_data('2022-03-29-3.txt')
+        g = GoogleJsonParser(html, snippet_fields=('d', 'p', 'u', 't', 's', 'm'))
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+
+        # В мобильной выдаче похоже нет общего кол-ва результатов
+        self.assertEqual(res['pc'], 0)
+        self.assertEqual(len(res['sn']), 93)
+
+        self.assertEqual(res['sn'][0]['t'], u'ᑐ Купить унитаз Gustavsberg (Густавберг) - Сантехника.Ру')
+        self.assertEqual(res['sn'][0]['s'], u'Низкие цены на унитазы Gustavsberg. ▷ Более 100 тысяч товаров в наличии. 【 Доставка по Москве сегодня или завтра, по России от 2х дней. 】')
+        self.assertEqual(res['sn'][0]['u'], 'https://www.santehnica.ru/catalog/unitazi/gustavsberg/')
+        self.assertEqual(res['sn'][0]['d'], 'santehnica.ru')
+        self.assertEqual(res['sn'][0]['vu'], None)
+
+        self.assertEqual(res['sn'][77]['t'], u'Унитаз Gustavsberg Nordic DUO 2310 - Сантехника Чебоксары')
+        self.assertEqual(res['sn'][77]['s'], u'Только в магазине VivaVanna унитаз gustavsberg nordic duo 2310 по цене от Доставим в любую точку ... Купить в 1 клик ... Раковина Gustavsberg Nordic 2600.')
+        self.assertEqual(res['sn'][77]['u'], 'https://vivavanna.ru/catalog/unitazy_nordic/unitaz_gustavsberg_nordic_duo_2310/')
+        self.assertEqual(res['sn'][77]['d'], 'vivavanna.ru')
+        self.assertEqual(res['sn'][77]['vu'], None)
+
+        self.assertEqual(res['sn'][92]['t'], u'Villeroy & Boch')
+        self.assertEqual(res['sn'][92]['s'], u'Виллерой & Бох. Вечная элегантность, передовой дизайн и выдающееся качество с 1748 года в области оздоровительных процедур, культуры питания и плиток.')
+        self.assertEqual(res['sn'][92]['u'], 'https://www.villeroy-boch.ru/')
+        self.assertEqual(res['sn'][92]['d'], 'villeroy-boch.ru')
+        self.assertEqual(res['sn'][92]['vu'], None)
+
     def print_sn(self, res):
         for i in res['sn']:
             print
