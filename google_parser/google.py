@@ -579,6 +579,7 @@ class SnippetsParserDefault(object):
             ur'<div class="FUUCsd CkcVWd RgAZAc"[^>]*?>(.*?)</div>',
             ur'<div\s+class="s">(.*?)</div>',
             ur'<span\s+class="f">(.*?)<cite>',
+            ur'<div\s+class="Uroaid">(.*?)</div>',
         ]
         for pattern in patterns:
             res = re.search(pattern, snippet, flags=re.I | re.M | re.S)

@@ -2976,6 +2976,38 @@ class GoogleParserTestCase(GoogleParserTests):
         self.assertEqual(res['sn'][98]['d'], 'downdetector.ru')
         self.assertEqual(res['sn'][98]['vu'], None)
 
+    def test136(self):
+        u""""
+            Ошибка парсинга от 2022-03-29
+        """
+        html = self.get_data('2022-03-29.txt')
+        g = GoogleJsonParser(html, snippet_fields=('d', 'p', 'u', 't', 's', 'm'))
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+
+        # В мобильной выдаче похоже нет общего кол-ва результатов
+        self.assertEqual(res['pc'], 27)
+        self.assertEqual(len(res['sn']), 24)
+
+        self.assertEqual(res['sn'][0]['t'], u'Ангстрем Магнум | отзывы - Irecommend')
+        self.assertEqual(res['sn'][0]['s'], u'Ангстрем Магнум . Долго искали стенку себе в гостиную в своём небольшом городе. Комната небольшая, 16 квадратных метров. И наконец мы ее нашли!')
+        self.assertEqual(res['sn'][0]['u'], u'https://irecommend.ru/content/angstrem-magnum-0')
+        self.assertEqual(res['sn'][0]['d'], 'irecommend.ru')
+        self.assertEqual(res['sn'][0]['vu'], None)
+
+        self.assertEqual(res['sn'][12]['t'], u'Шкаф Ангстрем Магнум - Аукцион, Красноярск')
+        self.assertEqual(res['sn'][12]['s'], u'16 янв. 2020 г. — Шкаф АНГСТРЕМ серии МАГНУМ. Подробно можно посмотреть на сайте angstrem-mebel.ru. Цвет дерева - дуб бунратти, цвет задних стенок - графит.')
+        self.assertEqual(res['sn'][12]['u'], u'https://krsk.au.ru/15070201-shkaf-angstrem-magnum/')
+        self.assertEqual(res['sn'][12]['d'], 'krsk.au.ru')
+        self.assertEqual(res['sn'][12]['vu'], None)
+
+        self.assertEqual(res['sn'][23]['t'], u'Ангстрем - Мебельный центр Гулливер в Екатеринбурге')
+        self.assertEqual(res['sn'][23]['s'], u'Представленные товары: Корпусная мебель: спальни, гостиные, детские. Мягкая мебель. Сайт магазина: www.angstrem-mebel.ru. E-mail: ebrg1-sell@mebel-a.net.')
+        self.assertEqual(res['sn'][23]['u'], u'http://www.gulliver2008.ru/shops/myagkaya-mebel/angstrem/')
+        self.assertEqual(res['sn'][23]['d'], 'gulliver2008.ru')
+        self.assertEqual(res['sn'][23]['vu'], None)
+
     def print_sn(self, res):
         for i in res['sn']:
             print
