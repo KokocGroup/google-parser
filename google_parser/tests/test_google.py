@@ -3104,6 +3104,70 @@ class GoogleParserTestCase(GoogleParserTests):
         self.assertEqual(res['sn'][92]['d'], 'villeroy-boch.ru')
         self.assertEqual(res['sn'][92]['vu'], None)
 
+    def test140(self):
+        u""""
+            Ошибка парсинга от 2022-03-30
+        """
+        html = self.get_data('2022-03-30.txt')
+        g = GoogleJsonParser(html, snippet_fields=('d', 'p', 'u', 't', 's', 'm'))
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+
+        # В мобильной выдаче похоже нет общего кол-ва результатов
+        self.assertEqual(res['pc'], 75)
+        self.assertEqual(len(res['sn']), 80)
+
+        self.assertEqual(res['sn'][0]['t'], u'1 мл-сколько капель пипеткой? - Ответы Mail.ru')
+        self.assertEqual(res['sn'][0]['s'], u'7 ответов')
+        self.assertEqual(res['sn'][0]['u'], u'https://otvet.mail.ru/question/43253786')
+        self.assertEqual(res['sn'][0]['d'], 'otvet.mail.ru')
+        self.assertEqual(res['sn'][0]['vu'], None)
+
+        self.assertEqual(res['sn'][77]['t'], u'Инфузория для мальков - разведение в домашних ...')
+        self.assertEqual(res['sn'][77]['s'], u'Одновременно заряжают две банки и инфузорий для кормления мальков отбирают поочередно один раз в день по 400 миллилитров среды с парамециями: - 1 день банка №1;.')
+        self.assertEqual(res['sn'][77]['u'], u'http://aquamegapedia.ru/3/infuzoriya-dlya-malkov-razvedenie-v-domashnih-usloviyah-gde-vzyat-kak-vyvesti-razvesti-vyrastit-i-kormlenie-kak-kormit')
+        self.assertEqual(res['sn'][77]['d'], 'aquamegapedia.ru')
+        self.assertEqual(res['sn'][77]['vu'], None)
+
+        self.assertEqual(res['sn'][79]['t'], u'Дневник тан-ча : LiveInternet - Российский Сервис Онлайн ...')
+        self.assertEqual(res['sn'][79]['s'], u'4 янв. 2013 г. — Творог - 100 гр. Питьевой йогурт - 100-150 мл (в зависимости от густоты творога) яйца - 3 шт сахар - 1 стакан ( стакан на 250 мл ...')
+        self.assertEqual(res['sn'][79]['u'], u'http://https--www--liveinternet--ru.proxy.nynct.shaanxi.gov.cn/users/4819379/quotes/page40.html')
+        self.assertEqual(res['sn'][79]['d'], 'https--www--liveinternet--ru.proxy.nynct.shaanxi.gov.cn')
+        self.assertEqual(res['sn'][79]['vu'], None)
+
+    def test141(self):
+        u""""
+            Ошибка парсинга от 2022-03-30-1
+        """
+        html = self.get_data('2022-03-30-1.txt')
+        g = GoogleJsonParser(html, snippet_fields=('d', 'p', 'u', 't', 's', 'm'))
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+
+        # В мобильной выдаче похоже нет общего кол-ва результатов
+        self.assertEqual(res['pc'], 0)
+        self.assertEqual(len(res['sn']), 99)
+
+        self.assertEqual(res['sn'][0]['t'], u'Барные стулья Италии и Германии купить в Москве ТРИО.')
+        self.assertEqual(res['sn'][0]['s'], u'Широкий выбор барных стульев производства Италии и Германии. Дизайнерские барные стулья для дома и кафе. Доставка по всей России.')
+        self.assertEqual(res['sn'][0]['u'], 'https://www.trio.ru/catalog/stolovye_gruppy/barnye_stulya/')
+        self.assertEqual(res['sn'][0]['d'], 'trio.ru')
+        self.assertEqual(res['sn'][0]['vu'], None)
+
+        self.assertEqual(res['sn'][90]['t'], u'Барные стулья SCAB Design (Италия) | Facebook - فېسبوک')
+        self.assertEqual(res['sn'][90]['s'], u'20 февр. 2022 г. · Барные стулья фабрики SCAB Design - эталон эстетики интерьера и итальянского качества продукта. Сделано в Италии! #барныйстул ...Опубликовано: 20 февр. 2022 г.')
+        self.assertEqual(res['sn'][90]['u'], 'https://ps-af.facebook.com/SlavStolica/videos/%D0%B1%D0%B0%D1%80%D0%BD%D1%8B%D0%B5-%D1%81%D1%82%D1%83%D0%BB%D1%8C%D1%8F-scab-design-%D0%B8%D1%82%D0%B0%D0%BB%D0%B8%D1%8F/1333039380482818/')
+        self.assertEqual(res['sn'][90]['d'], 'ps-af.facebook.com')
+        self.assertEqual(res['sn'][90]['vu'], None)
+
+        self.assertEqual(res['sn'][98]['t'], u'Купить барный стул из Италии - Итальянская мебель')
+        self.assertEqual(res['sn'][98]['s'], u'Итальянские барные стулья можно купить в нашем интернет магазине по выгодной цене и доставкой в Москве и по России.')
+        self.assertEqual(res['sn'][98]['u'], 'http://mebel-ital.ru/category/stulja_barnye/')
+        self.assertEqual(res['sn'][98]['d'], 'mebel-ital.ru')
+        self.assertEqual(res['sn'][98]['vu'], None)
+
     def print_sn(self, res):
         for i in res['sn']:
             print

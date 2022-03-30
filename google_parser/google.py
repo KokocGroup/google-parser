@@ -803,6 +803,9 @@ class SnippetsParserAfter_2021_01_29(SnippetsParserAfter_2016_03_10):
                 if re.search(ur'class="g[^"]+(?:obcontainer|g-blk)\s*', html):
                     continue
 
+                if re.search(ur'class="[^"]*?\s*obcontainer\s+', html):
+                    continue
+
                 # дополнительные элементы
                 if re.search(ur'class="[^"]+?(?:__outer-card|-wholepage|g-blk|vk_c)', html):
                     continue
@@ -850,7 +853,7 @@ class SnippetsParserAfter_2022_02_14(SnippetsParserAfter_2021_01_29):
     result_regexp = re.compile(ur'(<div id="main">.*?<!-- cctlcm)', re.I | re.M | re.S)
 
     def _parse_title_snippet(self, snippet, position):
-        res = re.compile(ur'<div class="egMi0[^"]*">\s*<a href="([^"]+?)"[^>]*?>\s*<h3 class="[^"]*?">\s*<div class="BNeawe[^"]*?">\s*([^<]*?)\s*</div>\s*</h3>', re.I | re.M | re.S).search(snippet)
+        res = re.compile(ur'<div class="egMi0[^"]*">\s*<a href="([^"]+?)"[^>]*?>\s*<h3 class="[^"]*?">\s*<div class="BNeawe[^"]*?">\s*(.*?)\s*</div>\s*</h3>', re.I | re.M | re.S).search(snippet)
         if res:
             return HTMLParser().unescape(SnippetsParserDefault.strip_tags(res.group(2))), SnippetsParserDefault.format_link(res.group(1)),
         raise SnippetsParserException(u'Parsing error. Broken snippet at {0}: {1}'.format(position, snippet))
