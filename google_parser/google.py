@@ -258,6 +258,27 @@ class GoogleParser(object):
             'q': q
         }
 
+    @classmethod
+    def is_before_search(cls, content):
+        if u'<title>Прежде чем перейти к Google Поиску</title>' not in content:
+            return
+
+        match = re.search(ur'(<form\s*action="(https://consent.google.com/s[^"]*?)"\s*method="POST".*?</form>)', content, flags=re.I | re.M | re.S)
+        if not match:
+            raise GoogleParserError
+
+        url = match.group(2)
+
+        form = match.group(1)
+        post = re.findall(ur'<input type="hidden" name="([^"]*?)" value="([^"]*?)">', form)
+        if not post:
+            raise GoogleParserError
+
+        return {
+            'url': url,
+            'post': dict(post)
+        }
+
     def is_blocked(self):
         return bool(self.sorry_page_regexp.search(self.content))
 

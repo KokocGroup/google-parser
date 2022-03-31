@@ -3168,6 +3168,29 @@ class GoogleParserTestCase(GoogleParserTests):
         self.assertEqual(res['sn'][98]['d'], 'mebel-ital.ru')
         self.assertEqual(res['sn'][98]['vu'], None)
 
+    def test142(self):
+        u""""
+            Ошибка парсинга от 2022-03-31.html
+        """
+        html = self.get_data('2022-03-31.html')
+        data = GoogleJsonParser.is_before_search(html)
+
+        self.assertEqual(data['url'], 'https://consent.google.com/s')
+        self.assertEqual(data['post']['src'], '1')
+        self.assertEqual(data['post']['uxe'], 'none')
+        self.assertEqual(data['post']['ca'], 'r')
+        self.assertEqual(data['post']['m'], '0')
+        self.assertEqual(data['post']['pc'], 'srp')
+        self.assertEqual(data['post']['continue'], 'https://www.google.com/search?newwindow=1&amp;biw=1387&amp;bih=495&amp;q=%D0%B8%D0%B7%20%D1%87%D0%B5%D0%B3%D0%BE%20%D1%81%D0%BE%D1%81%D1%82%D0%BE%D0%B8%D1%82%20%D1%8D%D0%BB%D0%B5%D0%BA%D1%82%D1%80%D0%BE%D0%BC%D0%B0%D0%B3%D0%BD%D0%B8%D1%82%D0%BD%D0%BE%D0%B5%20%D0%BF%D0%BE%D0%BB%D0%B5&amp;oq=%201mCJBvW5&amp;gs_l=serp.3.o..01.05624.0.96666.55.8.0.0.0.0.0.0..0.0....0...1c.1.64.serp..55.0.0.8l9lg83z&amp;pbx=1&amp;bav=on.2,or.&amp;fp=ZqA4uCxfge6IcPD9&amp;pf=p&amp;tch=1&amp;ved=Kd8XFLKBoovESQFIFFXsz_IrfLriAg5RrKJIZrye&amp;uact=5')
+        self.assertEqual(data['post']['t'], 'ADw3F8jMAzxtbOsx08qoErJIe7fjntfmCQ:1648703346671')
+        self.assertEqual(data['post']['hl'], 'ru')
+        self.assertEqual(data['post']['v'], 'cb.20220320-18-p0.ru+FX+635')
+        self.assertEqual(data['post']['x'], '8')
+        self.assertEqual(data['post']['gl'], 'DE')
+
+        html = self.get_data('2022-03-30-1.txt')
+        self.assertFalse(bool(GoogleJsonParser.is_before_search(html)))
+
     def print_sn(self, res):
         for i in res['sn']:
             print
