@@ -601,6 +601,7 @@ class SnippetsParserDefault(object):
             ur'<div\s+class="s">(.*?)</div>',
             ur'<span\s+class="f">(.*?)<cite>',
             ur'<div\s+class="Uroaid">(.*?)</div>',
+            ur'<div\s+class="Uroaid"/?>()',
             ur'<table\s+class="NwNzde">(.*?)</table>',
             ur'</div>\s*</div>\s*</div>\s*(.*?)<div class="NJo7tc',
         ]

@@ -3191,6 +3191,38 @@ class GoogleParserTestCase(GoogleParserTests):
         html = self.get_data('2022-03-30-1.txt')
         self.assertFalse(bool(GoogleJsonParser.is_before_search(html)))
 
+    def test143(self):
+        u""""
+            Ошибка парсинга от 2022-03-31-1.txt
+        """
+        html = self.get_data('2022-03-31-1.txt')
+        g = GoogleJsonParser(html, snippet_fields=('d', 'p', 'u', 't', 's', 'm'))
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+
+        # В мобильной выдаче похоже нет общего кол-ва результатов
+        self.assertEqual(res['pc'], 113000000)
+        self.assertEqual(len(res['sn']), 95)
+
+        self.assertEqual(res['sn'][0]['t'], u'Подиум для ТВ Милан 14 купить в интернет-магазине ЮТАШОП ...')
+        self.assertEqual(res['sn'][0]['s'], u'Подиум для ТВ Милан 14 по цене 10 750 руб. только в официальном интернет-магазине ЮТАШОП, интернет-магазин мебели из массива. Гостиные по низким ценам.')
+        self.assertEqual(res['sn'][0]['u'], u'https://utamebel-shop.ru/gostinye/milan-14-podium-up-1/')
+        self.assertEqual(res['sn'][0]['d'], 'utamebel-shop.ru')
+        self.assertEqual(res['sn'][0]['vu'], None)
+
+        self.assertEqual(res['sn'][91]['t'], u'Arno Kantelberg eert Elton John in RTL Boulevard: \'Gemaakt voor het ...')
+        self.assertEqual(res['sn'][91]['s'], u'')
+        self.assertEqual(res['sn'][91]['u'], u'https://www.gids.tv/video/435179/arno-kantelberg-eert-elton-john-in-rtl-boulevard-gemaakt-voor-het-podium')
+        self.assertEqual(res['sn'][91]['d'], 'gids.tv')
+        self.assertEqual(res['sn'][91]['vu'], None)
+
+        self.assertEqual(res['sn'][94]['t'], u'Audiences TV : la victoire des Bleus loin devant la série de France 3 ...')
+        self.assertEqual(res['sn'][94]['s'], u'1 день назад — Un score en baisse par rapport à mardi dernier (3,7 millions, 18 % de PDA). « Affaire conclue » au pied du podium. De son côté, M 6 programmait ...')
+        self.assertEqual(res['sn'][94]['u'], u'https://www.leparisien.fr/culture-loisirs/audiences-tv-la-victoire-des-bleus-loin-devant-la-serie-de-france-3-30-03-2022-7CKXDJOFDVBTFMHGKCYHFQFT74.php')
+        self.assertEqual(res['sn'][94]['d'], 'leparisien.fr')
+        self.assertEqual(res['sn'][94]['vu'], None)
+
     def print_sn(self, res):
         for i in res['sn']:
             print
