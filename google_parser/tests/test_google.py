@@ -3223,6 +3223,20 @@ class GoogleParserTestCase(GoogleParserTests):
         self.assertEqual(res['sn'][94]['d'], 'leparisien.fr')
         self.assertEqual(res['sn'][94]['vu'], None)
 
+    def test144(self):
+        u""""
+            Ошибка парсинга от 2022-04-04.txt
+        """
+        html = self.get_data('2022-04-04.txt')
+        g = GoogleJsonParser(html, snippet_fields=('d', 'p', 'u', 't', 's', 'm'))
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+
+        self.assertEqual(res['pc'], 0)
+        self.assertEqual(len(res['sn']), 0)
+
+
     def print_sn(self, res):
         for i in res['sn']:
             print
