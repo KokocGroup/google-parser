@@ -3252,7 +3252,7 @@ class GoogleParserTestCase(GoogleParserTests):
 
     def test146(self):
         u""""
-            Ошибка парсинга от 2022-03-31-1.txt
+            Ошибка парсинга от 2022-04-06-1.txt
         """
         html = self.get_data('2022-04-06-1.txt')
         g = GoogleJsonParser(html, snippet_fields=('d', 'p', 'u', 't', 's', 'm'))
@@ -3287,6 +3287,39 @@ class GoogleParserTestCase(GoogleParserTests):
         self.assertEqual(res['sn'][98]['u'], 'https://elado.ru/catalog/category/dvuhmestnye-divany/')
         self.assertEqual(res['sn'][98]['d'], 'elado.ru')
         self.assertEqual(res['sn'][98]['vu'], None)
+
+    def test147(self):
+        u""""
+            Ошибка парсинга от 2022-04-06-2.txt
+        """
+        html = self.get_data('2022-04-06-2.txt')
+        g = GoogleJsonParser(html, snippet_fields=('d', 'p', 'u', 't', 's', 'm'))
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+
+        # В мобильной выдаче похоже нет общего кол-ва результатов
+        self.assertEqual(res['pc'], 0)
+        self.assertEqual(len(res['sn']), 98)
+
+        self.assertEqual(res['sn'][0]['t'], u'Термометры для воды купить в интернет-магазине OZON.ru')
+        self.assertEqual(res['sn'][0]['s'], u'Безопасный детский термометр игрушка для воды плавающий, градусник для измерения, для купания малыша. В корзину. Послезавтра доставит Ozon, продавец EKKEL.')
+        self.assertEqual(res['sn'][0]['u'], 'https://www.ozon.ru/category/termometry-dlya-vody-7018/')
+        self.assertEqual(res['sn'][0]['d'], 'ozon.ru')
+        self.assertEqual(res['sn'][0]['vu'], None)
+
+        self.assertEqual(res['sn'][4]['t'], u'Погружные термометры и измерительные наконечники от профессионалов | ООО «Тэсто Рус»')
+        self.assertEqual(res['sn'][4]['s'], u'Погружные термометры и огромный практический опыт измерения температуры в жидкостях, пастах, полутвердых и ... Зонд должен мыться проточной водой.')
+        self.assertEqual(res['sn'][4]['u'], 'https://www.testo.ru/ru-RU/pribory/pogruzhnye-termometry')
+        self.assertEqual(res['sn'][4]['d'], 'testo.ru')
+        self.assertEqual(res['sn'][4]['vu'], None)
+
+        self.assertEqual(res['sn'][97]['t'], u'Чем измерить температуру отопления в трубе или котле: датчики, термометры и другие приборы')
+        self.assertEqual(res['sn'][97]['s'], u'Он должен подходить для горячей воды, создаваться из качественных материалов. Многие современные котлы для отопительной системы уже комплектуются приборами. Но ...')
+        self.assertEqual(res['sn'][97]['u'], 'https://zakon.wiki/zkh/uslugi-zhkx/otoplenie/termometr-dlya-kotla.html')
+        self.assertEqual(res['sn'][97]['d'], 'zakon.wiki')
+        self.assertEqual(res['sn'][97]['vu'], None)
+
 
     def print_sn(self, res):
         for i in res['sn']:

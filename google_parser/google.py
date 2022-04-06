@@ -630,6 +630,7 @@ class MobileSnippetsParser(SnippetsParserDefault):
             flags=re.S
         )
         if not match:
+            print(snippet)
             raise GoogleParserError(snippet)
 
         url = HTMLParser().unescape(match.group(1))
@@ -708,6 +709,9 @@ class MobileSnippetsParser(SnippetsParserDefault):
             snippet_content = etree.tostring(snippet)
 
             if snippet_content.count(main_class) > 1:
+                continue
+
+            if 'class="pXvdUe">' in snippet_content:
                 continue
 
             if 'class="TvV1fe"' in snippet_content:
