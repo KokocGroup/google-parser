@@ -626,7 +626,8 @@ class MobileSnippetsParser(SnippetsParserDefault):
     def _parse_title(self, snippet):
         match = re.search(
             ur'<a class="(?:C8nzq|cz3goc)\s+[^"]*BmP5tf[^"]*"[^>]*href="([^"]+)".*?<div[^>]+class="[^"]*MUxGbd v0nnCb[^"]*"[^>]*>(.*?)</div>',
-            snippet
+            snippet,
+            flags=re.S
         )
         if not match:
             raise GoogleParserError(snippet)
@@ -682,12 +683,14 @@ class MobileSnippetsParser(SnippetsParserDefault):
         if not rso_div:
             raise GoogleParserError()
 
+        main_class = 'mnr-c xpd O9g5cc uUPGi'
+
         divs = rso_div.find('div.mnr-c')
         serp = []
         for div in divs:
             attrib_class = div.attrib.get('class', '')
 
-            if 'mnr-c xpd O9g5cc uUPGi' != attrib_class:
+            if main_class != attrib_class:
                 continue
 
             is_dual = False
@@ -703,6 +706,9 @@ class MobileSnippetsParser(SnippetsParserDefault):
         position = 0
         for snippet in serp:
             snippet_content = etree.tostring(snippet)
+
+            if snippet_content.count(main_class) > 1:
+                continue
 
             if 'class="TvV1fe"' in snippet_content:
                 continue

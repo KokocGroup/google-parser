@@ -3250,6 +3250,43 @@ class GoogleParserTestCase(GoogleParserTests):
         self.assertEqual(res['pc'], 0)
         self.assertEqual(len(res['sn']), 0)
 
+    def test146(self):
+        u""""
+            Ошибка парсинга от 2022-03-31-1.txt
+        """
+        html = self.get_data('2022-04-06-1.txt')
+        g = GoogleJsonParser(html, snippet_fields=('d', 'p', 'u', 't', 's', 'm'))
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+
+        # В мобильной выдаче похоже нет общего кол-ва результатов
+        self.assertEqual(res['pc'], 0)
+        self.assertEqual(len(res['sn']), 99)
+
+        self.assertEqual(res['sn'][0]['t'], u'Двухместные угловые диваны - Купить двухместный угловой диван в Москве - Цены от производителя в интернет-магазине MrDivanoff')
+        self.assertEqual(res['sn'][0]['s'], u'Интернет-магазин MrDivanoff предлагает купить двухместный угловой диван в Москве недорого - цены от 15736 руб. ⭐ Гарантия от производителя мебели до 2-х ...')
+        self.assertEqual(res['sn'][0]['u'], 'https://mrdivanoff.ru/katalog/divany/uglovye-49/dvuhmestnye-29')
+        self.assertEqual(res['sn'][0]['d'], 'mrdivanoff.ru')
+        self.assertEqual(res['sn'][0]['vu'], None)
+
+        self.assertEqual(res['sn'][4]['t'], u'Двухместный диван: купить в Москве недорого 2х местный диван-кровать, распродажа, цена')
+        self.assertEqual(res['sn'][4]['s'], u'Двухместные диваны от производителя в Москве. Более 600 моделей диванов вы сможете купить в ... 2-х местные диваны в Москве ... Угловой диван «Портленд-3»')
+        self.assertEqual(res['sn'][4]['u'], 'https://pushe.ru/catalog/divany-kolichestvo-mest-dvukhmestnye/')
+        self.assertEqual(res['sn'][4]['d'], 'pushe.ru')
+        self.assertEqual(res['sn'][4]['vu'], None)
+
+        self.assertEqual(res['sn'][5]['t'], u'Маленький угловой диван: купить в Москве небольшой, малогабаритные, компактный, мини - фото, цены')
+        self.assertEqual(res['sn'][5]['s'], u'Купить маленький угловой диван в Москве: ⚡️ Большой выбор в интернет-магазине【ОТ ПРОИЗВОДИТЕЛЯ】➦ Pushe. Каталог с фото и ценами ✔️ Доставка и ...')
+        self.assertEqual(res['sn'][5]['u'], 'https://pushe.ru/catalog/uglovye-divany-razmer-malenkie/')
+        self.assertEqual(res['sn'][5]['d'], 'pushe.ru')
+        self.assertEqual(res['sn'][5]['vu'], None)
+
+        self.assertEqual(res['sn'][98]['t'], u'Диван двухместный - купить двухместный диван по недорогой цене в Москве – Elado.ru')
+        self.assertEqual(res['sn'][98]['s'], u'Тип товара · Диван · Кушетка · Диван детский · Диван модульный · Диван офисный прямой · Диван угловой · Диван кухонный ...')
+        self.assertEqual(res['sn'][98]['u'], 'https://elado.ru/catalog/category/dvuhmestnye-divany/')
+        self.assertEqual(res['sn'][98]['d'], 'elado.ru')
+        self.assertEqual(res['sn'][98]['vu'], None)
 
     def print_sn(self, res):
         for i in res['sn']:
