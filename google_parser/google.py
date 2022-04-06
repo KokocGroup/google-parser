@@ -351,9 +351,6 @@ class GoogleParser(object):
         pagecount = self.get_pagecount()
         snippets = self.get_snippets()
 
-        if not snippets:
-            raise GoogleParserError('not found snippets')
-
         for pos, snippet in enumerate(snippets, start=1):
             if snippet['p'] != pos:
                 raise GoogleParserError('bad position')
@@ -438,7 +435,7 @@ class GoogleParser(object):
             re.compile(ur'Извините,\s*у\s*нас\s*нет\s*информации\s*об\s*адресе\s*<(?:em|b)>.*?</(?:em|b)>', re.I | re.M | re.S),
             re.compile(ur'<div id="sbfrm_l"></div>', re.I | re.M | re.S),
             re.compile(ur'Результатов: примерно 0', re.I | re.M | re.S),
-            re.compile(ur'ничего не найдено.', re.I | re.M | re.S),
+            re.compile(ur'<span class="[^"]+?">\s*ничего не найдено.', re.I | re.M | re.S),
         ]
         res = False
         for pattern in patterns:
