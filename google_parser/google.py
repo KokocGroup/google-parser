@@ -608,6 +608,9 @@ class SnippetsParserDefault(object):
             if res:
                 return SnippetsParserDefault.strip_tags(res.group(1))
 
+        if snippet.count('NJo7tc Z26q7c uUuwM') == 0:
+            return ''
+
         raise GoogleParserError()
 
     @classmethod

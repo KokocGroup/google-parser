@@ -3352,6 +3352,38 @@ class GoogleParserTestCase(GoogleParserTests):
         self.assertEqual(res['sn'][46]['d'], 'shinjyukushinminami-cl.jp')
         self.assertEqual(res['sn'][46]['vu'], None)
 
+    def test149(self):
+        u""""
+            Ошибка парсинга от 2022-04-07-1.txt
+        """
+        html = self.get_data('2022-04-07-1.txt')
+        g = GoogleJsonParser(html, snippet_fields=('d', 'p', 'u', 't', 's', 'm'))
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+
+        # В мобильной выдаче похоже нет общего кол-ва результатов
+        self.assertEqual(res['pc'], 6550)
+        self.assertEqual(len(res['sn']), 98)
+
+        self.assertEqual(res['sn'][0]['t'], u'Газовый конвектор на баллонном газе — отзывы ...')
+        self.assertEqual(res['sn'][0]['s'], u'Газовый конвектор для дома и дачи может работать при смене жиклёров на сжиженном (баллонном) газе. Какой расход пропана? Обзор производителей.')
+        self.assertEqual(res['sn'][0]['u'], u'https://teplofan.ru/obogrevateli/konvektory/na-ballonnom-gaze')
+        self.assertEqual(res['sn'][0]['d'], 'teplofan.ru')
+        self.assertEqual(res['sn'][0]['vu'], None)
+
+        self.assertEqual(res['sn'][48]['t'], u'Лучшие газовые конвекторы 2022 года: рейтинг топ-10 по ...')
+        self.assertEqual(res['sn'][48]['s'], '')
+        self.assertEqual(res['sn'][48]['u'], u'https://www.kp.ru/expert/dom/luchshie-gazovye-konvektory/')
+        self.assertEqual(res['sn'][48]['d'], 'kp.ru')
+        self.assertEqual(res['sn'][48]['vu'], None)
+
+        self.assertEqual(res['sn'][97]['t'], u'газовый конвектор на баллонном газе для дачи - 7 кубов ...')
+        self.assertEqual(res['sn'][97]['s'], u'20 окт. 2021 г. — Резервное отопление загородного дома газовым конвектором Трудности и дороговизна подключения магистрального газа вынуждают загородных ...')
+        self.assertEqual(res['sn'][97]['u'], u'https://www.7kub.ru/gazovyy-konvektor-na-ballonnom-gaze-dlya-dachi/')
+        self.assertEqual(res['sn'][97]['d'], '7kub.ru')
+        self.assertEqual(res['sn'][97]['vu'], None)
+
     def print_sn(self, res):
         for i in res['sn']:
             print
