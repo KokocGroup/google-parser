@@ -3320,6 +3320,37 @@ class GoogleParserTestCase(GoogleParserTests):
         self.assertEqual(res['sn'][97]['d'], 'zakon.wiki')
         self.assertEqual(res['sn'][97]['vu'], None)
 
+    def test148(self):
+        u""""
+            Ошибка парсинга от 2022-04-07.txt
+        """
+        html = self.get_data('2022-04-07.txt')
+        g = GoogleJsonParser(html, snippet_fields=('d', 'p', 'u', 't', 's', 'm'))
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+
+        # В мобильной выдаче похоже нет общего кол-ва результатов
+        self.assertEqual(res['pc'], 0)
+        self.assertEqual(len(res['sn']), 47)
+
+        self.assertEqual(res['sn'][0]['t'], u'Прецизионный кондиционер DeLonghi Performer DXO 15 LFM (с воздушным охлаждением конденсатора) во Владивостоке, Находке, Южно-Сахалинске')
+        self.assertEqual(res['sn'][0]['s'], u'Прецизионный кондиционер DeLonghi Performer DXO 15 LFM (с воздушным охлаждением конденсатора) во Владивостоке, Находке, Южно-Сахалинске по низкой цене.')
+        self.assertEqual(res['sn'][0]['u'], 'https://www.klimat-dv.ru/catalog/kondicionery/pretsizionnye_konditsionery/pretsizionnyy_konditsioner_delonghi_performer_dxo_15_lfm_s_vozdushnym_okhlazhdeniem_kondensatora_/')
+        self.assertEqual(res['sn'][0]['d'], 'klimat-dv.ru')
+        self.assertEqual(res['sn'][0]['vu'], None)
+
+        self.assertEqual(res['sn'][28]['t'], u'▷ ▷ руководство по эксплуатации прецизионного кондиционера - duragloss.pl')
+        self.assertEqual(res['sn'][28]['s'], u'23 июл. 2019 г. — Срок службы этих систем расчитан не менее, чем на 15 лет, ... по эксплуатации на прецизионные кондиционеры DeLonghi PERFORMER DC, ...')
+        self.assertEqual(res['sn'][28]['u'], 'http://www.duragloss.pl/userfiles/file/rukovodstvo-po-ekspluatatsii-pretsizionnogo-konditsionera.xml')
+        self.assertEqual(res['sn'][28]['d'], 'duragloss.pl')
+        self.assertEqual(res['sn'][28]['vu'], None)
+
+        self.assertEqual(res['sn'][46]['t'], 'Brbs amp, S60x6 female thread, Sylvia hommert andreas, Berdychova, Zach dorsey mom, Current end times revelations, What does 27mhz frequency mean? Royal veterinary college ...')
+        self.assertEqual(res['sn'][46]['s'], u'Nw15 vs nw20, Havaianas femininas minnie, Dxo lense reviews, Wonderland secret worlds ... Abd racing performance, Rally motion unity 3d racing games, ...')
+        self.assertEqual(res['sn'][46]['u'], 'http://shinjyukushinminami-cl.jp/304024')
+        self.assertEqual(res['sn'][46]['d'], 'shinjyukushinminami-cl.jp')
+        self.assertEqual(res['sn'][46]['vu'], None)
 
     def print_sn(self, res):
         for i in res['sn']:

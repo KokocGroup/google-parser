@@ -634,6 +634,8 @@ class MobileSnippetsParser(SnippetsParserDefault):
             raise GoogleParserError(snippet)
 
         url = HTMLParser().unescape(match.group(1))
+        url = self.format_link(url)
+
         title = HTMLParser().unescape(
             SnippetsParserDefault.strip_tags(
                 match.group(2) or '')
