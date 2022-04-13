@@ -388,15 +388,18 @@ class GoogleParser(object):
     def get_pagecount(self):
         u"""Получить количество сниппетов результатов выдачи
         """
+
         pagecount = 0
-        patterns = (ur'<div[^>]+resultStats(?:[^>]+)?>Результатов: примерно (.*?)<',
-        ur'<div[^>]+resultStats(?:[^>]+)?>(.*?)<nobr>',
-        ur'<div[^>]+result-stats(?:[^>]+)?>(.*?)<nobr>',
-        ur'<div[^>]+resultStats(?:[^>]+)?>Результатов:(.*?)</div>',
-        ur'<div>Результатов:\s*(.*?)</div>',
-        ur'Результатов:\s*(.*?),.*?</div>',
-        ur'из примерно <b>(.*?)</b>',
-        ur'<div>Результаты:.*?из\s*<b>\s*(\d+)\s*</b>')
+        patterns = (
+            ur'<div[^>]+resultStats(?:[^>]+)?>Результатов: примерно (.*?)<',
+            ur'<div[^>]+resultStats(?:[^>]+)?>(.*?)<nobr>',
+            ur'<div[^>]+result-stats(?:[^>]+)?>(.*?)<nobr>',
+            ur'<div[^>]+resultStats(?:[^>]+)?>Результатов:(.*?)</div>',
+            ur'<div>Результатов:\s*(.*?)</div>',
+            ur'Результатов:\s*(.*?),.*?</div>',
+            ur'из примерно <b>(.*?)</b>',
+            ur'<div>Результаты:.*?из\s*<b>\s*(\d+)\s*</b>',
+        )
 
         response = self.content
         for pattern in patterns:
@@ -436,6 +439,7 @@ class GoogleParser(object):
             re.compile(ur'<div id="sbfrm_l"></div>', re.I | re.M | re.S),
             re.compile(ur'Результатов: примерно 0', re.I | re.M | re.S),
             re.compile(ur'<span class="[^"]+?">\s*ничего не найдено.', re.I | re.M | re.S),
+            re.compile(ur'<div class="hwc"></div>\s*</div>\s*</div>\s*</div>\s*<footer', re.I | re.M | re.S),
         ]
         res = False
         for pattern in patterns:

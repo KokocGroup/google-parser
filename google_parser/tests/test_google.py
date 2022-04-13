@@ -3384,6 +3384,21 @@ class GoogleParserTestCase(GoogleParserTests):
         self.assertEqual(res['sn'][97]['d'], '7kub.ru')
         self.assertEqual(res['sn'][97]['vu'], None)
 
+    def test150(self):
+        u""""
+            Ошибка парсинга от 2022-04-08.txt
+        """
+        html = self.get_data('2022-04-13.txt')
+        g = GoogleJsonParser(html, snippet_fields=('d', 'p', 'u', 't', 's', 'm'))
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+
+        # В мобильной выдаче похоже нет общего кол-ва результатов
+        self.assertEqual(res['pc'], 0)
+        self.assertEqual(len(res['sn']), 0)
+
+
     def print_sn(self, res):
         for i in res['sn']:
             print
@@ -3392,7 +3407,6 @@ class GoogleParserTestCase(GoogleParserTests):
             print i.get('t')
             print i.get('s')
             print i.get('h')
-
 
     def check2(self, snippets, founded):
         for i, founded_snippet in enumerate(founded):
