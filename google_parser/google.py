@@ -440,6 +440,7 @@ class GoogleParser(object):
             re.compile(ur'Результатов: примерно 0', re.I | re.M | re.S),
             re.compile(ur'<span class="[^"]+?">\s*ничего не найдено.', re.I | re.M | re.S),
             re.compile(ur'<div class="hwc"></div>\s*</div>\s*</div>\s*</div>\s*<footer', re.I | re.M | re.S),
+            re.compile(ur'</a>\s*</div>\s*</div>\s*</div>\s*<footer', re.I | re.M | re.S),
         ]
         res = False
         for pattern in patterns:
