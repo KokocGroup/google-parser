@@ -3386,7 +3386,7 @@ class GoogleParserTestCase(GoogleParserTests):
 
     def test150(self):
         u""""
-            Ошибка парсинга от 2022-04-08.txt
+            Ошибка парсинга от 2022-04-13.txt
         """
         html = self.get_data('2022-04-13.txt')
         g = GoogleJsonParser(html, snippet_fields=('d', 'p', 'u', 't', 's', 'm'))
@@ -3400,9 +3400,23 @@ class GoogleParserTestCase(GoogleParserTests):
 
     def test151(self):
         u""""
-            Ошибка парсинга от 2022-04-07-1.txt
+            Ошибка парсинга от 2022-04-13-1.txt
         """
         html = self.get_data('2022-04-13-1.txt')
+        g = GoogleJsonParser(html, snippet_fields=('d', 'p', 'u', 't', 's', 'm'))
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+
+        # В мобильной выдаче похоже нет общего кол-ва результатов
+        self.assertEqual(res['pc'], 0)
+        self.assertEqual(len(res['sn']), 0)
+
+    def test152(self):
+        u""""
+            Ошибка парсинга от 2022-04-14.txt
+        """
+        html = self.get_data('2022-04-14.txt')
         g = GoogleJsonParser(html, snippet_fields=('d', 'p', 'u', 't', 's', 'm'))
         self.assertFalse(g.is_suspicious_traffic())
 

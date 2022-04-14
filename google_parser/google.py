@@ -418,7 +418,7 @@ class GoogleParser(object):
         if not res:
             raise GoogleParserError('no body in response')
 
-        if '<div id="main">' in self.content and '<!-- cctlcm' in self.content and 'luh4tb' in self.content:
+        if '<div id="main">' in self.content and '<!-- cctlcm' in self.content and 'ZINbbc' in self.content:
             return SnippetsParserAfter_2022_02_14(self.snippet_fields).get_snippets(self.content)
         elif re.search('<div class="[^"]*?" id="res" role="main">.*?<div id="bottomads"', self.content, flags=re.S):
             return SnippetsParserAfter_2021_01_29(self.snippet_fields).get_snippets(self.content)
