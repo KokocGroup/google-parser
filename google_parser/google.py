@@ -12,7 +12,7 @@ from pyquery import PyQuery
 from lxml import etree
 
 
-from google_parser.exceptions import SnippetsParserException, GoogleParserError
+from google_parser.exceptions import SnippetsParserException, GoogleParserError, NoBodyInResponseError
 
 __all__ = ['GoogleParser']
 
@@ -416,7 +416,7 @@ class GoogleParser(object):
     def get_snippets(self):
         res = re.compile('<body.*?</body>', re.DOTALL).search(self.content)
         if not res:
-            raise GoogleParserError('no body in response')
+            raise NoBodyInResponseError('no body in response')
 
         if '<div id="main">' in self.content and '<!-- cctlcm' in self.content and 'ZINbbc' in self.content:
             return SnippetsParserAfter_2022_02_14(self.snippet_fields).get_snippets(self.content)

@@ -3,7 +3,7 @@ import json
 
 import unittest
 
-from google_parser.exceptions import GoogleParserError
+from google_parser.exceptions import GoogleParserError, NoBodyInResponseError
 from google_parser.tests import GoogleParserTests
 from google_parser.google import GoogleParser, SnippetsParserDefault, GoogleJsonParser, GoogleMobileParser
 from google_parser.google_query import GoogleQuery
@@ -3425,6 +3425,16 @@ class GoogleParserTestCase(GoogleParserTests):
         # В мобильной выдаче похоже нет общего кол-ва результатов
         self.assertEqual(res['pc'], 0)
         self.assertEqual(len(res['sn']), 0)
+
+    def test153(self):
+        u""""
+            Ошибка парсинга от 2022-04-20.txt
+        """
+        html = self.get_data('2022-04-20.txt')
+
+        with self.assertRaises(NoBodyInResponseError) as e:
+            g = GoogleJsonParser(html, snippet_fields=('d', 'p', 'u', 't', 's', 'm'))
+            res = g.get_serp()
 
     def print_sn(self, res):
         for i in res['sn']:
