@@ -439,13 +439,23 @@ class GoogleParser(object):
             re.compile(ur'<div id="sbfrm_l"></div>', re.I | re.M | re.S),
             re.compile(ur'Результатов: примерно 0', re.I | re.M | re.S),
             re.compile(ur'<span class="[^"]+?">\s*ничего не найдено.', re.I | re.M | re.S),
-            re.compile(ur'<div class="hwc"></div>\s*</div>\s*</div>\s*</div>\s*<footer', re.I | re.M | re.S),
             re.compile(ur'</a>\s*</div>\s*</div>\s*</div>\s*<footer', re.I | re.M | re.S),
         ]
         res = False
         for pattern in patterns:
             if pattern.search(self.content):
                 return True
+
+        pattern = re.compile(ur'<div class="hwc"></div>\s*</div>\s*</div>\s*</div>\s*<footer', re.I | re.M | re.S)
+        match = pattern.search(self.content)
+        if match:
+            match = re.search(
+                ur'Мы скрыли некоторые результаты, которые очень похожи на уже представленные выше \(0\)',
+                self.content,
+                flags=re.I | re.M | re.S
+            )
+            return bool(match)
+
         return res
 
 

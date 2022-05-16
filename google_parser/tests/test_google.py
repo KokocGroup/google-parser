@@ -3436,6 +3436,38 @@ class GoogleParserTestCase(GoogleParserTests):
             g = GoogleJsonParser(html, snippet_fields=('d', 'p', 'u', 't', 's', 'm'))
             res = g.get_serp()
 
+    def test154(self):
+        u""""
+            Ошибка парсинга от 2022-04-07-1.txt
+        """
+        html = self.get_data('2022-05-16.txt')
+        g = GoogleJsonParser(html, snippet_fields=('d', 'p', 'u', 't', 's', 'm'))
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+
+        # В мобильной выдаче похоже нет общего кол-ва результатов
+        self.assertEqual(res['pc'], 0)
+        self.assertEqual(len(res['sn']), 46)
+
+        self.assertEqual(res['sn'][0]['t'], u'Агентство недвижимости BSA: отзывы сотрудников о ...')
+        self.assertEqual(res['sn'][0]['s'], u'Нужны отзывы сотрудников о компании Агентство недвижимости BSA? На нашем сайте есть информация о данной компании.')
+        self.assertEqual(res['sn'][0]['u'], 'https://pravda-sotrudnikov.ru/company/bsa-invest')
+        self.assertEqual(res['sn'][0]['d'], 'pravda-sotrudnikov.ru')
+        self.assertEqual(res['sn'][0]['vu'], None)
+
+        self.assertEqual(res['sn'][27]['t'], u'Респект Недвижимость - отзывы сотрудников о компании')
+        self.assertEqual(res['sn'][27]['s'], u'Правда сотрудников (Без цензуры) о компании Респект Недвижимость. Отзывы о работе в компании Респект Риэлти от действующих и бывших сотрудников.')
+        self.assertEqual(res['sn'][27]['u'], 'https://pravda-sotrudnikov.org/company/respekt-nedvizhimost-otzyvy-sotrudnikov')
+        self.assertEqual(res['sn'][27]['d'], 'pravda-sotrudnikov.org')
+        self.assertEqual(res['sn'][27]['vu'], None)
+
+        self.assertEqual(res['sn'][45]['t'], u'Книга отзывов | Петербургская Недвижимость')
+        self.assertEqual(res['sn'][45]['s'], u'Хотелось бы отметить работу сотрудника ПН Голдиной Екатерины, с ее помощью приобрел 2 квартиры и машиноместо , проявила себя как грамотный помощник ...')
+        self.assertEqual(res['sn'][45]['u'], 'https://pn.ru/company/feedback')
+        self.assertEqual(res['sn'][45]['d'], 'pn.ru')
+        self.assertEqual(res['sn'][45]['vu'], None)
+
     def print_sn(self, res):
         for i in res['sn']:
             print
