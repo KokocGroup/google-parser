@@ -3468,6 +3468,38 @@ class GoogleParserTestCase(GoogleParserTests):
         self.assertEqual(res['sn'][45]['d'], 'pn.ru')
         self.assertEqual(res['sn'][45]['vu'], None)
 
+    def test155(self):
+        u""""
+            Ошибка парсинга от 2022-06-10.txt
+        """
+        html = self.get_data('2022-06-10.txt')
+        g = GoogleJsonParser(html, snippet_fields=('d', 'p', 'u', 't', 's', 'm'))
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+
+        # В мобильной выдаче похоже нет общего кол-ва результатов
+        self.assertEqual(res['pc'], 0)
+        self.assertEqual(len(res['sn']), 100)
+
+        self.assertEqual(res['sn'][0]['t'], 'Domus Finance: Best Mortgage Deals in London, Tunbridge Wells ...')
+        self.assertEqual(res['sn'][0]['s'], u'Contact Us · Tunbridge Wells · Amortisation Calculator')
+        self.assertEqual(res['sn'][0]['u'], 'https://domusfinance.co.uk/')
+        self.assertEqual(res['sn'][0]['d'], 'domusfinance.co.uk')
+        self.assertEqual(res['sn'][0]['vu'], None)
+
+        self.assertEqual(res['sn'][27]['t'], 'DOMUS FINANCIAL SERVICES - Equity Release Council')
+        self.assertEqual(res['sn'][27]['s'], u'DOMUS FINANCIAL SERVICES ... Giving you peace of mind through friendly, safe and jargon free Equity Release advice, at your home or our office. All advice is ...')
+        self.assertEqual(res['sn'][27]['u'], 'https://www.equityreleasecouncil.com/company/domus-financial-services/')
+        self.assertEqual(res['sn'][27]['d'], 'equityreleasecouncil.com')
+        self.assertEqual(res['sn'][27]['vu'], None)
+
+        self.assertEqual(res['sn'][99]['t'], u'МК Московский комсомолец 64')
+        self.assertEqual(res['sn'][99]['s'], u'По оценке специалистов компании «Домус финанс», в этом году новостройки на северо-востоке Подмосковья ... +7(495)5-00000-4ина сайте: www.domus-finance.ru.')
+        self.assertEqual(res['sn'][99]['u'], 'https://books.google.ru/books?id=iW-eBwAAQBAJ&pg=PA1&lpg=PA1&dq=domus+finance&source=bl&ots=_te4JOlAwE&sig=ACfU3U1e_y6KrMlmj3cDWmwAP6YbmMJ3xQ&hl=ru&sa=X&sqi=2&ved=2ahUKEwjR7pqOlqL4AhVm-yoKHVmnDO8Q6AF6BAhgEAE')
+        self.assertEqual(res['sn'][99]['d'], 'books.google.ru')
+        self.assertEqual(res['sn'][99]['vu'], None)
+
     def print_sn(self, res):
         for i in res['sn']:
             print

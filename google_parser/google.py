@@ -418,7 +418,7 @@ class GoogleParser(object):
         if not res:
             raise NoBodyInResponseError('no body in response')
 
-        if '<div id="main">' in self.content and '<!-- cctlcm' in self.content and 'ZINbbc' in self.content:
+        if '<div id="main">' in self.content and '<!-- cctlcm' in self.content and 'KP7LCb' in self.content:
             return SnippetsParserAfter_2022_02_14(self.snippet_fields).get_snippets(self.content)
         elif re.search('<div class="[^"]*?" id="res" role="main">.*?<div id="bottomads"', self.content, flags=re.S):
             return SnippetsParserAfter_2021_01_29(self.snippet_fields).get_snippets(self.content)
@@ -951,6 +951,8 @@ class SnippetsParserAfter_2022_02_14(SnippetsParserAfter_2021_01_29):
         for body in res:
             dom = PyQuery(body)
             snippets = dom('div.luh4tb')
+            if not snippets:
+                snippets = dom('div.fP1Qef')
             for snippet in snippets:
                 html = etree.tostring(snippet)
 
