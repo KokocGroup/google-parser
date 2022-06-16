@@ -3500,6 +3500,38 @@ class GoogleParserTestCase(GoogleParserTests):
         self.assertEqual(res['sn'][99]['d'], 'books.google.ru')
         self.assertEqual(res['sn'][99]['vu'], None)
 
+    def test156(self):
+        u""""
+            Ошибка парсинга от 2022-06-16.txt
+        """
+        html = self.get_data('2022-06-16.txt')
+        g = GoogleJsonParser(html, snippet_fields=('d', 'p', 'u', 't', 's', 'm'))
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+
+        # В мобильной выдаче похоже нет общего кол-ва результатов
+        self.assertEqual(res['pc'], 0)
+        self.assertEqual(len(res['sn']), 99)
+
+        self.assertEqual(res['sn'][0]['t'], u'Белые тюльпаны купить в Москве - Доставка цветов')
+        self.assertEqual(res['sn'][0]['s'], u'Купить недорого Белые тюльпаны по цене от 1490 рублей✓ Заказать букет с бесплатной доставкой по Москве✓ Интернет магазин службы доставки цветов WHITE ...')
+        self.assertEqual(res['sn'][0]['u'], 'https://whiterabbit-flowers.ru/catalog/belye-tyulpany/')
+        self.assertEqual(res['sn'][0]['d'], 'whiterabbit-flowers.ru')
+        self.assertEqual(res['sn'][0]['vu'], None)
+
+        self.assertEqual(res['sn'][27]['t'], u'купить букет белых тюльпанов в Москве - Premium-Flowers')
+        self.assertEqual(res['sn'][27]['s'], u'Купить белые тюльпаны в Москве с бесплатной доставкой ✿ В разделе огромный выбор букетов ✿ Заказать букет белых тюльпанов в интернет-магазине ...')
+        self.assertEqual(res['sn'][27]['u'], 'https://premium-flowers.ru/tyulpany/color-belyy/')
+        self.assertEqual(res['sn'][27]['d'], 'premium-flowers.ru')
+        self.assertEqual(res['sn'][27]['vu'], None)
+
+        self.assertEqual(res['sn'][98]['t'], u'Алмазная Живопись «Белые тюльпаны - Раскраски.Ру')
+        self.assertEqual(res['sn'][98]['s'], u'10 дек. 2019 г. · Алмазную мозаику Алмазная живопись «Белые тюльпаны», артикул АЖ-1503 можно заказать с доставкой или купить в розничной магазине Раскраски.Ру ...')
+        self.assertEqual(res['sn'][98]['u'], 'https://www.raskraski.ru/cat_almaznaya_zhivopis_aj_1503_belye_tyulpany.html')
+        self.assertEqual(res['sn'][98]['d'], 'raskraski.ru')
+        self.assertEqual(res['sn'][98]['vu'], None)
+
     def print_sn(self, res):
         for i in res['sn']:
             print

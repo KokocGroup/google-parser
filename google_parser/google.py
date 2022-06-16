@@ -563,7 +563,7 @@ class SnippetsParserDefault(object):
                     title = title_res.group(1)
 
             return SnippetsParserDefault.strip_tags(title), SnippetsParserDefault.format_link(res.group(1)),
-        raise SnippetsParserException(u'Parsing error. Broken snippet at {0}: {1}'.format(position, snippet))
+        raise GoogleParserError(u'Parsing error. Broken snippet at {0}: {1}'.format(position, snippet))
 
     def _is_image_snippet(self, url):
         return url.startswith('/images?q=')
@@ -903,10 +903,17 @@ class SnippetsParserAfter_2022_02_14(SnippetsParserAfter_2021_01_29):
     result_regexp = re.compile(ur'(<div id="main">.*?<!-- cctlcm)', re.I | re.M | re.S)
 
     def _parse_title_snippet(self, snippet, position):
-        res = re.compile(ur'<div class="egMi0[^"]*">\s*<a href="([^"]+?)"[^>]*?>\s*<h3 class="[^"]*?">\s*<div class="BNeawe[^"]*?">\s*(.*?)\s*</div>\s*</h3>', re.I | re.M | re.S).search(snippet)
+        res = re.search(
+            ur'<div\s*class="egMi0[^"]*">'
+                ur'<a\s*href="([^"]+?)"[^>]*?>'
+                    ur'<h3\s*class="[^"]*?">'
+                        ur'<div\s*class="BNeawe[^"]*?"[^>]*?>\s*(.*?)\s*</div>',
+            snippet,
+            re.I | re.M | re.S | re.X
+        )
         if res:
             return HTMLParser().unescape(SnippetsParserDefault.strip_tags(res.group(2))), SnippetsParserDefault.format_link(res.group(1)),
-        raise SnippetsParserException(u'Parsing error. Broken snippet at {0}: {1}'.format(position, snippet))
+        raise GoogleParserError(u'Parsing error. Broken snippet at {0}: {1}'.format(position, snippet))
 
     def _parse_description_snippet(self, snippet):
 
