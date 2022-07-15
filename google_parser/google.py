@@ -906,6 +906,7 @@ class SnippetsParserAfter_2022_02_14(SnippetsParserAfter_2021_01_29):
         res = re.search(
             ur'<div\s*class="egMi0[^"]*">'
                 ur'<a\s*href="([^"]+?)"[^>]*?>'
+                    ur'(?:<div\s*class="DnJfK"><div\s*class="j039Wc">)?'
                     ur'<h3\s*class="[^"]*?">'
                         ur'<div\s*class="BNeawe[^"]*?"[^>]*?>\s*(.*?)\s*</div>',
             snippet,

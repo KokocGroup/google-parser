@@ -3532,6 +3532,38 @@ class GoogleParserTestCase(GoogleParserTests):
         self.assertEqual(res['sn'][98]['d'], 'raskraski.ru')
         self.assertEqual(res['sn'][98]['vu'], None)
 
+    def test157(self):
+        u""""
+            Ошибка парсинга от 2022-07-15.txt
+        """
+        html = self.get_data('2022-07-15.txt')
+        g = GoogleJsonParser(html, snippet_fields=('d', 'p', 'u', 't', 's', 'm'))
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+
+        # В мобильной выдаче похоже нет общего кол-ва результатов
+        self.assertEqual(res['pc'], 0)
+        self.assertEqual(len(res['sn']), 71)
+
+        self.assertEqual(res['sn'][0]['t'], u'Вискозные ковры - Леруа Мерлен')
+        self.assertEqual(res['sn'][0]['s'], u'В интернет-магазине Леруа Мерлен Москвы и России вискозные ковры в наличии по низкой цене. Широкий ассортимент товаров для дома и ремонта, спешите купить ...')
+        self.assertEqual(res['sn'][0]['u'], 'https://leroymerlin.ru/catalogue/kovry/viskozovie/')
+        self.assertEqual(res['sn'][0]['d'], 'leroymerlin.ru')
+        self.assertEqual(res['sn'][0]['vu'], None)
+
+        self.assertEqual(res['sn'][27]['t'], u'купить вискозные ковры в интернет-магазине в Москве')
+        self.assertEqual(res['sn'][27]['s'], u'Турецкие ковры — купить недорого вискозные ковры на пол в интернет-магазине Ковер Сказка с доставкой по Москве и России.')
+        self.assertEqual(res['sn'][27]['u'], 'https://kover-skazka.ru/category/viskoznye-kovry/')
+        self.assertEqual(res['sn'][27]['d'], 'kover-skazka.ru')
+        self.assertEqual(res['sn'][27]['vu'], None)
+
+        self.assertEqual(res['sn'][70]['t'], u'Ковры из вискозы: советы по выбору и уходу')
+        self.assertEqual(res['sn'][70]['s'], u'Для первой разновидности характерна высокая цена и ряд достоинств. Профессиональные мастера изготовляют изделия с применением уникальных узоров. Учитываются ...')
+        self.assertEqual(res['sn'][70]['u'], 'https://textiletrend.ru/pro-tkani/ispolzovanie/kovryi-iz-viskozyi.html')
+        self.assertEqual(res['sn'][70]['d'], 'textiletrend.ru')
+        self.assertEqual(res['sn'][70]['vu'], None)
+
     def print_sn(self, res):
         for i in res['sn']:
             print
