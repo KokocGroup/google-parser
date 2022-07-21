@@ -3564,6 +3564,38 @@ class GoogleParserTestCase(GoogleParserTests):
         self.assertEqual(res['sn'][70]['d'], 'textiletrend.ru')
         self.assertEqual(res['sn'][70]['vu'], None)
 
+    def test158(self):
+        u""""
+            Ошибка парсинга от 2022-07-21.txt
+        """
+        html = self.get_data('2022-07-21.txt')
+        g = GoogleJsonParser(html, snippet_fields=('d', 'p', 'u', 't', 's', 'm'))
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+
+        # В мобильной выдаче похоже нет общего кол-ва результатов
+        self.assertEqual(res['pc'], 0)
+        self.assertEqual(len(res['sn']), 69)
+
+        self.assertEqual(res['sn'][0]['t'], u'купить слуховой аппарат в Астане (адреса, цены)')
+        self.assertEqual(res['sn'][0]['s'], u'Слуховые аппараты в Астана по выгодным ценам! Диагностика слуха и слуховые аппараты в центре слуха «Радуга Звуков Казахстан»')
+        self.assertEqual(res['sn'][0]['u'], 'https://www.radugazvukov.kz/centers/astana/')
+        self.assertEqual(res['sn'][0]['d'], 'radugazvukov.kz')
+        self.assertEqual(res['sn'][0]['vu'], None)
+
+        self.assertEqual(res['sn'][27]['t'], u'Алматон-2, слуховые аппараты, ул. Шокана Валиханова, 9/1, Нур ...')
+        self.assertEqual(res['sn'][27]['s'], u'Алматон-2 ⭐ , ул. Шокана Валиханова, 9/1, Нур-Султан (Астана): ✓ фотографии, адрес и ☎️ телефон, часы работы, фото и отзывы посетителей на Яндекс ...')
+        self.assertEqual(res['sn'][27]['u'], 'https://yandex.ru/maps/org/almaton_2/1050412456/')
+        self.assertEqual(res['sn'][27]['d'], 'yandex.ru')
+        self.assertEqual(res['sn'][27]['vu'], None)
+
+        self.assertEqual(res['sn'][68]['t'], u'Как инвалиду по слуху получить льготный аппарат - МастерСлух')
+        self.assertEqual(res['sn'][68]['s'], u'16 сент. 2019 г. · Как получить слуховой аппарат инвалиду. Что выгоднее: купить аппарат самому и компенсировать стоимость или носить льготную модель, ...')
+        self.assertEqual(res['sn'][68]['u'], 'https://mastersluh.ru/stati/o-sluxe/kak-i-gde-poluchit-lgotnyy-slukhovoy-apparat-invalidu-so-snizheniem-slukha/')
+        self.assertEqual(res['sn'][68]['d'], 'mastersluh.ru')
+        self.assertEqual(res['sn'][68]['vu'], None)
+
     def print_sn(self, res):
         for i in res['sn']:
             print

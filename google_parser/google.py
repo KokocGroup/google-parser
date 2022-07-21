@@ -965,7 +965,7 @@ class SnippetsParserAfter_2022_02_14(SnippetsParserAfter_2021_01_29):
                 html = etree.tostring(snippet)
 
                 html_unescaped = HTMLParser().unescape(html)
-                if re.search(ur'<span class="[^"]+?">Реклама</span>', html_unescaped, flags=re.I):
+                if re.search(ur'<span class="[^"]+?">Реклама</?span>?', html_unescaped, flags=re.I):
                     continue
 
                 position += 1
