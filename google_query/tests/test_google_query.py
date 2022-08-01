@@ -69,7 +69,7 @@ class GoogleParserTests(GoogleQueryTests):
 
     def test19(self):
         with self.assertRaises(GoogleQueryError) as e:
-            GoogleQuery.get_zone_and_region(u'Крым')
+            GoogleQuery.get_zone_and_region(u'Абракадабра')
 
     def test17(self):
         res = GoogleQuery.get_zone_and_region(u'Москва')
