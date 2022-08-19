@@ -313,9 +313,10 @@ class GoogleParser(object):
                 ur'class="g-recaptcha"', re.I | re.M | re.S
             ),
         ]
-        result = True
+        result = False
         for pattern in patterns:
-            result &= bool(pattern.search(self.content))
+            if bool(pattern.search(self.content)):
+                return True
         return result
 
     def get_context_snippet_title(self, content):

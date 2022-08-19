@@ -704,7 +704,7 @@ class GoogleParserTestCase(GoogleParserTests):
 
         html = self.get_data('google-captcha-2016-12-06.html')
         g = GoogleParser(html)
-        self.assertFalse(g.is_recaptcha_suspicious_traffic())
+        self.assertTrue(g.is_recaptcha_suspicious_traffic())
 
     def test46(self):
         u""""
@@ -3595,6 +3595,17 @@ class GoogleParserTestCase(GoogleParserTests):
         self.assertEqual(res['sn'][68]['u'], 'https://mastersluh.ru/stati/o-sluxe/kak-i-gde-poluchit-lgotnyy-slukhovoy-apparat-invalidu-so-snizheniem-slukha/')
         self.assertEqual(res['sn'][68]['d'], 'mastersluh.ru')
         self.assertEqual(res['sn'][68]['vu'], None)
+
+    def test159(self):
+        u""""
+            Ошибка парсинга от 2022-08-19.txt
+        """
+        html = self.get_data('google-blocked-2022-08-19.html')
+        g = GoogleParser(html, snippet_fields=('d', 'p', 'u', 't', 's', 'm'))
+        self.assertFalse(g.is_suspicious_traffic())
+        self.assertFalse(g.is_blocked())
+        self.assertTrue(g.is_recaptcha_suspicious_traffic())
+
 
     def print_sn(self, res):
         for i in res['sn']:
