@@ -23,3 +23,7 @@ class SnippetsParserException(GoogleParserError):
 
 class BadUrlError(GoogleParserError):
     pass
+
+
+class TemporaryGoogleParserError(GoogleParserError):
+    pass

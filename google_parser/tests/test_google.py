@@ -3,7 +3,7 @@ import json
 
 import unittest
 
-from google_parser.exceptions import GoogleParserError, NoBodyInResponseError
+from google_parser.exceptions import GoogleParserError, NoBodyInResponseError, TemporaryGoogleParserError
 from google_parser.tests import GoogleParserTests
 from google_parser.google import GoogleParser, SnippetsParserDefault, GoogleJsonParser, GoogleMobileParser
 from google_parser.google_query import GoogleQuery
@@ -3605,6 +3605,14 @@ class GoogleParserTestCase(GoogleParserTests):
         self.assertFalse(g.is_suspicious_traffic())
         self.assertFalse(g.is_blocked())
         self.assertTrue(g.is_recaptcha_suspicious_traffic())
+
+    def test160(self):
+        u""""
+            Ошибка парсинга от 2022-08-23.txt
+        """
+        html = self.get_data('2022-08-23.html')
+        with self.assertRaises(TemporaryGoogleParserError) as e:
+            GoogleJsonParser(html, snippet_fields=('d', 'p', 'u', 't', 's', 'm'))
 
 
     def print_sn(self, res):

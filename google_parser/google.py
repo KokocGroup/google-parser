@@ -12,7 +12,8 @@ from pyquery import PyQuery
 from lxml import etree
 
 
-from google_parser.exceptions import SnippetsParserException, GoogleParserError, NoBodyInResponseError
+from google_parser.exceptions import SnippetsParserException, GoogleParserError, NoBodyInResponseError, \
+    TemporaryGoogleParserError
 
 __all__ = ['GoogleParser']
 
@@ -224,6 +225,10 @@ class GoogleParser(object):
 
         self.xhtml_snippet = xhtml_snippet
         self.snippet_fields = snippet_fields
+
+    def raise_if_temporary_error(self, html):
+        if '<title>Error 502' in html:
+            raise TemporaryGoogleParserError()
 
     def get_clean_html(self):
         return GoogleSerpCleaner.clean(self.content)
@@ -996,6 +1001,9 @@ class SnippetsParserAfter_2022_02_14(SnippetsParserAfter_2021_01_29):
 
 class GoogleJsonParser(GoogleParser):
     def __init__(self, content, xhtml_snippet=False, snippet_fields=('d', 'p', 'u', 't', 's', 'm')):
+
+        self.raise_if_temporary_error(content)
+
         content = self._prepare_content(content)
         super(GoogleJsonParser, self).__init__(content, xhtml_snippet=False, snippet_fields=snippet_fields)
 
