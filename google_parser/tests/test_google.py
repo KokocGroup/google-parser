@@ -6,7 +6,6 @@ import unittest
 from google_parser.exceptions import GoogleParserError, NoBodyInResponseError, TemporaryGoogleParserError
 from google_parser.tests import GoogleParserTests
 from google_parser.google import GoogleParser, SnippetsParserDefault, GoogleJsonParser, GoogleMobileParser
-from google_parser.google_query import GoogleQuery
 
 
 class GoogleParserTestCase(GoogleParserTests):
@@ -3613,6 +3612,44 @@ class GoogleParserTestCase(GoogleParserTests):
         html = self.get_data('2022-08-23.html')
         with self.assertRaises(TemporaryGoogleParserError) as e:
             GoogleJsonParser(html, snippet_fields=('d', 'p', 'u', 't', 's', 'm'))
+
+    def test161(self):
+        u""""
+            Ошибка парсинга от 2024-02-05.txt
+        """
+        html = self.get_data('2024-02-05.txt')
+
+        g = GoogleJsonParser(html, snippet_fields=('d', 'p', 'u', 't', 's', 'm'))
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+
+        # В мобильной выдаче похоже нет общего кол-ва результатов
+        self.assertEqual(res['pc'], 0)
+        # Топ 10 т.к. истекли nid-cookie
+        self.assertEqual(len(res['sn']), 10)
+
+        self.assertEqual(res['sn'][0]['t'], u'Купить Комод Милан 16 в интернет магазине GGМебель')
+        self.assertEqual(res['sn'][0]['s'],
+                         u'В нашем интернет магазине Вы сможете заказать Комод Милан 16 по выгодным ценам в Москве. Звоните!')
+        self.assertEqual(res['sn'][0]['u'], 'https://mebel-domoy.ru/milan/milan-16/&ved=2ahUKEwja9dnJ1ZOEAxW4ExAIHRbcAToQFnoECAYQAg&usg=AOvVaw09eQClbAol2wtMOxdR1OyQ')
+        self.assertEqual(res['sn'][0]['d'], 'mebel-domoy.ru')
+        self.assertEqual(res['sn'][0]['vu'], None)
+
+        self.assertEqual(res['sn'][5]['t'], u'Комод «Милан-16 - Интернет-магазин недорогой мебели в Москве')
+        self.assertEqual(res['sn'][5]['s'],
+                         u'Комод «Милан-16» ; Ширина: 1300 мм ; Глубина: 430 мм ; Материал корпуса: ЛДСП ; Материал фасадов: ЛДСП ; Цвета: Бук, Дуб сонома, Дуб Молочный, Орех, Венге, ...')
+        self.assertEqual(res['sn'][5]['u'], 'https://vashdommebel.ru/katalog/korpusnaya-bytovaya-mebel/komody/komod-milan-16&ved=2ahUKEwja9dnJ1ZOEAxW4ExAIHRbcAToQFnoECAQQAg&usg=AOvVaw0iITxkX_BIwCNaw6nUXpbD')
+        self.assertEqual(res['sn'][5]['d'], 'vashdommebel.ru')
+        self.assertEqual(res['sn'][5]['vu'], None)
+
+        self.assertEqual(res['sn'][9]['t'], u'Комод «Милан-16», ЛДСП (3566683) - Сима-ленд')
+        self.assertEqual(res['sn'][9]['s'],
+                         u'Комод «Милан-16», ЛДСП (арт. 3566683) оптом и в розницу. Бесплатная консультация. Заказывайте онлайн с быстрой доставкой из интернет-магазина SIMA-LAND.RU.')
+        self.assertEqual(res['sn'][9]['u'],
+                         'https://www.sima-land.ru/3566683/komod-milan-16-ldsp/&ved=2ahUKEwja9dnJ1ZOEAxW4ExAIHRbcAToQFnoECAcQAg&usg=AOvVaw0WZL1mdXvqTog-T1zWaX-v')
+        self.assertEqual(res['sn'][9]['d'], 'sima-land.ru')
+        self.assertEqual(res['sn'][9]['vu'], None)
 
 
     def print_sn(self, res):

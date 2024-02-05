@@ -265,7 +265,7 @@ class GoogleParser(object):
 
     @classmethod
     def is_before_search(cls, content):
-        if u'<title>Прежде чем перейти к Google Поиску</title>' not in content:
+        if '<title>Прежде чем перейти к Google Поиску</title>' not in content:
             return
 
         match = re.search(ur'(<form\s*action="(https://consent.google.com/s[^"]*?)"\s*method="POST".*?</form>)', content, flags=re.I | re.M | re.S)
@@ -426,6 +426,8 @@ class GoogleParser(object):
 
         if '<div id="main">' in self.content and '<!-- cctlcm' in self.content and 'KP7LCb' in self.content:
             return SnippetsParserAfter_2022_02_14(self.snippet_fields).get_snippets(self.content)
+        elif '<div id="main">' in self.content and 'KP7LCb' in self.content:
+            return SnippetsParserAfter_2024_02_05(self.snippet_fields).get_snippets(self.content)
         elif re.search('<div class="[^"]*?" id="res" role="main">.*?<div id="bottomads"', self.content, flags=re.S):
             return SnippetsParserAfter_2021_01_29(self.snippet_fields).get_snippets(self.content)
         elif re.search('<div class="[^"]*?" id="res" role="main">', self.content):
@@ -1005,6 +1007,7 @@ class GoogleJsonParser(GoogleParser):
         self.raise_if_temporary_error(content)
 
         content = self._prepare_content(content)
+
         super(GoogleJsonParser, self).__init__(content, xhtml_snippet=False, snippet_fields=snippet_fields)
 
 
@@ -1088,3 +1091,85 @@ class SnippetsMobileParserDefault(SnippetsParserDefault):
         res = re.compile(ur'<span class="st">(.*?)</span>\s*</div>', re.I | re.M | re.S).search(snippet)
         if res:
             return SnippetsParserDefault.strip_tags(res.group(1))
+
+
+class SnippetsParserAfter_2024_02_05(SnippetsParserAfter_2022_02_14):
+    def _parse_title_snippet(self, doc, position):
+        title = doc('.BNeawe.vvjwJb.AP7Wnd.UwRFLe').text()
+        url_content = doc('a').attr('href')
+        url = re.search(r'url=(.*)', url_content).group(1)
+
+        return title, url
+
+    def _parse_description_snippet(self, doc):
+        doc('.BNeawe.s3v9rd.AP7Wnd .BNeawe.s3v9rd.AP7Wnd').remove('.r0bn4c.rQMQod')
+        description_content = doc('.BNeawe.s3v9rd.AP7Wnd .BNeawe.s3v9rd.AP7Wnd')
+
+        return description_content.text().strip()
+
+    def get_snippet(self, position, snippet):
+        doc = PyQuery(snippet)
+
+        title, url = self._parse_title_snippet(doc, position)
+        description = self._parse_description_snippet(doc)
+
+        if not title:
+            raise GoogleParserError('Title not found')
+
+        if not url:
+            raise GoogleParserError('Url not found')
+
+        return {
+            'p': position,
+            'u': url,
+            'd': self._get_domain(url),
+            'm': self._is_map_snippet(url),
+            't': self._get_title(title),
+            's': description,
+            'h': self._get_html(snippet),
+            'vu': None,
+        }
+
+    def get_snippets(self, body):
+        doc = PyQuery(body)
+
+        body = doc('#main')
+
+        if not body:
+            raise GoogleParserError('no body in response')
+
+        result = []
+        position = 0
+
+        snippets = body('.Gx5Zad.fP1Qef.xpd.EtOod.pkphOe')
+
+        for snippet in snippets:
+            html = etree.tostring(snippet)
+
+            html_unescaped = HTMLParser().unescape(html)
+            if re.search(ur'<span class="[^"]+?">Реклама</?span>?', html_unescaped, flags=re.I):
+                continue
+
+            position += 1
+            try:
+                item = self.get_snippet(position, html)
+            except SnippetsParserException:
+                if self._is_empty_snippet(snippet):
+                    position -= 1
+                    continue
+                else:
+                    raise
+
+            # игнорим сниппет с картинками и карты
+            if self._is_map_snippet(item['u']) or item['u'].startswith('/search'):
+                position -= 1
+                continue
+
+            result.append(item)
+
+        if len(result) >= 2 and result[0]['u'] == result[1]['u']:
+            result = result[1:]
+            for i in range(len(result)):
+                result[i]['p'] = i + 1
+
+        return result
