@@ -1113,9 +1113,6 @@ class SnippetsParserAfter_2024_02_05(SnippetsParserAfter_2022_02_14):
         title, url = self._parse_title_snippet(doc, position)
         description = self._parse_description_snippet(doc)
 
-        if not description:
-            raise GoogleParserError('Description not found')
-
         if not title:
             raise GoogleParserError('Title not found')
 
