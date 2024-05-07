@@ -3651,6 +3651,82 @@ class GoogleParserTestCase(GoogleParserTests):
         self.assertEqual(res['sn'][9]['d'], 'sima-land.ru')
         self.assertEqual(res['sn'][9]['vu'], None)
 
+    def test162(self):
+        u""""
+            Ошибка парсинга от 2024-05-06.txt
+        """
+        html = self.get_data('2024-05-06.txt')
+
+        g = GoogleJsonParser(html, snippet_fields=('d', 'p', 'u', 't', 's', 'm'))
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+
+        # В мобильной выдаче похоже нет общего кол-ва результатов
+        self.assertEqual(res['pc'], 1270000)
+        # Топ 10 т.к. истекли nid-cookie
+        self.assertEqual(len(res['sn']), 99)
+
+        self.assertEqual(res['sn'][0]['t'], u'American Crew Daily Moisturizing Shampoo 250OZON')
+        self.assertEqual(res['sn'][0]['s'],u'OZON')
+        self.assertEqual(res['sn'][0]['u'], 'https://www.ozon.ru/category/american-crew-daily-moisturizing-shampoo250/')
+        self.assertEqual(res['sn'][0]['d'], 'ozon.ru')
+        self.assertEqual(res['sn'][0]['vu'], None)
+
+        self.assertEqual(res['sn'][50]['t'], u'Шампунь American Crew Daily Moisturizing увлажняющий ...СберМаркет')
+        self.assertEqual(res['sn'][50]['s'], u'СберМаркет')
+        self.assertEqual(res['sn'][50]['u'], 'https://sbermarket.ru/products/1257182-shampun-american-crew-daily-moisturizing-uvlazhnyayuschiy-dlya-normal-nyh-i-suhih-volos-250-ml-920ad32')
+        self.assertEqual(res['sn'][50]['d'], 'sbermarket.ru')
+        self.assertEqual(res['sn'][50]['vu'], None)
+
+        self.assertEqual(res['sn'][90]['t'], u'American Crew Daily Moisturizing Shampoo - Шампунь ...Hairmaniac — сообщество об уходе за волосами')
+        self.assertEqual(res['sn'][90]['s'],u'Hairmaniac — сообщество об уходе за волосами')
+        self.assertEqual(res['sn'][90]['u'], 'https://hairmaniac.ru/catalog/product/american-crew-daily-moisturizing-shampoo-shampun-dlya-ezhednevnogo-uhoda-za-norm-4648/')
+        self.assertEqual(res['sn'][90]['d'], 'hairmaniac.ru')
+        self.assertEqual(res['sn'][90]['vu'], None)
+
+    def test163(self):
+        u""""
+            Ошибка парсинга от 2024-05-07
+        """
+        html = self.get_data('bad_json_2024-05-07.html')
+
+        with self.assertRaises(TemporaryGoogleParserError):
+            GoogleJsonParser(html, snippet_fields=('d', 'p', 'u', 't', 's', 'm'))
+
+    def test164(self):
+        u""""
+            Ошибка парсинга от 2024-05-06
+        """
+        html = self.get_data('html_to_json_parser_2024-05-06.html')
+
+        g = GoogleJsonParser(html, snippet_fields=('d', 'p', 'u', 't', 's', 'm'))
+        self.assertFalse(g.is_suspicious_traffic())
+
+        res = g.get_serp()
+
+        # В мобильной выдаче похоже нет общего кол-ва результатов
+        self.assertEqual(res['pc'], 153000)
+        # Топ 10 т.к. истекли nid-cookie
+        self.assertEqual(len(res['sn']), 100)
+
+        self.assertEqual(res['sn'][0]['t'], u'Аренда авто в ОАЭ, цены на машины от 11$ в сутки!Localrent.com')
+        self.assertEqual(res['sn'][0]['s'],u'Localrent.com')
+        self.assertEqual(res['sn'][0]['u'], 'https://localrent.com/ru/uae/')
+        self.assertEqual(res['sn'][0]['d'], 'localrent.com')
+        self.assertEqual(res['sn'][0]['vu'], None)
+
+        self.assertEqual(res['sn'][50]['t'], u'Аренда авто в Дубае дешево ➤ Арендовать машину в ...arenda-avto-v-dubae.ru')
+        self.assertEqual(res['sn'][50]['s'], u'arenda-avto-v-dubae.ru')
+        self.assertEqual(res['sn'][50]['u'], 'https://arenda-avto-v-dubae.ru/')
+        self.assertEqual(res['sn'][50]['d'], 'arenda-avto-v-dubae.ru')
+        self.assertEqual(res['sn'][50]['vu'], None)
+
+        self.assertEqual(res['sn'][90]['t'], u'Аренда авто в Дубае, Абу-Даби и других регионах ОАЭ ...ТУРвопрос')
+        self.assertEqual(res['sn'][90]['s'],u'ТУРвопрос')
+        self.assertEqual(res['sn'][90]['u'], 'https://turvopros.com/arenda-avto-v-oae/')
+        self.assertEqual(res['sn'][90]['d'], 'turvopros.com')
+        self.assertEqual(res['sn'][90]['vu'], None)
 
     def print_sn(self, res):
         for i in res['sn']:

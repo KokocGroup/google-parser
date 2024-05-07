@@ -1006,10 +1006,19 @@ class GoogleJsonParser(GoogleParser):
 
         self.raise_if_temporary_error(content)
 
-        content = self._prepare_content(content)
+        if self.is_json(content):
+            content = self._prepare_content(content)
 
         super(GoogleJsonParser, self).__init__(content, xhtml_snippet=False, snippet_fields=snippet_fields)
 
+    def is_json(self, content):
+        start = content.startswith('{')
+        end = content.endswith('}/*""*/')
+
+        if (start and not end) or (not start and end):
+            raise TemporaryGoogleParserError('not full json')
+
+        return start and end
 
     def _get_need_blocks(self, content):
         ret = ''
@@ -1022,6 +1031,7 @@ class GoogleJsonParser(GoogleParser):
                 continue
 
             d = json.loads(block).get('d', '')
+
             if '"i":"search"' in d or '"i":"appbar"' in d or '"i":"xjs"' in d or '"i":"topstuff"' in d or not self._is_je_api(d):
                 ret += d
         return ret
